@@ -1,0 +1,79 @@
+{
+  "ci": true,
+  "runner": "GitHub Actions 1000005903",
+  "run_url": "https://github.com/MrArun005/editor-bench/actions/runs/39059210835",
+  "fetch": {
+    "friedliver": {
+      "source": "gh release MrArun005/FriedLiver-Code",
+      "version": "v1.142.0-5",
+      "hash": "sha256 verified",
+      "codesign": "valid",
+      "spctl": "<app>: rejected\norigin=FriedLiver Self-Signed Code Signing",
+      "status": "ok"
+    },
+    "vscode": {
+      "source": "https://update.code.visualstudio.com/latest/darwin-arm64/stable",
+      "version": null,
+      "hash": "vendor publishes no hash",
+      "codesign": "valid",
+      "spctl": "<app>: accepted\nsource=Notarized Developer ID\norigin=Developer ID Application: Microsoft Corporation (UBF8T346G9)",
+      "status": "ok"
+    },
+    "friedliver-patched": {
+      "source": "gh MrArun005/FriedLiver-Code 39055910922",
+      "version": "run 39055910922: perf/core@3f198b5401 (workflow_dispatch)",
+      "hash": "trusted run; artifact sha256 digest verified",
+      "codesign": "valid",
+      "spctl": "<app>: rejected\norigin=FriedLiver Self-Signed Code Signing",
+      "status": "ok"
+    }
+  },
+  "model": "Apple Virtual Machine 1 / VirtualMac2,1",
+  "chip": "Apple M1 (Virtual)",
+  "cores": "3",
+  "ram": "7 GB",
+  "macos": "26.6.2 (25G83)",
+  "power_at_start": "AC ?",
+  "date": "2026-10-17",
+  "apps": {
+    "friedliver": {
+      "label": "FriedLiver",
+      "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 563,
+      "base": null,
+      "settings": null,
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    },
+    "vscode": {
+      "label": "VS Code (stock)",
+      "path": "/Users/runner/work/_temp/bench/apps/vscode/Visual Studio Code.app",
+      "version": "1.142.0",
+      "install_mb": 865,
+      "base": null,
+      "settings": null,
+      "vscode_base": "1.142.0",
+      "commit": "6d62b1d5da"
+    },
+    "friedliver-patched": {
+      "label": "FriedLiver patched",
+      "path": "/Users/runner/work/_temp/bench/apps/friedliver-patched/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 518,
+      "base": null,
+      "settings": null,
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    }
+  },
+  "fixture": {
+    "repo": "microsoft/vscode-extension-samples",
+    "commit": "65c1c44800eeac6fb065a54823ee5ae62c79540a",
+    "big_file_bytes": 5242880
+  },
+  "scenarios": [
+    "slow-shell"
+  ],
+  "bigrepo": false
+}

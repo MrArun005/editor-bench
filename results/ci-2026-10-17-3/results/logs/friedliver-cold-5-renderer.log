@@ -1,0 +1,7 @@
+2026-10-17 19:29:55.318 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-17 19:29:55.834 [info] Started local extension host with pid 18215.
+2026-10-17 19:29:56.140 [info] [DefaultAccount] Authentication provider is not available. {"id":"","name":"","enterprise":false}
+2026-10-17 19:29:56.743 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false
+2026-10-17 19:29:56.862 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-17 19:29:59.153 [info] [perf] Render performance baseline is 22ms
+2026-10-17 19:30:01.753 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false

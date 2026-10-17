@@ -1,0 +1,186 @@
+2026-10-17 19:34:28.254 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-17 19:34:28.280 [info] [AgentHost:renderer] Acquiring MessagePort to agent host...
+2026-10-17 19:34:28.419 [info] [ChatModelSelection] event=no-model-at-toolbar-build surface="workbench" sessionKey=undefined conversationKey=undefined modelTarget=undefined storageKey="chat.currentLanguageModel.panel" widgetViewKind="view"
+2026-10-17 19:34:28.710 [info] [AgentHost:renderer] MessagePort acquired, creating client...
+2026-10-17 19:34:28.809 [info] Started local extension host with pid 25691.
+2026-10-17 19:34:28.972 [error] Extension 'github.copilot-chat' appears in product.json but enables LESS API proposals than the extension wants.
+package.json (LOSES): agentSessionsWorkspace
+agentsWindowConfiguration
+chatDebug
+chatHooks
+envIsConnectionMetered
+extensionsAny
+newSymbolNamesProvider
+interactive
+codeActionAI
+activeComment
+commentReveal
+contribCommentThreadAdditionalMenu
+contribCommentsViewThreadMenus
+contribChatEditorInlineGutterMenu
+documentFiltersExclusive
+embeddings
+findTextInFiles
+findTextInFiles2
+languageModelToolSupportsModel
+findFiles2
+textSearchProvider
+terminalDataWriteEvent
+terminalExecuteCommandEvent
+terminalSelection
+terminalQuickFixProvider
+mappedEditsProvider
+aiRelatedInformation
+aiSettingsSearch
+chatParticipantAdditions
+defaultChatParticipant
+contribSourceControlInputBoxMenu
+authLearnMore
+authIssuers
+testObserver
+aiTextSearchProvider
+chatParticipantPrivate
+chatProvider
+contribDebugCreateConfiguration
+chatReferenceDiagnostic
+textSearchProvider2
+chatReferenceBinaryData
+languageModelSystem
+languageModelCapabilities
+languageModelPricing
+inlineCompletionsAdditions
+chatStatusItem
+chatInputNotification
+taskProblemMatcherStatus
+contribLanguageModelToolSets
+textDocumentChangeReason
+resolvers
+taskExecutionTerminal
+dataChannels
+languageModelThinkingPart
+chatSessionsProvider
+devDeviceId
+contribEditorContentMenu
+chatPromptFiles
+mcpServerDefinitions
+tabInputMultiDiff
+workspaceTrust
+environmentPower
+terminalTitle
+toolInvocationApproveCombination
+chatSessionCustomizationProvider
+product.json (WINS): agentSessionsWorkspace
+agentsWindowConfiguration
+interactive
+terminalDataWriteEvent
+terminalExecuteCommandEvent
+terminalSelection
+terminalQuickFixProvider
+chatParticipantAdditions
+defaultChatParticipant
+embeddings
+chatProvider
+mappedEditsProvider
+aiRelatedInformation
+aiSettingsSearch
+codeActionAI
+findTextInFiles
+findTextInFiles2
+textSearchProvider
+textSearchProvider2
+activeComment
+commentReveal
+contribSourceControlInputBoxMenu
+contribCommentEditorActionsMenu
+contribCommentThreadAdditionalMenu
+contribCommentsViewThreadMenus
+contribChatEditorInlineGutterMenu
+extensionAffinity
+newSymbolNamesProvider
+findFiles2
+chatReferenceDiagnostic
+extensionsAny
+authLearnMore
+testObserver
+aiTextSearchProvider
+documentFiltersExclusive
+chatParticipantPrivate
+contribDebugCreateConfiguration
+inlineCompletionsAdditions
+chatReferenceBinaryData
+languageModelSystem
+languageModelCapabilities
+languageModelThinkingPart
+languageModelToolSupportsModel
+chatStatusItem
+taskProblemMatcherStatus
+contribLanguageModelToolSets
+textDocumentChangeReason
+resolvers
+taskExecutionTerminal
+dataChannels
+chatSessionsProvider
+chatSessionCustomizationProvider
+devDeviceId
+contribEditorContentMenu
+tokenInformation
+toolInvocationApproveCombination
+chatPromptFiles
+mcpServerDefinitions
+tabInputMultiDiff
+workspaceTrust
+chatHooks
+chatDebug
+envIsConnectionMetered
+environmentPower
+terminalTitle
+languageModelPricing
+chatInputNotification
+DELTA: authIssuers
+2026-10-17 19:34:29.361 [info] [RemoteAgentHostProtocol] Sending initialize: address=local clientId=8e9aa247-e22d-4ad4-9ab8-da1b90ea7de2 requestId=1
+2026-10-17 19:34:29.400 [info] [ChatModelSelection] event=no-model-at-toolbar-build surface="workbench" sessionKey=undefined conversationKey=undefined modelTarget=undefined storageKey="chat.currentLanguageModel.panel" widgetViewKind="view"
+2026-10-17 19:34:29.458 [info] [RemoteAgentHostProtocol] Initialized: address=local clientId=8e9aa247-e22d-4ad4-9ab8-da1b90ea7de2 durationMs=1177
+2026-10-17 19:34:29.470 [info] [AgentHost:renderer] Protocol connection established; clientId=8e9aa247-e22d-4ad4-9ab8-da1b90ea7de2
+2026-10-17 19:34:29.487 [info] [RemoteAgentHostProtocol] Mirroring configuration to host root config from DEFAULT: artifactTools=false (chat.artifactTools.enabled), autoAttachPullRequests=true (chat.agentHost.experimental.autoAttachPullRequests), copilotMultiRootEnabled=true (chat.agentHost.copilotAgent.multiRootEnabled), claudeMultiRootEnabled=true (chat.agentHost.claudeAgent.multiRootEnabled), codexMultiRootEnabled=true (chat.agentHost.codexAgent.multiRootEnabled), codexAgentEnabled=true (chat.agentHost.codexAgent.enabled)
+2026-10-17 19:34:30.170 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false
+2026-10-17 19:34:30.302 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:30.304 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:30.305 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:30.386 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:30.418 [info] [ChatModelSelection] event=no-model-at-toolbar-build surface="workbench" sessionKey="local" conversationKey="vscode-chat-session://local/NTkyYjAyZDAtNzhkMy00NDZmLWI1YzMtYTQ2MTE5NWNmMDk2" modelTarget=undefined storageKey="chat.currentLanguageModel.panel" widgetViewKind="view"
+2026-10-17 19:34:30.427 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:30.428 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:30.428 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:30.444 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:30.445 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-17 19:34:30.458 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:30.458 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:30.459 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:30.464 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:30.479 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:30.479 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:30.479 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:30.479 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:30.479 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:30.480 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:30.481 [info] [ChatModelSelection] event=no-model-at-toolbar-build surface="workbench" sessionKey="local" conversationKey="vscode-chat-session://local/NTkyYjAyZDAtNzhkMy00NDZmLWI1YzMtYTQ2MTE5NWNmMDk2" modelTarget=undefined storageKey="chat.currentLanguageModel.panel" widgetViewKind="view"
+2026-10-17 19:34:30.490 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:30.491 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:30.493 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:30.494 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:30.494 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:30.508 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:30.523 [info] [ChatModelSelection] event=no-model-at-toolbar-build surface="workbench" sessionKey="local" conversationKey="vscode-chat-session://local/NTkyYjAyZDAtNzhkMy00NDZmLWI1YzMtYTQ2MTE5NWNmMDk2" modelTarget=undefined storageKey="chat.currentLanguageModel.panel" widgetViewKind="view"
+2026-10-17 19:34:30.601 [info] [ChatModelSelection] event=no-model-at-toolbar-build surface="workbench" sessionKey="local" conversationKey="vscode-chat-session://local/NTkyYjAyZDAtNzhkMy00NDZmLWI1YzMtYTQ2MTE5NWNmMDk2" modelTarget=undefined storageKey="chat.currentLanguageModel.panel" widgetViewKind="view"
+2026-10-17 19:34:30.750 [info] [ChatModelSelection] event=no-model-at-toolbar-build surface="workbench" sessionKey="local" conversationKey="vscode-chat-session://local/NTkyYjAyZDAtNzhkMy00NDZmLWI1YzMtYTQ2MTE5NWNmMDk2" modelTarget=undefined storageKey="chat.currentLanguageModel.panel" widgetViewKind="view"
+2026-10-17 19:34:31.032 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:31.035 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:31.072 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:31.107 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:31.133 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-17 19:34:31.141 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-17 19:34:31.952 [info] Settings Sync: Account status changed from uninitialized to unavailable
+2026-10-17 19:34:32.366 [info] [perf] Render performance baseline is 41ms
+2026-10-17 19:34:33.907 [error] [Extension Host] (node:25691) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `Code Helper (Plugin) --trace-deprecation ...` to show where the warning was created)
+2026-10-17 19:34:35.172 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false
