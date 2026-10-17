@@ -12,7 +12,7 @@ Safety model (the owner's 8 GB laptop has crashed under load before):
 
 Usage: bench.py preflight | run [--only id,id] | postflight | cleanup
 """
-import json, os, signal, subprocess, sys, time, datetime, shutil, statistics
+import json, os, signal, stat, subprocess, sys, tempfile, time, datetime, shutil, statistics
 
 SCRATCH = os.environ.get('BENCH_SCRATCH',
     '/private/tmp/claude-501/-Users-arunmallikarjun-HRMS/607dfe49-a562-4c39-8755-d4057bf35d87/scratchpad/bench')
@@ -20,10 +20,12 @@ REPO = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(REPO, 'results')
 FIX = os.path.join(SCRATCH, 'fixture')
 BIG = os.path.join(FIX, 'big-5mb.txt')
-# Profiles live in SCRATCH/prof but are addressed through a short symlink: VS Code derives its
-# main IPC socket path from --user-data-dir and unix socket paths are capped at 103 chars.
-PROF_REAL = os.path.join(SCRATCH, 'prof')
-PROF = '/private/tmp/ebp'
+# Profile root: VS Code derives its main IPC socket path from --user-data-dir and unix socket paths
+# are capped at 103 chars, so SCRATCH is too long. The root is a fresh mkdtemp dir in /private/tmp
+# (atomic, unpredictable name, mode 0700) - never a fixed name another user could pre-create.
+# Every root ever created is listed in PROF_LIST so `cleanup` (a separate process) can find it.
+PROF = None
+PROF_LIST = os.path.join(SCRATCH, 'prof-roots.txt')
 WINWAIT = os.path.join(SCRATCH, 'winwait')
 RAW = os.path.join(RES, 'raw-runs.jsonl')
 MIN_FREE = 2 * 1024**3
@@ -76,6 +78,7 @@ def power():
     return f'{src} {pct}'
 
 def tag_of(app):
+    ensure_root()
     return os.path.join(PROF, app['id']) + '/'
 
 def procs(tag, exclude=()):
@@ -121,10 +124,23 @@ def snapshot(tag, exclude=()):
                 footprint_mb=(lambda f: f and round(f / 1024**2, 1))(footprint([p['pid'] for p in ps])),
                 cpu_s=sum(p['cpu_s'] for p in ps), procs=[(p['pid'], p['exe'].rsplit('/', 1)[-1]) for p in ps])
 
+def safe_own_dir(path):
+    """True only for a real (non-symlink) directory owned by us, mode 0700, at its realpath."""
+    st = os.lstat(path)
+    return (stat.S_ISDIR(st.st_mode) and st.st_uid == os.getuid() and stat.S_IMODE(st.st_mode) == 0o700
+            and os.path.realpath(path) == path)
+
 def ensure_root():
-    os.makedirs(PROF_REAL, exist_ok=True)
-    if not os.path.islink(PROF):
-        os.symlink(PROF_REAL, PROF)
+    global PROF
+    if PROF:
+        return
+    os.makedirs(SCRATCH, exist_ok=True)
+    root = tempfile.mkdtemp(prefix='ebp-', dir='/private/tmp')
+    if not safe_own_dir(root):
+        raise SystemExit(f'ABORT: profile root {root} is not a private dir owned by us')
+    with open(PROF_LIST, 'a') as f:
+        f.write(root + '\n')
+    PROF = root
 
 def ensure_profile(app):
     ensure_root()
@@ -411,6 +427,9 @@ if __name__ == '__main__':
         a = BY_ID[sys.argv[2]]
         (idle if sys.argv[3] in ('idle', 'files20') else cold)(a, sys.argv[3], 0)
     elif cmd == 'cleanup':
-        shutil.rmtree(PROF_REAL, ignore_errors=True)
-        if os.path.islink(PROF):
-            os.unlink(PROF)
+        roots = open(PROF_LIST).read().split() if os.path.exists(PROF_LIST) else []
+        for r in roots:
+            if os.path.lexists(r) and safe_own_dir(r):     # never follow or delete something we don't own
+                shutil.rmtree(r)
+        if os.path.exists(PROF_LIST):
+            os.remove(PROF_LIST)
