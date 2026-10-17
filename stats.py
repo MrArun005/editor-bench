@@ -130,3 +130,13 @@ def split_list(text, all_items=()):
 def cache_lines(log_text):
     """'[node-compile-cache] <kind>: ... (status: ..., configured: ..., active: ...)' lines, one per process log."""
     return [l[l.index('[node-compile-cache]'):].strip() for l in log_text.splitlines() if '[node-compile-cache]' in l]
+
+
+def cpu_by_name(before, after, seconds):
+    """[(pid, name, cpu_s)] at two snapshots -> {process name: % of one core}, highest first. A pid that
+    appeared in between counts from 0; one that exited is lost (ps no longer reports it)."""
+    start = {pid: cpu for pid, _, cpu in before}
+    out = {}
+    for pid, name, cpu in after:
+        out[name] = out.get(name, 0) + cpu - start.get(pid, 0)
+    return {n: round(v / seconds * 100, 2) for n, v in sorted(out.items(), key=lambda kv: -kv[1])}

@@ -80,6 +80,9 @@ VARIANTS = {
         # (extensions.contribution.ts#L312, extHostExtensionService.ts#L622-L667)
         'extensions.experimental.deferredStartupFinishedActivation': True,
     },
+    # single-setting diagnostics, mostly for a build whose defaults already changed them
+    'caret-smooth': {'editor.cursorBlinking': 'smooth'},          # FriedLiver's release default
+    'welcome': {'workbench.startupEditor': 'welcomePage'},        # upstream default
 }
 
 def make_arms(apps, only, variants):
@@ -139,7 +142,7 @@ def procs(tag, exclude=()):
             continue
         pid, ppid = int(p[0]), int(p[1])
         rows[pid] = dict(pid=pid, ppid=ppid, rss_kb=int(p[2]), cpu_s=cpu_s(p[3]),
-                         exe=p[4].split(' --')[0].split(' HOME=')[0][:160])
+                         exe=p[4].split(' --')[0].split(' HOME=')[0][:400])
         if tag in p[4] and pid not in exclude and pid != os.getpid():
             tagged.add(pid)
     grew = True
@@ -170,7 +173,8 @@ def snapshot(tag, exclude=()):
     ps = procs(tag, exclude)
     return dict(n_procs=len(ps), rss_mb=round(sum(p['rss_kb'] for p in ps) / 1024, 1),
                 footprint_mb=(lambda f: f and round(f / 1024**2, 1))(footprint([p['pid'] for p in ps])),
-                cpu_s=sum(p['cpu_s'] for p in ps), procs=[(p['pid'], p['exe'].rsplit('/', 1)[-1]) for p in ps])
+                cpu_s=sum(p['cpu_s'] for p in ps), procs=[(p['pid'], p['exe'].rsplit('/', 1)[-1]) for p in ps],
+                cpu=[(p['pid'], p['exe'].rsplit('/', 1)[-1], p['cpu_s']) for p in ps])
 
 def safe_own_dir(path):
     """True only for a real (non-symlink) directory owned by us, mode 0700, at its realpath."""
@@ -464,6 +468,7 @@ def idle(app, kind='idle', i=0):
             if ok:
                 s2 = snapshot(tag_of(app), exclude={ww.pid})
                 rec['cpu_pct'] = round((s2['cpu_s'] - s1['cpu_s']) / (time.time() - t1) * 100, 2)
+                rec['cpu_by_proc'] = stats.cpu_by_name(s1['cpu'], s2['cpu'], time.time() - t1)
                 rec.update(rss_mb_120=s2['rss_mb'], footprint_mb_120=s2['footprint_mb'], n_procs_120=s2['n_procs'])
     if not ok:
         rec['error'] = 'no window' if win is None else 'low memory abort'

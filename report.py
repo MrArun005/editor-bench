@@ -65,6 +65,14 @@ def launch_split(app):
     return out
 
 
+def cpu_by_proc(app):
+    """Idle CPU per process name, median over the idle runs (a name missing from a run counts as 0)."""
+    runs = [r['cpu_by_proc'] for r in RUNS if r['app'] == app and r['kind'] == 'idle' and r.get('cpu_by_proc')]
+    names = {n for r in runs for n in r}
+    return dict(sorted(((n, round(statistics.median(r.get(n, 0) for r in runs), 2)) for n in names),
+                       key=lambda kv: -kv[1])) if runs else None
+
+
 IDLE_KEYS = ('n_procs', 'rss_mb', 'footprint_mb', 'cpu_pct', 'cpu_open_pct')
 S = {}
 for a in APPS:
@@ -88,6 +96,7 @@ for a in APPS:
                     **{f'bigrepo_{k}': agg(a, 'bigrepo', k) for k in IDLE_KEYS},
                     **{f'{kind.replace("-", "_")}_{k}': agg(a, kind, k)
                        for kind in ('shell-fast', 'shell-slow') for k in ('exthost_ms', 'search_ms', 'workbench_ms')},
+                    idle_cpu_by_proc=cpu_by_proc(a),
                     errors=[f"{r['kind']}#{r['i']}: {r['error']}" for r in RUNS if r['app'] == a and r.get('error')])
     if s['big5mb_restore_ms'] and s['cold_restore_ms']:
         s['open5mb_delta_ms'] = s['big5mb_restore_ms']['median'] - s['cold_restore_ms']['median']
@@ -209,6 +218,12 @@ for a in APPS:
     f20 = f"{med(s['files20_footprint_mb'])} / {med(s['files20_rss_mb'])}" if s['files20_rss_mb'] else 'n/a'
     md.append(f"| {s['label']} | {med(s['idle_n_procs'])} | {mr(s['idle_footprint_mb'])} | {mr(s['idle_rss_mb'])} | "
               f"{mr(s['idle_cpu_pct'])} | {mr(s['idle_cpu_open_pct'])} | {f20} |")
+byp = [a for a in APPS if S[a]['idle_cpu_by_proc']]
+if byp:
+    md += ['', '### Idle CPU by process (% of one core, median of the idle runs)', '',
+           '| Arm | Processes, highest first |', '|---|---|']
+    md += [f"| {S[a]['label']} | " + ', '.join(f'{n} {v:g}' for n, v in S[a]['idle_cpu_by_proc'].items() if v >= 0.05) + ' |'
+           for a in byp]
 md += ['', '## Opening a 5 MB file (VS Code family only)', '',
        '| Arm | Editor restore with 5 MB file, median ms | Editor restore baseline, median ms | Delta ms |', '|---|---:|---:|---:|']
 for a in fam:

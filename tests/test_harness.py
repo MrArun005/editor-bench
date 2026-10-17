@@ -123,6 +123,14 @@ class CompileCacheLogTest(unittest.TestCase):
         self.assertEqual(stats.cache_lines('nothing here'), [])
 
 
+class CpuByProcTest(unittest.TestCase):
+    def test_delta_per_name(self):
+        before = [(1, 'App', 10.0), (2, 'App Helper (Renderer)', 5.0), (3, 'App Helper', 1.0)]
+        after = [(1, 'App', 10.6), (2, 'App Helper (Renderer)', 6.2), (4, 'App Helper', 0.3)]   # pid 3 gone, 4 new
+        self.assertEqual(stats.cpu_by_name(before, after, 60),
+                         {'App Helper (Renderer)': 2.0, 'App': 1.0, 'App Helper': 0.5})
+
+
 class CompareTest(unittest.TestCase):
     def test_beyond_noise(self):
         c = stats.compare([2800, 2820, 2840], [2500, 2510, 2520], 'ms')
