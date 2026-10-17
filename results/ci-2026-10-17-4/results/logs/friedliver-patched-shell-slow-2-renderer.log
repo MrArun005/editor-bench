@@ -1,0 +1,9 @@
+2026-10-17 21:21:46.881 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-17 21:21:47.226 [info] [DefaultAccount] Authentication provider is not available. {"id":"","name":"","enterprise":false}
+2026-10-17 21:21:47.242 [info] Extension host: starting with the cached shell environment; resolving the current one in the background
+2026-10-17 21:21:47.252 [info] Started local extension host with pid 5849.
+2026-10-17 21:21:47.592 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false
+2026-10-17 21:21:47.794 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-17 21:21:49.453 [info] Extension host: shell environment changed since last launch (SHLVL, PWD, OLDPWD, _); updating it for new processes
+2026-10-17 21:21:50.027 [info] [perf] Render performance baseline is 16ms
+2026-10-17 21:21:52.601 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false

@@ -1,0 +1,2490 @@
+{
+  "machine": {
+    "ci": true,
+    "runner": "GitHub Actions 1000005904",
+    "run_url": "https://github.com/MrArun005/editor-bench/actions/runs/39062025866",
+    "fetch": {
+      "friedliver": {
+        "source": "gh release MrArun005/FriedLiver-Code",
+        "version": "v1.142.0-5",
+        "hash": "sha256 verified",
+        "codesign": "valid",
+        "spctl": "<app>: rejected\norigin=FriedLiver Self-Signed Code Signing",
+        "status": "ok"
+      },
+      "vscode": {
+        "source": "https://update.code.visualstudio.com/latest/darwin-arm64/stable",
+        "version": null,
+        "hash": "vendor publishes no hash",
+        "codesign": "valid",
+        "spctl": "<app>: accepted\nsource=Notarized Developer ID\norigin=Developer ID Application: Microsoft Corporation (UBF8T346G9)",
+        "status": "ok"
+      },
+      "friedliver-patched": {
+        "source": "gh MrArun005/FriedLiver-Code 39055910922",
+        "version": "run 39055910922: perf/core@3f198b5401 (workflow_dispatch)",
+        "hash": "trusted run; artifact sha256 digest verified",
+        "codesign": "valid",
+        "spctl": "<app>: rejected\norigin=FriedLiver Self-Signed Code Signing",
+        "status": "ok"
+      }
+    },
+    "model": "Apple Virtual Machine 1 / VirtualMac2,1",
+    "chip": "Apple M1 (Virtual)",
+    "cores": "3",
+    "ram": "7 GB",
+    "macos": "26.6.2 (25G83)",
+    "power_at_start": "AC ?",
+    "date": "2026-10-17",
+    "apps": {
+      "friedliver": {
+        "label": "FriedLiver",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 563,
+        "base": null,
+        "settings": null,
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      },
+      "vscode": {
+        "label": "VS Code (stock)",
+        "path": "/Users/runner/work/_temp/bench/apps/vscode/Visual Studio Code.app",
+        "version": "1.142.0",
+        "install_mb": 865,
+        "base": null,
+        "settings": null,
+        "vscode_base": "1.142.0",
+        "commit": "6d62b1d5da"
+      },
+      "friedliver-patched": {
+        "label": "FriedLiver patched",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver-patched/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 518,
+        "base": null,
+        "settings": null,
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      }
+    },
+    "fixture": {
+      "repo": "microsoft/vscode-extension-samples",
+      "commit": "65c1c44800eeac6fb065a54823ee5ae62c79540a",
+      "big_file_bytes": 5242880
+    },
+    "scenarios": [
+      "slow-shell"
+    ],
+    "shell_sleep": 3.0,
+    "bigrepo": false
+  },
+  "apps": {
+    "friedliver": {
+      "label": "FriedLiver",
+      "version": "1.142.0",
+      "base": null,
+      "settings": null,
+      "vscode_base": "1.142.0",
+      "install_mb": 563,
+      "cold_window_ms": {
+        "median": 1582,
+        "p90": 1977,
+        "min": 1334,
+        "max": 1977,
+        "n": 5,
+        "runs": [
+          1334,
+          1605,
+          1428,
+          1977,
+          1582
+        ]
+      },
+      "cold_workbench_ms": {
+        "median": 2462,
+        "p90": 3315,
+        "min": 2315,
+        "max": 3315,
+        "n": 5,
+        "runs": [
+          2315,
+          2408,
+          2462,
+          3315,
+          2639
+        ]
+      },
+      "cold_exthost_ms": {
+        "median": 2737,
+        "p90": 3934,
+        "min": 2607,
+        "max": 3934,
+        "n": 5,
+        "runs": [
+          2607,
+          2737,
+          2713,
+          3934,
+          2972
+        ]
+      },
+      "cold_restore_ms": {
+        "median": 45,
+        "p90": 84,
+        "min": 35,
+        "max": 84,
+        "n": 5,
+        "runs": [
+          45,
+          35,
+          43,
+          84,
+          64
+        ]
+      },
+      "big5mb_restore_ms": {
+        "median": 800,
+        "p90": 813,
+        "min": 660,
+        "max": 813,
+        "n": 3,
+        "runs": [
+          660,
+          800,
+          813
+        ]
+      },
+      "big5mb_workbench_ms": {
+        "median": 2842,
+        "p90": 3023,
+        "min": 2509,
+        "max": 3023,
+        "n": 3,
+        "runs": [
+          2509,
+          2842,
+          3023
+        ]
+      },
+      "phases": {
+        "Process start \u2192 main started": {
+          "median": 540,
+          "p90": 677,
+          "min": 430,
+          "max": 677,
+          "n": 5,
+          "runs": [
+            430,
+            557,
+            436,
+            677,
+            540
+          ]
+        },
+        "Main: switches, locale, app ready": {
+          "median": 189,
+          "p90": 233,
+          "min": 165,
+          "max": 233,
+          "n": 5,
+          "runs": [
+            185,
+            189,
+            201,
+            233,
+            165
+          ]
+        },
+        "Main services \u2192 window opened": {
+          "median": 449,
+          "p90": 548,
+          "min": 381,
+          "max": 548,
+          "n": 5,
+          "runs": [
+            381,
+            462,
+            426,
+            548,
+            449
+          ]
+        },
+        "Renderer start \u2192 workbench JS load": {
+          "median": 337,
+          "p90": 348,
+          "min": 280,
+          "max": 348,
+          "n": 5,
+          "runs": [
+            280,
+            282,
+            337,
+            348,
+            345
+          ]
+        },
+        "Workbench JS load + evaluate": {
+          "median": 363,
+          "p90": 472,
+          "min": 311,
+          "max": 472,
+          "n": 5,
+          "runs": [
+            311,
+            319,
+            395,
+            472,
+            363
+          ]
+        },
+        "Workbench main \u2192 services start": {
+          "median": 60,
+          "p90": 82,
+          "min": 50,
+          "max": 82,
+          "n": 5,
+          "runs": [
+            50,
+            56,
+            65,
+            82,
+            60
+          ]
+        },
+        "Workbench services, contributions, restore": {
+          "median": 678,
+          "p90": 955,
+          "min": 543,
+          "max": 955,
+          "n": 5,
+          "runs": [
+            678,
+            543,
+            602,
+            955,
+            717
+          ]
+        },
+        "\u00b7 BlockStartup contributions": {
+          "median": 19,
+          "p90": 23,
+          "min": 14,
+          "max": 23,
+          "n": 5,
+          "runs": [
+            17,
+            14,
+            19,
+            21,
+            23
+          ]
+        },
+        "\u00b7 BlockRestore contributions": {
+          "median": 19,
+          "p90": 31,
+          "min": 15,
+          "max": 31,
+          "n": 5,
+          "runs": [
+            18,
+            15,
+            19,
+            24,
+            31
+          ]
+        },
+        "\u00b7 Editor restore": {
+          "median": 45,
+          "p90": 84,
+          "min": 35,
+          "max": 84,
+          "n": 5,
+          "runs": [
+            45,
+            35,
+            43,
+            84,
+            64
+          ]
+        },
+        "Extension scan + registration (renderer)": {
+          "median": 188,
+          "p90": 332,
+          "min": 156,
+          "max": 332,
+          "n": 5,
+          "runs": [
+            198,
+            156,
+            178,
+            332,
+            188
+          ]
+        },
+        "Extension host: connect to renderer": {
+          "median": 0,
+          "p90": 1,
+          "min": 0,
+          "max": 1,
+          "n": 5,
+          "runs": [
+            0,
+            0,
+            1,
+            0,
+            1
+          ]
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "median": 329,
+          "p90": 619,
+          "min": 251,
+          "max": 619,
+          "n": 5,
+          "runs": [
+            292,
+            329,
+            251,
+            619,
+            333
+          ]
+        },
+        "Extension host ready (from process start)": {
+          "median": 2737,
+          "p90": 3934,
+          "min": 2607,
+          "max": 3934,
+          "n": 5,
+          "runs": [
+            2607,
+            2737,
+            2713,
+            3934,
+            2972
+          ]
+        }
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: disabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: disabled, configured: /Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app/Contents/Resources/app/node-compile-cache/extension-host, active: none)",
+      "launches": {
+        "Workbench ready": {
+          "first": 2782,
+          "later": 2462,
+          "later_min": 2315,
+          "later_max": 3315
+        },
+        "Extension host ready": {
+          "first": 3953,
+          "later": 2737,
+          "later_min": 2607,
+          "later_max": 3934
+        },
+        "Process start \u2192 main started": {
+          "first": 526,
+          "later": 540,
+          "later_min": 430,
+          "later_max": 677
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 1171,
+          "later": 329,
+          "later_min": 251,
+          "later_max": 619
+        },
+        "node_cache_kb": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "idle_n_procs": {
+        "median": 12,
+        "p90": 12,
+        "min": 10,
+        "max": 12,
+        "n": 3,
+        "runs": [
+          10,
+          12,
+          12
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1745,
+        "p90": 1771.9,
+        "min": 1470.0,
+        "max": 1771.9,
+        "n": 3,
+        "runs": [
+          1470.0,
+          1771.9,
+          1745.2
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 634,
+        "p90": 635.2,
+        "min": 515.6,
+        "max": 635.2,
+        "n": 3,
+        "runs": [
+          515.6,
+          634.3,
+          635.2
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 2.35,
+        "p90": 2.67,
+        "min": 2.31,
+        "max": 2.67,
+        "n": 3,
+        "runs": [
+          2.31,
+          2.67,
+          2.35
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 29,
+        "p90": 32.11,
+        "min": 25.83,
+        "max": 32.11,
+        "n": 3,
+        "runs": [
+          32.11,
+          29.43,
+          25.83
+        ]
+      },
+      "files20_n_procs": {
+        "median": 12,
+        "p90": 13,
+        "min": 12,
+        "max": 13,
+        "n": 3,
+        "runs": [
+          13,
+          12,
+          12
+        ]
+      },
+      "files20_rss_mb": {
+        "median": 1763,
+        "p90": 1783.5,
+        "min": 1759.4,
+        "max": 1783.5,
+        "n": 3,
+        "runs": [
+          1783.5,
+          1759.4,
+          1762.8
+        ]
+      },
+      "files20_footprint_mb": {
+        "median": 649,
+        "p90": 657.4,
+        "min": 635.7,
+        "max": 657.4,
+        "n": 3,
+        "runs": [
+          657.4,
+          635.7,
+          648.8
+        ]
+      },
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": {
+        "median": 2447,
+        "p90": 2508,
+        "min": 1914,
+        "max": 2508,
+        "n": 3,
+        "runs": [
+          2508,
+          2447,
+          1914
+        ]
+      },
+      "shell_fast_search_ms": {
+        "median": 3166,
+        "p90": 3289,
+        "min": 2390,
+        "max": 3289,
+        "n": 3,
+        "runs": [
+          3289,
+          3166,
+          2390
+        ]
+      },
+      "shell_fast_workbench_ms": {
+        "median": 2056,
+        "p90": 2128,
+        "min": 1667,
+        "max": 2128,
+        "n": 3,
+        "runs": [
+          2128,
+          2056,
+          1667
+        ]
+      },
+      "shell_slow_exthost_ms": {
+        "median": 4082,
+        "p90": 4474,
+        "min": 3853,
+        "max": 4474,
+        "n": 3,
+        "runs": [
+          4474,
+          4082,
+          3853
+        ]
+      },
+      "shell_slow_search_ms": {
+        "median": 4472,
+        "p90": 5315,
+        "min": 4248,
+        "max": 5315,
+        "n": 3,
+        "runs": [
+          5315,
+          4472,
+          4248
+        ]
+      },
+      "shell_slow_workbench_ms": {
+        "median": 1597,
+        "p90": 2045,
+        "min": 1417,
+        "max": 2045,
+        "n": 3,
+        "runs": [
+          2045,
+          1597,
+          1417
+        ]
+      },
+      "errors": [],
+      "open5mb_delta_ms": 755
+    },
+    "vscode": {
+      "label": "VS Code (stock)",
+      "version": "1.142.0",
+      "base": null,
+      "settings": null,
+      "vscode_base": "1.142.0",
+      "install_mb": 865,
+      "cold_window_ms": {
+        "median": 1417,
+        "p90": 2524,
+        "min": 1095,
+        "max": 2524,
+        "n": 5,
+        "runs": [
+          2524,
+          1520,
+          1417,
+          1095,
+          1294
+        ]
+      },
+      "cold_workbench_ms": {
+        "median": 2089,
+        "p90": 3484,
+        "min": 1900,
+        "max": 3484,
+        "n": 5,
+        "runs": [
+          3484,
+          2155,
+          2089,
+          1905,
+          1900
+        ]
+      },
+      "cold_exthost_ms": {
+        "median": 3689,
+        "p90": 6555,
+        "min": 3049,
+        "max": 6555,
+        "n": 5,
+        "runs": [
+          6555,
+          4712,
+          3236,
+          3689,
+          3049
+        ]
+      },
+      "cold_restore_ms": {
+        "median": 187,
+        "p90": 265,
+        "min": 175,
+        "max": 265,
+        "n": 5,
+        "runs": [
+          265,
+          177,
+          175,
+          214,
+          187
+        ]
+      },
+      "big5mb_restore_ms": {
+        "median": 1186,
+        "p90": 1304,
+        "min": 1107,
+        "max": 1304,
+        "n": 3,
+        "runs": [
+          1304,
+          1107,
+          1186
+        ]
+      },
+      "big5mb_workbench_ms": {
+        "median": 3034,
+        "p90": 4255,
+        "min": 2942,
+        "max": 4255,
+        "n": 3,
+        "runs": [
+          4255,
+          3034,
+          2942
+        ]
+      },
+      "phases": {
+        "Process start \u2192 main started": {
+          "median": 464,
+          "p90": 1087,
+          "min": 268,
+          "max": 1087,
+          "n": 5,
+          "runs": [
+            1087,
+            512,
+            464,
+            268,
+            278
+          ]
+        },
+        "Main: switches, locale, app ready": {
+          "median": 135,
+          "p90": 276,
+          "min": 107,
+          "max": 276,
+          "n": 5,
+          "runs": [
+            276,
+            191,
+            130,
+            107,
+            135
+          ]
+        },
+        "Main services \u2192 window opened": {
+          "median": 411,
+          "p90": 663,
+          "min": 390,
+          "max": 663,
+          "n": 5,
+          "runs": [
+            663,
+            411,
+            404,
+            390,
+            505
+          ]
+        },
+        "Renderer start \u2192 workbench JS load": {
+          "median": 274,
+          "p90": 384,
+          "min": 200,
+          "max": 384,
+          "n": 5,
+          "runs": [
+            384,
+            274,
+            275,
+            210,
+            200
+          ]
+        },
+        "Workbench JS load + evaluate": {
+          "median": 396,
+          "p90": 448,
+          "min": 290,
+          "max": 448,
+          "n": 5,
+          "runs": [
+            420,
+            290,
+            396,
+            448,
+            323
+          ]
+        },
+        "Workbench main \u2192 services start": {
+          "median": 43,
+          "p90": 66,
+          "min": 40,
+          "max": 66,
+          "n": 5,
+          "runs": [
+            66,
+            43,
+            45,
+            41,
+            40
+          ]
+        },
+        "Workbench services, contributions, restore": {
+          "median": 434,
+          "p90": 588,
+          "min": 375,
+          "max": 588,
+          "n": 5,
+          "runs": [
+            588,
+            434,
+            375,
+            441,
+            419
+          ]
+        },
+        "\u00b7 BlockStartup contributions": {
+          "median": 14,
+          "p90": 15,
+          "min": 12,
+          "max": 15,
+          "n": 5,
+          "runs": [
+            14,
+            15,
+            12,
+            13,
+            14
+          ]
+        },
+        "\u00b7 BlockRestore contributions": {
+          "median": 52,
+          "p90": 57,
+          "min": 34,
+          "max": 57,
+          "n": 5,
+          "runs": [
+            55,
+            34,
+            52,
+            34,
+            57
+          ]
+        },
+        "\u00b7 Editor restore": {
+          "median": 187,
+          "p90": 265,
+          "min": 175,
+          "max": 265,
+          "n": 5,
+          "runs": [
+            265,
+            177,
+            175,
+            214,
+            187
+          ]
+        },
+        "Extension scan + registration (renderer)": {
+          "median": 370,
+          "p90": 599,
+          "min": 227,
+          "max": 599,
+          "n": 5,
+          "runs": [
+            599,
+            508,
+            227,
+            370,
+            290
+          ]
+        },
+        "Extension host: connect to renderer": {
+          "median": 8,
+          "p90": 59,
+          "min": 0,
+          "max": 59,
+          "n": 5,
+          "runs": [
+            8,
+            59,
+            2,
+            0,
+            31
+          ]
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "median": 1784,
+          "p90": 3071,
+          "min": 1147,
+          "max": 3071,
+          "n": 5,
+          "runs": [
+            3071,
+            2557,
+            1147,
+            1784,
+            1149
+          ]
+        },
+        "Extension host ready (from process start)": {
+          "median": 3689,
+          "p90": 6555,
+          "min": 3049,
+          "max": 6555,
+          "n": 5,
+          "runs": [
+            6555,
+            4712,
+            3236,
+            3689,
+            3049
+          ]
+        }
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "agent-host: packaged cache inactive: disabled",
+        "extension-host: packaged cache inactive: disabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: disabled, configured: /Users/runner/work/_temp/bench/apps/vscode/Visual Studio Code.app/Contents/Resources/app/node-compile-cache/extension-host, active: none)",
+      "launches": {
+        "Workbench ready": {
+          "first": 2098,
+          "later": 2089,
+          "later_min": 1900,
+          "later_max": 3484
+        },
+        "Extension host ready": {
+          "first": 4082,
+          "later": 3689,
+          "later_min": 3049,
+          "later_max": 6555
+        },
+        "Process start \u2192 main started": {
+          "first": 467,
+          "later": 464,
+          "later_min": 268,
+          "later_max": 1087
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 1984,
+          "later": 1784,
+          "later_min": 1147,
+          "later_max": 3071
+        },
+        "node_cache_kb": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "idle_n_procs": {
+        "median": 14,
+        "p90": 14,
+        "min": 11,
+        "max": 14,
+        "n": 3,
+        "runs": [
+          11,
+          14,
+          14
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 2086,
+        "p90": 2152.3,
+        "min": 1861.8,
+        "max": 2152.3,
+        "n": 3,
+        "runs": [
+          1861.8,
+          2152.3,
+          2085.7
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 811,
+        "p90": 812.7,
+        "min": 647.2,
+        "max": 812.7,
+        "n": 3,
+        "runs": [
+          647.2,
+          812.7,
+          810.6
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 5.64,
+        "p90": 6.17,
+        "min": 5.26,
+        "max": 6.17,
+        "n": 3,
+        "runs": [
+          5.26,
+          6.17,
+          5.64
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 40,
+        "p90": 42.13,
+        "min": 34.81,
+        "max": 42.13,
+        "n": 3,
+        "runs": [
+          34.81,
+          42.13,
+          40.23
+        ]
+      },
+      "files20_n_procs": {
+        "median": 14,
+        "p90": 15,
+        "min": 14,
+        "max": 15,
+        "n": 3,
+        "runs": [
+          15,
+          14,
+          14
+        ]
+      },
+      "files20_rss_mb": {
+        "median": 2083,
+        "p90": 2128.0,
+        "min": 2020.8,
+        "max": 2128.0,
+        "n": 3,
+        "runs": [
+          2020.8,
+          2128.0,
+          2082.8
+        ]
+      },
+      "files20_footprint_mb": {
+        "median": 800,
+        "p90": 832.0,
+        "min": 798.5,
+        "max": 832.0,
+        "n": 3,
+        "runs": [
+          832.0,
+          800.0,
+          798.5
+        ]
+      },
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": {
+        "median": 4453,
+        "p90": 4863,
+        "min": 2102,
+        "max": 4863,
+        "n": 3,
+        "runs": [
+          4453,
+          4863,
+          2102
+        ]
+      },
+      "shell_fast_search_ms": {
+        "median": 5265,
+        "p90": 5727,
+        "min": 2746,
+        "max": 5727,
+        "n": 3,
+        "runs": [
+          5265,
+          5727,
+          2746
+        ]
+      },
+      "shell_fast_workbench_ms": {
+        "median": 2336,
+        "p90": 2357,
+        "min": 1201,
+        "max": 2357,
+        "n": 3,
+        "runs": [
+          2336,
+          2357,
+          1201
+        ]
+      },
+      "shell_slow_exthost_ms": {
+        "median": 4507,
+        "p90": 4799,
+        "min": 4140,
+        "max": 4799,
+        "n": 3,
+        "runs": [
+          4507,
+          4799,
+          4140
+        ]
+      },
+      "shell_slow_search_ms": {
+        "median": 5084,
+        "p90": 5446,
+        "min": 4604,
+        "max": 5446,
+        "n": 3,
+        "runs": [
+          5084,
+          5446,
+          4604
+        ]
+      },
+      "shell_slow_workbench_ms": {
+        "median": 1906,
+        "p90": 1949,
+        "min": 1290,
+        "max": 1949,
+        "n": 3,
+        "runs": [
+          1949,
+          1906,
+          1290
+        ]
+      },
+      "errors": [],
+      "open5mb_delta_ms": 999
+    },
+    "friedliver-patched": {
+      "label": "FriedLiver patched",
+      "version": "1.142.0",
+      "base": null,
+      "settings": null,
+      "vscode_base": "1.142.0",
+      "install_mb": 518,
+      "cold_window_ms": {
+        "median": 1481,
+        "p90": 1885,
+        "min": 1294,
+        "max": 1885,
+        "n": 5,
+        "runs": [
+          1294,
+          1470,
+          1885,
+          1481,
+          1596
+        ]
+      },
+      "cold_workbench_ms": {
+        "median": 2334,
+        "p90": 3246,
+        "min": 2236,
+        "max": 3246,
+        "n": 5,
+        "runs": [
+          2236,
+          2392,
+          3246,
+          2321,
+          2334
+        ]
+      },
+      "cold_exthost_ms": {
+        "median": 2751,
+        "p90": 3836,
+        "min": 2546,
+        "max": 3836,
+        "n": 5,
+        "runs": [
+          2546,
+          2751,
+          3836,
+          2644,
+          2780
+        ]
+      },
+      "cold_restore_ms": {
+        "median": 43,
+        "p90": 76,
+        "min": 35,
+        "max": 76,
+        "n": 5,
+        "runs": [
+          35,
+          46,
+          76,
+          43,
+          36
+        ]
+      },
+      "big5mb_restore_ms": {
+        "median": 614,
+        "p90": 728,
+        "min": 585,
+        "max": 728,
+        "n": 3,
+        "runs": [
+          585,
+          728,
+          614
+        ]
+      },
+      "big5mb_workbench_ms": {
+        "median": 2862,
+        "p90": 3541,
+        "min": 2507,
+        "max": 3541,
+        "n": 3,
+        "runs": [
+          2507,
+          2862,
+          3541
+        ]
+      },
+      "phases": {
+        "Process start \u2192 main started": {
+          "median": 489,
+          "p90": 653,
+          "min": 429,
+          "max": 653,
+          "n": 5,
+          "runs": [
+            429,
+            489,
+            653,
+            462,
+            593
+          ]
+        },
+        "Main: switches, locale, app ready": {
+          "median": 168,
+          "p90": 203,
+          "min": 155,
+          "max": 203,
+          "n": 5,
+          "runs": [
+            155,
+            168,
+            203,
+            182,
+            159
+          ]
+        },
+        "Main services \u2192 window opened": {
+          "median": 413,
+          "p90": 563,
+          "min": 365,
+          "max": 563,
+          "n": 5,
+          "runs": [
+            365,
+            415,
+            563,
+            413,
+            382
+          ]
+        },
+        "Renderer start \u2192 workbench JS load": {
+          "median": 319,
+          "p90": 388,
+          "min": 285,
+          "max": 388,
+          "n": 5,
+          "runs": [
+            285,
+            333,
+            388,
+            300,
+            319
+          ]
+        },
+        "Workbench JS load + evaluate": {
+          "median": 332,
+          "p90": 450,
+          "min": 253,
+          "max": 450,
+          "n": 5,
+          "runs": [
+            359,
+            332,
+            450,
+            311,
+            253
+          ]
+        },
+        "Workbench main \u2192 services start": {
+          "median": 47,
+          "p90": 80,
+          "min": 43,
+          "max": 80,
+          "n": 5,
+          "runs": [
+            47,
+            44,
+            80,
+            52,
+            43
+          ]
+        },
+        "Workbench services, contributions, restore": {
+          "median": 601,
+          "p90": 909,
+          "min": 585,
+          "max": 909,
+          "n": 5,
+          "runs": [
+            596,
+            611,
+            909,
+            601,
+            585
+          ]
+        },
+        "\u00b7 BlockStartup contributions": {
+          "median": 14,
+          "p90": 22,
+          "min": 12,
+          "max": 22,
+          "n": 5,
+          "runs": [
+            12,
+            13,
+            22,
+            14,
+            14
+          ]
+        },
+        "\u00b7 BlockRestore contributions": {
+          "median": 17,
+          "p90": 37,
+          "min": 15,
+          "max": 37,
+          "n": 5,
+          "runs": [
+            15,
+            17,
+            37,
+            17,
+            21
+          ]
+        },
+        "\u00b7 Editor restore": {
+          "median": 43,
+          "p90": 76,
+          "min": 35,
+          "max": 76,
+          "n": 5,
+          "runs": [
+            35,
+            46,
+            76,
+            43,
+            36
+          ]
+        },
+        "Extension scan + registration (renderer)": {
+          "median": 206,
+          "p90": 288,
+          "min": 166,
+          "max": 288,
+          "n": 5,
+          "runs": [
+            190,
+            166,
+            288,
+            206,
+            209
+          ]
+        },
+        "Extension host: connect to renderer": {
+          "median": 1,
+          "p90": 1,
+          "min": 0,
+          "max": 1,
+          "n": 5,
+          "runs": [
+            0,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "median": 359,
+          "p90": 590,
+          "min": 310,
+          "max": 590,
+          "n": 5,
+          "runs": [
+            310,
+            359,
+            590,
+            323,
+            446
+          ]
+        },
+        "Extension host ready (from process start)": {
+          "median": 2751,
+          "p90": 3836,
+          "min": 2546,
+          "max": 3836,
+          "n": 5,
+          "runs": [
+            2546,
+            2751,
+            3836,
+            2644,
+            2780
+          ]
+        }
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: enabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: enabled, configured: /private/tmp/ebp-b538ochc/friedliver-patched/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host, active: /private/tmp/ebp-b538ochc/friedliver-patched/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host/v24.21.0-arm64-c3a7e8f2-501)",
+      "launches": {
+        "Workbench ready": {
+          "first": 1861,
+          "later": 2334,
+          "later_min": 2236,
+          "later_max": 3246
+        },
+        "Extension host ready": {
+          "first": 3257,
+          "later": 2751,
+          "later_min": 2546,
+          "later_max": 3836
+        },
+        "Process start \u2192 main started": {
+          "first": 330,
+          "later": 489,
+          "later_min": 429,
+          "later_max": 653
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 1396,
+          "later": 359,
+          "later_min": 310,
+          "later_max": 590
+        },
+        "node_cache_kb": [
+          4406,
+          4469,
+          4532,
+          4595,
+          4658,
+          4721
+        ]
+      },
+      "idle_n_procs": {
+        "median": 11,
+        "p90": 11,
+        "min": 10,
+        "max": 11,
+        "n": 3,
+        "runs": [
+          10,
+          11,
+          11
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1614,
+        "p90": 1655.7,
+        "min": 1463.2,
+        "max": 1655.7,
+        "n": 3,
+        "runs": [
+          1463.2,
+          1655.7,
+          1614.2
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 566,
+        "p90": 569.5,
+        "min": 514.0,
+        "max": 569.5,
+        "n": 3,
+        "runs": [
+          514.0,
+          569.5,
+          565.8
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 5.42,
+        "p90": 5.56,
+        "min": 5.35,
+        "max": 5.56,
+        "n": 3,
+        "runs": [
+          5.42,
+          5.35,
+          5.56
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 30,
+        "p90": 30.48,
+        "min": 26.7,
+        "max": 30.48,
+        "n": 3,
+        "runs": [
+          30.05,
+          26.7,
+          30.48
+        ]
+      },
+      "files20_n_procs": {
+        "median": 11,
+        "p90": 12,
+        "min": 11,
+        "max": 12,
+        "n": 3,
+        "runs": [
+          12,
+          11,
+          11
+        ]
+      },
+      "files20_rss_mb": {
+        "median": 1622,
+        "p90": 1652.8,
+        "min": 1617.0,
+        "max": 1652.8,
+        "n": 3,
+        "runs": [
+          1622.0,
+          1652.8,
+          1617.0
+        ]
+      },
+      "files20_footprint_mb": {
+        "median": 570,
+        "p90": 590.4,
+        "min": 565.3,
+        "max": 590.4,
+        "n": 3,
+        "runs": [
+          590.4,
+          570.2,
+          565.3
+        ]
+      },
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": {
+        "median": 2042,
+        "p90": 2185,
+        "min": 1954,
+        "max": 2185,
+        "n": 3,
+        "runs": [
+          1954,
+          2185,
+          2042
+        ]
+      },
+      "shell_fast_search_ms": {
+        "median": 2554,
+        "p90": 2950,
+        "min": 2372,
+        "max": 2950,
+        "n": 3,
+        "runs": [
+          2372,
+          2950,
+          2554
+        ]
+      },
+      "shell_fast_workbench_ms": {
+        "median": 1783,
+        "p90": 1824,
+        "min": 1693,
+        "max": 1824,
+        "n": 3,
+        "runs": [
+          1693,
+          1824,
+          1783
+        ]
+      },
+      "shell_slow_exthost_ms": {
+        "median": 1964,
+        "p90": 3094,
+        "min": 1832,
+        "max": 3094,
+        "n": 3,
+        "runs": [
+          3094,
+          1964,
+          1832
+        ]
+      },
+      "shell_slow_search_ms": {
+        "median": 2402,
+        "p90": 3554,
+        "min": 2187,
+        "max": 3554,
+        "n": 3,
+        "runs": [
+          3554,
+          2402,
+          2187
+        ]
+      },
+      "shell_slow_workbench_ms": {
+        "median": 1487,
+        "p90": 2270,
+        "min": 1196,
+        "max": 2270,
+        "n": 3,
+        "runs": [
+          2270,
+          1487,
+          1196
+        ]
+      },
+      "errors": [],
+      "open5mb_delta_ms": 571
+    }
+  },
+  "ab": {
+    "friedliver vs vscode": {
+      "arm": "friedliver",
+      "ref": "vscode",
+      "rows": [
+        {
+          "metric": "Workbench ready",
+          "unit": "ms",
+          "base": 2089,
+          "arm": 2462,
+          "delta": 373,
+          "pct": 17.855433221637146,
+          "spread": 1584,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "First window",
+          "unit": "ms",
+          "base": 1417,
+          "arm": 1582,
+          "delta": 165,
+          "pct": 11.644318983768526,
+          "spread": 1429,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Extension host ready",
+          "unit": "ms",
+          "base": 3689,
+          "arm": 2737,
+          "delta": -952,
+          "pct": -25.806451612903224,
+          "spread": 3506,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Process start \u2192 main started",
+          "unit": "ms",
+          "base": 464,
+          "arm": 540,
+          "delta": 76,
+          "pct": 16.379310344827587,
+          "spread": 819,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Main: switches, locale, app ready",
+          "unit": "ms",
+          "base": 135,
+          "arm": 189,
+          "delta": 54,
+          "pct": 40.0,
+          "spread": 169,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Main services \u2192 window opened",
+          "unit": "ms",
+          "base": 411,
+          "arm": 449,
+          "delta": 38,
+          "pct": 9.245742092457421,
+          "spread": 273,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Renderer start \u2192 workbench JS load",
+          "unit": "ms",
+          "base": 274,
+          "arm": 337,
+          "delta": 63,
+          "pct": 22.99270072992701,
+          "spread": 184,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench JS load + evaluate",
+          "unit": "ms",
+          "base": 396,
+          "arm": 363,
+          "delta": -33,
+          "pct": -8.333333333333332,
+          "spread": 161,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench main \u2192 services start",
+          "unit": "ms",
+          "base": 43,
+          "arm": 60,
+          "delta": 17,
+          "pct": 39.53488372093023,
+          "spread": 32,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench services, contributions, restore",
+          "unit": "ms",
+          "base": 434,
+          "arm": 678,
+          "delta": 244,
+          "pct": 56.22119815668203,
+          "spread": 412,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 BlockStartup contributions",
+          "unit": "ms",
+          "base": 14,
+          "arm": 19,
+          "delta": 5,
+          "pct": 35.714285714285715,
+          "spread": 9,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 BlockRestore contributions",
+          "unit": "ms",
+          "base": 52,
+          "arm": 19,
+          "delta": -33,
+          "pct": -63.46153846153846,
+          "spread": 23,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "\u00b7 Editor restore",
+          "unit": "ms",
+          "base": 187,
+          "arm": 45,
+          "delta": -142,
+          "pct": -75.93582887700535,
+          "spread": 90,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 810.6,
+          "arm": 634.3,
+          "delta": -176.30000000000007,
+          "pct": -21.74932149025414,
+          "spread": 165.5,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 2085.7,
+          "arm": 1745.2,
+          "delta": -340.4999999999998,
+          "pct": -16.325454283933443,
+          "spread": 301.9000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 5.64,
+          "arm": 2.35,
+          "delta": -3.2899999999999996,
+          "pct": -58.33333333333333,
+          "spread": 0.9100000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 40.23,
+          "arm": 29.43,
+          "delta": -10.799999999999997,
+          "pct": -26.84563758389261,
+          "spread": 7.32,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "20 files: footprint",
+          "unit": "mb",
+          "base": 800.0,
+          "arm": 648.8,
+          "delta": -151.20000000000005,
+          "pct": -18.900000000000006,
+          "spread": 33.5,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "Slow shell: extension host ready",
+          "unit": "ms",
+          "base": 4507,
+          "arm": 4082,
+          "delta": -425,
+          "pct": -9.429775904149102,
+          "spread": 659,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Slow shell: first file-search result",
+          "unit": "ms",
+          "base": 5084,
+          "arm": 4472,
+          "delta": -612,
+          "pct": -12.037765538945711,
+          "spread": 1067,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Fast shell: first file-search result",
+          "unit": "ms",
+          "base": 5265,
+          "arm": 3166,
+          "delta": -2099,
+          "pct": -39.8670465337132,
+          "spread": 2981,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    },
+    "friedliver-patched vs vscode": {
+      "arm": "friedliver-patched",
+      "ref": "vscode",
+      "rows": [
+        {
+          "metric": "Workbench ready",
+          "unit": "ms",
+          "base": 2089,
+          "arm": 2334,
+          "delta": 245,
+          "pct": 11.728099569171853,
+          "spread": 1584,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "First window",
+          "unit": "ms",
+          "base": 1417,
+          "arm": 1481,
+          "delta": 64,
+          "pct": 4.516584333098095,
+          "spread": 1429,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Extension host ready",
+          "unit": "ms",
+          "base": 3689,
+          "arm": 2751,
+          "delta": -938,
+          "pct": -25.426944971537,
+          "spread": 3506,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Process start \u2192 main started",
+          "unit": "ms",
+          "base": 464,
+          "arm": 489,
+          "delta": 25,
+          "pct": 5.387931034482758,
+          "spread": 819,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Main: switches, locale, app ready",
+          "unit": "ms",
+          "base": 135,
+          "arm": 168,
+          "delta": 33,
+          "pct": 24.444444444444443,
+          "spread": 169,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Main services \u2192 window opened",
+          "unit": "ms",
+          "base": 411,
+          "arm": 413,
+          "delta": 2,
+          "pct": 0.48661800486618007,
+          "spread": 273,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Renderer start \u2192 workbench JS load",
+          "unit": "ms",
+          "base": 274,
+          "arm": 319,
+          "delta": 45,
+          "pct": 16.423357664233578,
+          "spread": 184,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench JS load + evaluate",
+          "unit": "ms",
+          "base": 396,
+          "arm": 332,
+          "delta": -64,
+          "pct": -16.161616161616163,
+          "spread": 197,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench main \u2192 services start",
+          "unit": "ms",
+          "base": 43,
+          "arm": 47,
+          "delta": 4,
+          "pct": 9.30232558139535,
+          "spread": 37,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench services, contributions, restore",
+          "unit": "ms",
+          "base": 434,
+          "arm": 601,
+          "delta": 167,
+          "pct": 38.47926267281106,
+          "spread": 324,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 BlockStartup contributions",
+          "unit": "ms",
+          "base": 14,
+          "arm": 14,
+          "delta": 0,
+          "pct": 0.0,
+          "spread": 10,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 BlockRestore contributions",
+          "unit": "ms",
+          "base": 52,
+          "arm": 17,
+          "delta": -35,
+          "pct": -67.3076923076923,
+          "spread": 23,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "\u00b7 Editor restore",
+          "unit": "ms",
+          "base": 187,
+          "arm": 43,
+          "delta": -144,
+          "pct": -77.00534759358288,
+          "spread": 90,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 810.6,
+          "arm": 565.8,
+          "delta": -244.80000000000007,
+          "pct": -30.19985196151,
+          "spread": 165.5,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 2085.7,
+          "arm": 1614.2,
+          "delta": -471.4999999999998,
+          "pct": -22.606319221364522,
+          "spread": 290.5000000000002,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 5.64,
+          "arm": 5.42,
+          "delta": -0.21999999999999975,
+          "pct": -3.900709219858152,
+          "spread": 0.9100000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 40.23,
+          "arm": 30.05,
+          "delta": -10.179999999999996,
+          "pct": -25.304499130002476,
+          "spread": 7.32,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "20 files: footprint",
+          "unit": "mb",
+          "base": 800.0,
+          "arm": 570.2,
+          "delta": -229.79999999999995,
+          "pct": -28.724999999999994,
+          "spread": 33.5,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "Slow shell: extension host ready",
+          "unit": "ms",
+          "base": 4507,
+          "arm": 1964,
+          "delta": -2543,
+          "pct": -56.42334146882627,
+          "spread": 1262,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "Slow shell: first file-search result",
+          "unit": "ms",
+          "base": 5084,
+          "arm": 2402,
+          "delta": -2682,
+          "pct": -52.75373721479151,
+          "spread": 1367,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "Fast shell: first file-search result",
+          "unit": "ms",
+          "base": 5265,
+          "arm": 2554,
+          "delta": -2711,
+          "pct": -51.49097815764483,
+          "spread": 2981,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    },
+    "friedliver-patched vs friedliver": {
+      "arm": "friedliver-patched",
+      "ref": "friedliver",
+      "rows": [
+        {
+          "metric": "Workbench ready",
+          "unit": "ms",
+          "base": 2462,
+          "arm": 2334,
+          "delta": -128,
+          "pct": -5.199025182778229,
+          "spread": 1010,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "First window",
+          "unit": "ms",
+          "base": 1582,
+          "arm": 1481,
+          "delta": -101,
+          "pct": -6.38432364096081,
+          "spread": 643,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Extension host ready",
+          "unit": "ms",
+          "base": 2737,
+          "arm": 2751,
+          "delta": 14,
+          "pct": 0.5115089514066496,
+          "spread": 1327,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Process start \u2192 main started",
+          "unit": "ms",
+          "base": 540,
+          "arm": 489,
+          "delta": -51,
+          "pct": -9.444444444444445,
+          "spread": 247,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Main: switches, locale, app ready",
+          "unit": "ms",
+          "base": 189,
+          "arm": 168,
+          "delta": -21,
+          "pct": -11.11111111111111,
+          "spread": 68,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Main services \u2192 window opened",
+          "unit": "ms",
+          "base": 449,
+          "arm": 413,
+          "delta": -36,
+          "pct": -8.017817371937639,
+          "spread": 198,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Renderer start \u2192 workbench JS load",
+          "unit": "ms",
+          "base": 337,
+          "arm": 319,
+          "delta": -18,
+          "pct": -5.341246290801187,
+          "spread": 103,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench JS load + evaluate",
+          "unit": "ms",
+          "base": 363,
+          "arm": 332,
+          "delta": -31,
+          "pct": -8.539944903581267,
+          "spread": 197,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench main \u2192 services start",
+          "unit": "ms",
+          "base": 60,
+          "arm": 47,
+          "delta": -13,
+          "pct": -21.666666666666668,
+          "spread": 37,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench services, contributions, restore",
+          "unit": "ms",
+          "base": 678,
+          "arm": 601,
+          "delta": -77,
+          "pct": -11.35693215339233,
+          "spread": 412,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 BlockStartup contributions",
+          "unit": "ms",
+          "base": 19,
+          "arm": 14,
+          "delta": -5,
+          "pct": -26.31578947368421,
+          "spread": 10,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 BlockRestore contributions",
+          "unit": "ms",
+          "base": 19,
+          "arm": 17,
+          "delta": -2,
+          "pct": -10.526315789473683,
+          "spread": 22,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 Editor restore",
+          "unit": "ms",
+          "base": 45,
+          "arm": 43,
+          "delta": -2,
+          "pct": -4.444444444444445,
+          "spread": 49,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 634.3,
+          "arm": 565.8,
+          "delta": -68.5,
+          "pct": -10.799306321929688,
+          "spread": 119.60000000000002,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1745.2,
+          "arm": 1614.2,
+          "delta": -131.0,
+          "pct": -7.5063030025212,
+          "spread": 301.9000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 2.35,
+          "arm": 5.42,
+          "delta": 3.07,
+          "pct": 130.63829787234042,
+          "spread": 0.3599999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "worse"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 29.43,
+          "arm": 30.05,
+          "delta": 0.620000000000001,
+          "pct": 2.1066938498131194,
+          "spread": 6.280000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "20 files: footprint",
+          "unit": "mb",
+          "base": 648.8,
+          "arm": 570.2,
+          "delta": -78.59999999999991,
+          "pct": -12.114673242909975,
+          "spread": 25.100000000000023,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "Slow shell: extension host ready",
+          "unit": "ms",
+          "base": 4082,
+          "arm": 1964,
+          "delta": -2118,
+          "pct": -51.88633023027928,
+          "spread": 1262,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "Slow shell: first file-search result",
+          "unit": "ms",
+          "base": 4472,
+          "arm": 2402,
+          "delta": -2070,
+          "pct": -46.288014311270125,
+          "spread": 1367,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        },
+        {
+          "metric": "Fast shell: first file-search result",
+          "unit": "ms",
+          "base": 3166,
+          "arm": 2554,
+          "delta": -612,
+          "pct": -19.33038534428301,
+          "spread": 899,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    }
+  }
+}
