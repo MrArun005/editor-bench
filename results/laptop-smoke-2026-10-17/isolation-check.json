@@ -1,14 +1,14 @@
 {
   "touched_real_paths": [
-    "/Users/arunmallikarjun/Library/Application Support/ai.opencode.desktop",
-    "/Users/arunmallikarjun/Library/Application Support/ai.opencode.desktop/blob_storage",
-    "/Users/arunmallikarjun/Library/Application Support/ai.opencode.desktop/blob_storage/9a9b8e3f-da9a-48ac-a786-83dbef655949",
-    "/Users/arunmallikarjun/Library/Application Support/ai.opencode.desktop/DawnGraphiteCache/data_1",
-    "/Users/arunmallikarjun/Library/Application Support/ai.opencode.desktop/Session Storage",
-    "/Users/arunmallikarjun/Library/Preferences/com.friedliver.app.plist",
-    "/Users/arunmallikarjun/Library/Preferences/com.todesktop.230313mzl4w4u92.plist",
-    "/Users/arunmallikarjun/Library/Preferences/com.google.antigravity-ide.plist",
-    "/Users/arunmallikarjun/Library/Preferences/com.microsoft.VSCode.plist",
-    "/Users/arunmallikarjun/Library/Preferences/ai.opencode.desktop.plist"
+    "~/Library/Application Support/ai.opencode.desktop",
+    "~/Library/Application Support/ai.opencode.desktop/blob_storage",
+    "~/Library/Application Support/ai.opencode.desktop/blob_storage/9a9b8e3f-da9a-48ac-a786-83dbef655949",
+    "~/Library/Application Support/ai.opencode.desktop/DawnGraphiteCache/data_1",
+    "~/Library/Application Support/ai.opencode.desktop/Session Storage",
+    "~/Library/Preferences/com.friedliver.app.plist",
+    "~/Library/Preferences/com.todesktop.230313mzl4w4u92.plist",
+    "~/Library/Preferences/com.google.antigravity-ide.plist",
+    "~/Library/Preferences/com.microsoft.VSCode.plist",
+    "~/Library/Preferences/ai.opencode.desktop.plist"
   ]
 }
