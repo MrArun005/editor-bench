@@ -140,3 +140,32 @@ def cpu_by_name(before, after, seconds):
     for pid, name, cpu in after:
         out[name] = out.get(name, 0) + cpu - start.get(pid, 0)
     return {n: round(v / seconds * 100, 2) for n, v in sorted(out.items(), key=lambda kv: -kv[1])}
+
+
+_ENV = re.compile(r' [A-Z_][A-Z0-9_]*=')
+
+
+def role(line):
+    """A `ps -axwwE` command+environment line -> the process's role: renderer, gpu, network (or another
+    Chromium utility), the VS Code utility process by entry point (extensionHostProcess, sharedProcessMain,
+    ptyHostMain, ...), a Node script by name (tsserver, ...), 'main' for the app binary, else the exe name."""
+    m = _ENV.search(line)
+    cmd = line[:m.start()] if m else line
+    t = re.search(r' --type=(\S+)', cmd)
+    if t and t[1] == 'renderer':
+        return 'renderer'
+    if t and t[1] == 'gpu-process':
+        return 'gpu'
+    if t and t[1] == 'utility':
+        sub = re.search(r' --utility-sub-type=(\S+)', cmd)
+        if sub and 'NodeService' not in sub[1]:
+            return sub[1].split('.')[0]
+        e = re.search(r'(?:^| )VSCODE_ESM_ENTRYPOINT=\S*/([\w-]+)(?: |$)', line)
+        return e[1] if e else 'utility'
+    if t:
+        return t[1]
+    js = re.search(r'/([\w.-]+)\.js(?: |$)', cmd)
+    if js:
+        return js[1]
+    exe = cmd.split(' --')[0].strip()
+    return 'main' if '/Contents/MacOS/' in exe and '/Frameworks/' not in exe else exe.rsplit('/', 1)[-1].split(' ')[0]

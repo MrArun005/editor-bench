@@ -11,7 +11,7 @@ M = json.load(open(os.path.join(RES, 'machine.json')))
 RUNS = [json.loads(l) for l in open(os.path.join(RES, 'raw-runs.jsonl')) if l.strip()]
 APPS = list(M['apps'])                         # arms in run order: selected apps, patched build, variants
 VSCODE_FAMILY = {a for a in APPS if M['apps'][a].get('vscode_base')}
-REFS = [r for r in ('vscode', 'friedliver') if r in APPS]   # A/B baselines
+REFS = [r for r in ('vscode', 'friedliver', 'friedliver-patched') if r in APPS]   # A/B baselines
 HI = lambda a: a.startswith('friedliver')
 
 
@@ -19,6 +19,8 @@ def value(r, key):
     """A run's metric: a record field, or a startup phase computed from its perf marks."""
     if key in r:
         return r[key]
+    if key.startswith('cpu:'):                   # idle CPU of one process role
+        return r['cpu_by_proc'].get(key[4:], 0) if 'cpu_by_proc' in r else None
     return stats.phases(r.get('marks') or {}).get(key)
 
 
@@ -106,7 +108,10 @@ METRICS = ([('Workbench ready', 'cold', 'workbench_ms', 'ms'), ('First window', 
             ('Extension host ready', 'cold', 'exthost_ms', 'ms')]
            + [(p, 'cold', p, 'ms') for p, _, _ in stats.PHASES[:stats.N_MAIN_PHASES + 3]]
            + [('Idle footprint', 'idle', 'footprint_mb', 'mb'), ('Idle RSS', 'idle', 'rss_mb', 'mb'),
-              ('Idle CPU (ready+60→120 s)', 'idle', 'cpu_pct', 'pct'), ('CPU, first 60 s after window', 'idle', 'cpu_open_pct', 'pct'),
+              ('Idle CPU (ready+60→120 s)', 'idle', 'cpu_pct', 'pct')]
+           + [(f'· idle CPU: {r}', 'idle', f'cpu:{r}', 'pct') for r in ('renderer', 'gpu', 'extensionHostProcess',
+              'sharedProcessMain', 'ptyHostMain', 'network', 'main', 'tsserver')]
+           + [('CPU, first 60 s after window', 'idle', 'cpu_open_pct', 'pct'),
               ('20 files: footprint', 'files20', 'footprint_mb', 'mb'),
               ('Slow shell: extension host ready', 'shell-slow', 'exthost_ms', 'ms'),
               ('Slow shell: first file-search result', 'shell-slow', 'search_ms', 'ms'),
@@ -117,12 +122,13 @@ METRICS = ([('Workbench ready', 'cold', 'workbench_ms', 'ms'), ('First window', 
 AB = {}
 for ref in REFS:
     for a in APPS:
-        if a == ref or a not in VSCODE_FAMILY or (ref == 'friedliver' and not HI(a)):
+        if a == ref or a not in VSCODE_FAMILY or (ref == 'friedliver' and not HI(a)) \
+                or (ref == 'friedliver-patched' and M['apps'][a].get('base') != ref):
             continue
         ab_rows = []
         for label, kind, key, unit in METRICS:
             c = stats.compare(vals(ref, kind, key), vals(a, kind, key), unit)
-            if c:
+            if c and not (key.startswith('cpu:') and c['base'] == c['arm'] == 0):
                 ab_rows.append(dict(metric=label, unit=unit, **c))
         if ab_rows:
             AB[f'{a} vs {ref}'] = dict(arm=a, ref=ref, rows=ab_rows)
@@ -171,6 +177,8 @@ for a in APPS:
     if S[a]['settings']:
         md += ['', f"Settings added for **{S[a]['label']}** (on top of `update.mode: none`):", '', '```json',
                json.dumps(S[a]['settings'], indent=1), '```']
+    if M['apps'][a].get('env'):
+        md += ['', f"Environment added for **{S[a]['label']}**: " + ', '.join(f'`{k}={v}`' for k, v in M['apps'][a]['env'].items())]
 mp = lambda d: f"{d['median']:,} ({d['p90']:,})" if d else '–'
 md += ['', '## Cold start (1 warm-up discarded, then 5 runs, round-robin across arms)', '',
        '| Arm | Launch → workbench ready, median (p90) ms | Launch → extension host ready, median (p90) ms | Launch → first window, median (p90) ms |',

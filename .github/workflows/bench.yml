@@ -23,6 +23,10 @@ on:
         description: 'Seconds the slow-shell .zshrc sleeps (0 < s <= 9)'
         required: false
         default: '1.0'
+      suite:
+        description: '"full" (cold, 5 MB, idle, 20 files) or "idle" (warm-up + 3 idle runs per arm, for bisecting idle CPU)'
+        required: false
+        default: 'full'
   schedule:
     - cron: '0 3 * * 1'   # Mondays 03:00 UTC
 
@@ -44,6 +48,7 @@ jobs:
       BENCH_SCENARIOS: ${{ inputs.scenarios || 'all' }}
       FRIEDLIVER_REF: ${{ inputs.friedliver_ref }}
       BENCH_SHELL_SLEEP: ${{ inputs.shell_sleep || '1.0' }}
+      BENCH_SUITE: ${{ inputs.suite || 'full' }}
     steps:
       - uses: actions/checkout@v4
         with:

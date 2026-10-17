@@ -80,9 +80,18 @@ VARIANTS = {
         # (extensions.contribution.ts#L312, extHostExtensionService.ts#L622-L667)
         'extensions.experimental.deferredStartupFinishedActivation': True,
     },
-    # single-setting diagnostics, mostly for a build whose defaults already changed them
+    # single-change diagnostics (bisecting the perf/core defaults, CORE-PERF C5-C8, C10, and patches 0200/0210)
     'caret-smooth': {'editor.cursorBlinking': 'smooth'},          # FriedLiver's release default
     'welcome': {'workbench.startupEditor': 'welcomePage'},        # upstream default
+    'blink': {'editor.cursorBlinking': 'blink'},                  # upstream default; perf/core drops 'smooth'
+    'deferred-activation': {'extensions.experimental.deferredStartupFinishedActivation': True},
+    'one-tsserver': {'typescript.tsserver.useSyntaxServer': 'never'},
+    'no-welcome': {'workbench.startupEditor': 'none'},
+    'watcher-excludes': {'files.watcherExclude': {g: True for g in (       # perf/core's additions (DEFAULTS.md)
+        '**/node_modules/*/**', '**/.venv/**', '**/venv/**', '**/__pycache__/**', '**/.mypy_cache/**',
+        '**/.pytest_cache/**', '**/.next/**', '**/.nuxt/**', '**/.turbo/**', '**/.parcel-cache/**', '**/.gradle/**')}},
+    'no-fast-shell': {'friedliver.fastShellEnv': False},          # patch 0200 off
+    'no-compile-cache': {'_env': {'NODE_DISABLE_COMPILE_CACHE': '1'}},   # patch 0210 off (Node honours it)
 }
 
 def make_arms(apps, only, variants):
@@ -95,7 +104,9 @@ def make_arms(apps, only, variants):
         if name not in VARIANTS:
             raise SystemExit(f'unknown variant {v!r}; known: {", ".join(VARIANTS)}')
         if base in by:
-            arms.append(dict(by[base], id=v, base=base, label=f"{by[base]['label']} + {name}", settings=VARIANTS[name]))
+            settings = {k: x for k, x in VARIANTS[name].items() if k != '_env'}
+            arms.append(dict(by[base], id=v, base=base, label=f"{by[base]['label']} + {name}", settings=settings,
+                             env=VARIANTS[name].get('_env', {})))
     return arms
 IN_CI = os.environ.get('GITHUB_ACTIONS') == 'true'
 if os.path.exists(os.environ.get('BENCH_APPS', '')):  # CI: {id: path} written by fetch_apps.py; missing ids = skipped
@@ -105,6 +116,9 @@ APPS = [a for a in APPS if IN_CI or not a.get('ci_only')]
 ARMS = make_arms(APPS, set(stats.split_list(os.environ.get('BENCH_ONLY', ''))),
                  stats.split_list(os.environ.get('BENCH_VARIANTS', 'none')))
 SCENARIOS = stats.split_list(os.environ.get('BENCH_SCENARIOS', 'none'), ['slow-shell', 'large-repo'])
+SUITE = os.environ.get('BENCH_SUITE') or 'full'      # 'idle': warm-up + idle x3 only (bisecting idle CPU)
+if SUITE not in ('full', 'idle'):
+    raise SystemExit(f'BENCH_SUITE must be full or idle, got {SUITE!r}')
 SHELL_SLEEP = float(os.environ.get('BENCH_SHELL_SLEEP') or 1.0)   # seconds the slow .zshrc sleeps
 if not 0 < SHELL_SLEEP <= 9:   # VS Code's shell-env timeout is 10 s
     raise SystemExit(f'BENCH_SHELL_SLEEP must be in (0, 9], got {SHELL_SLEEP}')
@@ -141,7 +155,7 @@ def procs(tag, exclude=()):
         if len(p) < 5:
             continue
         pid, ppid = int(p[0]), int(p[1])
-        rows[pid] = dict(pid=pid, ppid=ppid, rss_kb=int(p[2]), cpu_s=cpu_s(p[3]),
+        rows[pid] = dict(pid=pid, ppid=ppid, rss_kb=int(p[2]), cpu_s=cpu_s(p[3]), role=stats.role(p[4]),
                          exe=p[4].split(' --')[0].split(' HOME=')[0][:400])
         if tag in p[4] and pid not in exclude and pid != os.getpid():
             tagged.add(pid)
@@ -174,7 +188,7 @@ def snapshot(tag, exclude=()):
     return dict(n_procs=len(ps), rss_mb=round(sum(p['rss_kb'] for p in ps) / 1024, 1),
                 footprint_mb=(lambda f: f and round(f / 1024**2, 1))(footprint([p['pid'] for p in ps])),
                 cpu_s=sum(p['cpu_s'] for p in ps), procs=[(p['pid'], p['exe'].rsplit('/', 1)[-1]) for p in ps],
-                cpu=[(p['pid'], p['exe'].rsplit('/', 1)[-1], p['cpu_s']) for p in ps])
+                cpu=[(p['pid'], p['role'], p['cpu_s']) for p in ps])
 
 def safe_own_dir(path):
     """True only for a real (non-symlink) directory owned by us, mode 0700, at its realpath."""
@@ -260,7 +274,7 @@ exports.activate = () => {{
 def launch(app, args, run_dir):
     home, udd, ext = ensure_profile(app)
     env = dict(HOME=home, XDG_CONFIG_HOME=f'{home}/.config', XDG_DATA_HOME=f'{home}/.local/share',
-               XDG_STATE_HOME=f'{home}/.local/state', XDG_CACHE_HOME=f'{home}/.cache')
+               XDG_STATE_HOME=f'{home}/.local/state', XDG_CACHE_HOME=f'{home}/.cache', **app.get('env', {}))
     flags = [f'--user-data-dir={udd}', '--use-mock-keychain', '--password-store=basic', *app.get('extra', [])]
     if app['vscode']:
         flags += [f'--extensions-dir={ext}', '--disable-workspace-trust']
@@ -492,7 +506,7 @@ def machine_info():
             extra = dict(vscode_base=d.get('vscodeVersion') or d.get('version'), commit=(d.get('commit') or '')[:10])
         size_mb = int(sh('du', '-sk', a['path']).split()[0]) // 1024
         apps[a['id']] = dict(label=a['label'], path=a['path'], version=info, install_mb=size_mb, base=a.get('base'),
-                             settings=a.get('settings'), **extra)
+                             settings=a.get('settings'), env=a.get('env') or None, **extra)
     fetch = os.path.join(RES, 'fetch.json')
     return dict(ci=IN_CI, runner=os.environ.get('RUNNER_NAME'), run_url=(
                     f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
@@ -505,7 +519,7 @@ def machine_info():
                 fixture=dict(repo='microsoft/vscode-extension-samples',
                              commit=sh('git', '-C', FIX, 'rev-parse', 'HEAD').strip(),
                              big_file_bytes=os.path.getsize(BIG)),
-                scenarios=SCENARIOS, shell_sleep=SHELL_SLEEP,
+                scenarios=SCENARIOS, shell_sleep=SHELL_SLEEP, suite=SUITE,
                 bigrepo=os.path.isdir(BIGREPO) and dict(repo='microsoft/TypeScript',
                              commit=sh('git', '-C', BIGREPO, 'rev-parse', 'HEAD').strip(),
                              files=len(sh('git', '-C', BIGREPO, 'ls-files').splitlines())))
@@ -554,6 +568,13 @@ def run(only=None):
     log('warm-up (discarded) - also the first-ever launch of each fresh profile')
     for a in apps:
         cold(a, 'warmup', 0)
+    if SUITE == 'idle':
+        for r in range(1, SAMPLES + 1):
+            log(f'idle round {r}/{SAMPLES}')
+            for a in apps:
+                idle(a, 'idle', r)
+        log('done (idle suite)')
+        return
     for r in range(1, 6):                       # round-robin: thermal/battery drift hits every app equally
         log(f'cold-start round {r}/5')
         for a in apps:

@@ -131,6 +131,26 @@ class CpuByProcTest(unittest.TestCase):
                          {'App Helper (Renderer)': 2.0, 'App': 1.0, 'App Helper': 0.5})
 
 
+class RoleTest(unittest.TestCase):
+    APP = '/x/apps/fl/FriedLiver.app/Contents'
+
+    def test_roles(self):
+        A = self.APP
+        cases = [
+            (f'{A}/MacOS/Electron --user-data-dir=/p/udd HOME=/p/home', 'main'),
+            (f'{A}/Frameworks/FriedLiver Helper (Renderer).app/Contents/MacOS/FriedLiver Helper (Renderer) --type=renderer --lang=en HOME=/p', 'renderer'),
+            (f'{A}/Frameworks/FriedLiver Helper (GPU).app/Contents/MacOS/FriedLiver Helper (GPU) --type=gpu-process HOME=/p', 'gpu'),
+            (f'{A}/Frameworks/FriedLiver Helper.app/Contents/MacOS/FriedLiver Helper --type=utility --utility-sub-type=network.mojom.NetworkService HOME=/p', 'network'),
+            (f'{A}/Frameworks/FriedLiver Helper (Plugin).app/Contents/MacOS/FriedLiver Helper (Plugin) --type=utility --utility-sub-type=node.mojom.NodeService HOME=/p VSCODE_ESM_ENTRYPOINT=vs/workbench/api/node/extensionHostProcess X=1', 'extensionHostProcess'),
+            (f'{A}/Frameworks/FriedLiver Helper.app/Contents/MacOS/FriedLiver Helper --type=utility --utility-sub-type=node.mojom.NodeService VSCODE_ESM_ENTRYPOINT=vs/code/electron-utility/sharedProcess/sharedProcessMain', 'sharedProcessMain'),
+            (f'{A}/Frameworks/FriedLiver Helper (Plugin).app/Contents/MacOS/FriedLiver Helper (Plugin) {A}/Resources/app/extensions/node_modules/typescript/lib/tsserver.js --serverMode partialSemantic ELECTRON_RUN_AS_NODE=1 VSCODE_ESM_ENTRYPOINT=vs/workbench/api/node/extensionHostProcess', 'tsserver'),
+            (f'{A}/Frameworks/Electron Framework.framework/Helpers/chrome_crashpad_handler --database=/p HOME=/p', 'chrome_crashpad_handler'),
+            ('/bin/zsh -i -l -c x HOME=/p', 'zsh'),
+        ]
+        for line, want in cases:
+            self.assertEqual(stats.role(line), want, line)
+
+
 class CompareTest(unittest.TestCase):
     def test_beyond_noise(self):
         c = stats.compare([2800, 2820, 2840], [2500, 2510, 2520], 'ms')
@@ -165,6 +185,7 @@ class ArmsTest(unittest.TestCase):
         v = arms[-1]
         self.assertEqual((v['path'], v['base'], v['label']), ('/a', 'friedliver', 'FriedLiver + settings-perf'))
         self.assertEqual(v['settings']['workbench.startupEditor'], 'none')
+        self.assertEqual(v['env'], {})
         self.assertTrue(v['settings']['extensions.experimental.deferredStartupFinishedActivation'])
 
     def test_variant_without_its_base_arm_still_runs_and_bad_names_fail(self):
@@ -173,6 +194,11 @@ class ArmsTest(unittest.TestCase):
         self.assertEqual(bench.make_arms(self.BASE, {'vscode'}, ['cursor+settings-perf']), [self.BASE[1]])  # base not fetched
         with self.assertRaises(SystemExit):
             bench.make_arms(self.BASE, set(), ['friedliver+nope'])
+
+    def test_env_variant(self):
+        base = self.BASE + [dict(id='friedliver-patched', label='FriedLiver patched', path='/c', vscode=True)]
+        v = bench.make_arms(base, {'friedliver'}, ['friedliver-patched+no-compile-cache'])[-1]
+        self.assertEqual((v['env'], v['settings']), ({'NODE_DISABLE_COMPILE_CACHE': '1'}, {}))
 
     def test_all_apps_when_selection_empty(self):
         self.assertEqual(len(bench.make_arms(self.BASE, set(), [])), 2)
