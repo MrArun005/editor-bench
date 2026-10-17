@@ -1,0 +1,2640 @@
+{
+  "machine": {
+    "ci": true,
+    "runner": "GitHub Actions 1000005905",
+    "run_url": "https://github.com/MrArun005/editor-bench/actions/runs/39066571434",
+    "fetch": {
+      "friedliver": {
+        "source": "gh release MrArun005/FriedLiver-Code",
+        "version": "v1.142.0-5",
+        "hash": "sha256 verified",
+        "codesign": "valid",
+        "spctl": "<app>: rejected\norigin=FriedLiver Self-Signed Code Signing",
+        "status": "ok"
+      },
+      "friedliver-patched": {
+        "source": "gh MrArun005/FriedLiver-Code 39055910922",
+        "version": "run 39055910922: perf/core@3f198b5401 (workflow_dispatch)",
+        "hash": "trusted run; artifact sha256 digest verified",
+        "codesign": "valid",
+        "spctl": "<app>: rejected\norigin=FriedLiver Self-Signed Code Signing",
+        "status": "ok"
+      }
+    },
+    "model": "Apple Virtual Machine 1 / VirtualMac2,1",
+    "chip": "Apple M1 (Virtual)",
+    "cores": "3",
+    "ram": "7 GB",
+    "macos": "26.6.2 (25G83)",
+    "power_at_start": "AC ?",
+    "date": "2026-10-17",
+    "apps": {
+      "friedliver": {
+        "label": "FriedLiver",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 563,
+        "base": null,
+        "settings": null,
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      },
+      "friedliver-patched": {
+        "label": "FriedLiver patched",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver-patched/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 518,
+        "base": null,
+        "settings": null,
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      },
+      "friedliver-patched+caret-smooth": {
+        "label": "FriedLiver patched + caret-smooth",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver-patched/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 518,
+        "base": "friedliver-patched",
+        "settings": {
+          "editor.cursorBlinking": "smooth"
+        },
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      },
+      "friedliver-patched+welcome": {
+        "label": "FriedLiver patched + welcome",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver-patched/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 518,
+        "base": "friedliver-patched",
+        "settings": {
+          "workbench.startupEditor": "welcomePage"
+        },
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      }
+    },
+    "fixture": {
+      "repo": "microsoft/vscode-extension-samples",
+      "commit": "65c1c44800eeac6fb065a54823ee5ae62c79540a",
+      "big_file_bytes": 5242880
+    },
+    "scenarios": [],
+    "shell_sleep": 1.0,
+    "bigrepo": false
+  },
+  "apps": {
+    "friedliver": {
+      "label": "FriedLiver",
+      "version": "1.142.0",
+      "base": null,
+      "settings": null,
+      "vscode_base": "1.142.0",
+      "install_mb": 563,
+      "cold_window_ms": {
+        "median": 1600,
+        "p90": 2679,
+        "min": 1334,
+        "max": 2679,
+        "n": 5,
+        "runs": [
+          2679,
+          1611,
+          1334,
+          1600,
+          1457
+        ]
+      },
+      "cold_workbench_ms": {
+        "median": 2519,
+        "p90": 4064,
+        "min": 2021,
+        "max": 4064,
+        "n": 5,
+        "runs": [
+          4064,
+          2551,
+          2247,
+          2519,
+          2021
+        ]
+      },
+      "cold_exthost_ms": {
+        "median": 2771,
+        "p90": 4584,
+        "min": 2314,
+        "max": 4584,
+        "n": 5,
+        "runs": [
+          4584,
+          2804,
+          2476,
+          2771,
+          2314
+        ]
+      },
+      "cold_restore_ms": {
+        "median": 50,
+        "p90": 79,
+        "min": 33,
+        "max": 79,
+        "n": 5,
+        "runs": [
+          79,
+          40,
+          50,
+          51,
+          33
+        ]
+      },
+      "big5mb_restore_ms": {
+        "median": 576,
+        "p90": 664,
+        "min": 467,
+        "max": 664,
+        "n": 3,
+        "runs": [
+          576,
+          664,
+          467
+        ]
+      },
+      "big5mb_workbench_ms": {
+        "median": 2657,
+        "p90": 2665,
+        "min": 2130,
+        "max": 2665,
+        "n": 3,
+        "runs": [
+          2130,
+          2657,
+          2665
+        ]
+      },
+      "phases": {
+        "Process start \u2192 main started": {
+          "median": 518,
+          "p90": 833,
+          "min": 460,
+          "max": 833,
+          "n": 5,
+          "runs": [
+            833,
+            518,
+            460,
+            504,
+            549
+          ]
+        },
+        "Main: switches, locale, app ready": {
+          "median": 174,
+          "p90": 394,
+          "min": 136,
+          "max": 394,
+          "n": 5,
+          "runs": [
+            394,
+            200,
+            136,
+            174,
+            152
+          ]
+        },
+        "Main services \u2192 window opened": {
+          "median": 454,
+          "p90": 639,
+          "min": 359,
+          "max": 639,
+          "n": 5,
+          "runs": [
+            639,
+            454,
+            399,
+            461,
+            359
+          ]
+        },
+        "Renderer start \u2192 workbench JS load": {
+          "median": 332,
+          "p90": 512,
+          "min": 267,
+          "max": 512,
+          "n": 5,
+          "runs": [
+            512,
+            432,
+            273,
+            332,
+            267
+          ]
+        },
+        "Workbench JS load + evaluate": {
+          "median": 358,
+          "p90": 584,
+          "min": 221,
+          "max": 584,
+          "n": 5,
+          "runs": [
+            584,
+            358,
+            345,
+            393,
+            221
+          ]
+        },
+        "Workbench main \u2192 services start": {
+          "median": 47,
+          "p90": 151,
+          "min": 39,
+          "max": 151,
+          "n": 5,
+          "runs": [
+            151,
+            50,
+            43,
+            47,
+            39
+          ]
+        },
+        "Workbench services, contributions, restore": {
+          "median": 591,
+          "p90": 951,
+          "min": 434,
+          "max": 951,
+          "n": 5,
+          "runs": [
+            951,
+            539,
+            591,
+            608,
+            434
+          ]
+        },
+        "\u00b7 BlockStartup contributions": {
+          "median": 16,
+          "p90": 24,
+          "min": 12,
+          "max": 24,
+          "n": 5,
+          "runs": [
+            24,
+            15,
+            16,
+            17,
+            12
+          ]
+        },
+        "\u00b7 BlockRestore contributions": {
+          "median": 20,
+          "p90": 29,
+          "min": 15,
+          "max": 29,
+          "n": 5,
+          "runs": [
+            29,
+            20,
+            21,
+            19,
+            15
+          ]
+        },
+        "\u00b7 Editor restore": {
+          "median": 50,
+          "p90": 79,
+          "min": 33,
+          "max": 79,
+          "n": 5,
+          "runs": [
+            79,
+            40,
+            50,
+            51,
+            33
+          ]
+        },
+        "Extension scan + registration (renderer)": {
+          "median": 164,
+          "p90": 217,
+          "min": 122,
+          "max": 217,
+          "n": 5,
+          "runs": [
+            217,
+            162,
+            164,
+            177,
+            122
+          ]
+        },
+        "Extension host: connect to renderer": {
+          "median": 1,
+          "p90": 1,
+          "min": 0,
+          "max": 1,
+          "n": 5,
+          "runs": [
+            1,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "median": 253,
+          "p90": 520,
+          "min": 229,
+          "max": 520,
+          "n": 5,
+          "runs": [
+            520,
+            253,
+            229,
+            252,
+            293
+          ]
+        },
+        "Extension host ready (from process start)": {
+          "median": 2771,
+          "p90": 4584,
+          "min": 2314,
+          "max": 4584,
+          "n": 5,
+          "runs": [
+            4584,
+            2804,
+            2476,
+            2771,
+            2314
+          ]
+        }
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: disabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: disabled, configured: /Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app/Contents/Resources/app/node-compile-cache/extension-host, active: none)",
+      "launches": {
+        "Workbench ready": {
+          "first": 4940,
+          "later": 2519,
+          "later_min": 2021,
+          "later_max": 4064
+        },
+        "Extension host ready": {
+          "first": 7118,
+          "later": 2771,
+          "later_min": 2314,
+          "later_max": 4584
+        },
+        "Process start \u2192 main started": {
+          "first": 901,
+          "later": 518,
+          "later_min": 460,
+          "later_max": 833
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 2178,
+          "later": 253,
+          "later_min": 229,
+          "later_max": 520
+        },
+        "node_cache_kb": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "idle_n_procs": {
+        "median": 12,
+        "p90": 12,
+        "min": 10,
+        "max": 12,
+        "n": 3,
+        "runs": [
+          10,
+          12,
+          12
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1732,
+        "p90": 1759.6,
+        "min": 1476.9,
+        "max": 1759.6,
+        "n": 3,
+        "runs": [
+          1476.9,
+          1731.5,
+          1759.6
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 636,
+        "p90": 649.7,
+        "min": 515.7,
+        "max": 649.7,
+        "n": 3,
+        "runs": [
+          515.7,
+          649.7,
+          635.7
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 2.03,
+        "p90": 2.36,
+        "min": 1.93,
+        "max": 2.36,
+        "n": 3,
+        "runs": [
+          1.93,
+          2.36,
+          2.03
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 27,
+        "p90": 27.49,
+        "min": 22.1,
+        "max": 27.49,
+        "n": 3,
+        "runs": [
+          22.1,
+          27.49,
+          27.27
+        ]
+      },
+      "files20_n_procs": {
+        "median": 12,
+        "p90": 13,
+        "min": 12,
+        "max": 13,
+        "n": 3,
+        "runs": [
+          13,
+          12,
+          12
+        ]
+      },
+      "files20_rss_mb": {
+        "median": 1746,
+        "p90": 1796.2,
+        "min": 1738.6,
+        "max": 1796.2,
+        "n": 3,
+        "runs": [
+          1796.2,
+          1745.6,
+          1738.6
+        ]
+      },
+      "files20_footprint_mb": {
+        "median": 637,
+        "p90": 660.9,
+        "min": 634.5,
+        "max": 660.9,
+        "n": 3,
+        "runs": [
+          660.9,
+          636.9,
+          634.5
+        ]
+      },
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "FriedLiver Helper (Renderer)": 0.89,
+        "FriedLiver Helper": 0.84,
+        "FriedLiver Helper (Plugin)": 0.38,
+        "FriedLiver": 0.12,
+        "com.apple.launchd.KirWzhN": 0.0,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": [],
+      "open5mb_delta_ms": 526
+    },
+    "friedliver-patched": {
+      "label": "FriedLiver patched",
+      "version": "1.142.0",
+      "base": null,
+      "settings": null,
+      "vscode_base": "1.142.0",
+      "install_mb": 518,
+      "cold_window_ms": {
+        "median": 1529,
+        "p90": 1859,
+        "min": 1415,
+        "max": 1859,
+        "n": 5,
+        "runs": [
+          1728,
+          1859,
+          1415,
+          1529,
+          1431
+        ]
+      },
+      "cold_workbench_ms": {
+        "median": 2252,
+        "p90": 2711,
+        "min": 1947,
+        "max": 2711,
+        "n": 5,
+        "runs": [
+          2610,
+          2711,
+          1947,
+          2252,
+          2252
+        ]
+      },
+      "cold_exthost_ms": {
+        "median": 2680,
+        "p90": 3082,
+        "min": 2220,
+        "max": 3082,
+        "n": 5,
+        "runs": [
+          2845,
+          3082,
+          2220,
+          2680,
+          2657
+        ]
+      },
+      "cold_restore_ms": {
+        "median": 26,
+        "p90": 32,
+        "min": 24,
+        "max": 32,
+        "n": 5,
+        "runs": [
+          29,
+          32,
+          25,
+          24,
+          26
+        ]
+      },
+      "big5mb_restore_ms": {
+        "median": 374,
+        "p90": 623,
+        "min": 345,
+        "max": 623,
+        "n": 3,
+        "runs": [
+          374,
+          345,
+          623
+        ]
+      },
+      "big5mb_workbench_ms": {
+        "median": 2288,
+        "p90": 2293,
+        "min": 2163,
+        "max": 2293,
+        "n": 3,
+        "runs": [
+          2288,
+          2293,
+          2163
+        ]
+      },
+      "phases": {
+        "Process start \u2192 main started": {
+          "median": 581,
+          "p90": 643,
+          "min": 472,
+          "max": 643,
+          "n": 5,
+          "runs": [
+            617,
+            643,
+            540,
+            581,
+            472
+          ]
+        },
+        "Main: switches, locale, app ready": {
+          "median": 175,
+          "p90": 230,
+          "min": 129,
+          "max": 230,
+          "n": 5,
+          "runs": [
+            230,
+            201,
+            129,
+            139,
+            175
+          ]
+        },
+        "Main services \u2192 window opened": {
+          "median": 410,
+          "p90": 611,
+          "min": 336,
+          "max": 611,
+          "n": 5,
+          "runs": [
+            468,
+            611,
+            336,
+            409,
+            410
+          ]
+        },
+        "Renderer start \u2192 workbench JS load": {
+          "median": 326,
+          "p90": 332,
+          "min": 256,
+          "max": 332,
+          "n": 5,
+          "runs": [
+            326,
+            329,
+            256,
+            332,
+            290
+          ]
+        },
+        "Workbench JS load + evaluate": {
+          "median": 314,
+          "p90": 381,
+          "min": 254,
+          "max": 381,
+          "n": 5,
+          "runs": [
+            381,
+            322,
+            254,
+            266,
+            314
+          ]
+        },
+        "Workbench main \u2192 services start": {
+          "median": 52,
+          "p90": 64,
+          "min": 35,
+          "max": 64,
+          "n": 5,
+          "runs": [
+            47,
+            64,
+            35,
+            57,
+            52
+          ]
+        },
+        "Workbench services, contributions, restore": {
+          "median": 539,
+          "p90": 541,
+          "min": 397,
+          "max": 541,
+          "n": 5,
+          "runs": [
+            541,
+            541,
+            397,
+            468,
+            539
+          ]
+        },
+        "\u00b7 BlockStartup contributions": {
+          "median": 14,
+          "p90": 14,
+          "min": 12,
+          "max": 14,
+          "n": 5,
+          "runs": [
+            14,
+            14,
+            12,
+            12,
+            14
+          ]
+        },
+        "\u00b7 BlockRestore contributions": {
+          "median": 17,
+          "p90": 26,
+          "min": 16,
+          "max": 26,
+          "n": 5,
+          "runs": [
+            17,
+            22,
+            16,
+            26,
+            17
+          ]
+        },
+        "\u00b7 Editor restore": {
+          "median": 26,
+          "p90": 32,
+          "min": 24,
+          "max": 32,
+          "n": 5,
+          "runs": [
+            29,
+            32,
+            25,
+            24,
+            26
+          ]
+        },
+        "Extension scan + registration (renderer)": {
+          "median": 202,
+          "p90": 214,
+          "min": 134,
+          "max": 214,
+          "n": 5,
+          "runs": [
+            202,
+            214,
+            134,
+            164,
+            209
+          ]
+        },
+        "Extension host: connect to renderer": {
+          "median": 1,
+          "p90": 1,
+          "min": 0,
+          "max": 1,
+          "n": 5,
+          "runs": [
+            0,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "median": 371,
+          "p90": 428,
+          "min": 235,
+          "max": 428,
+          "n": 5,
+          "runs": [
+            235,
+            371,
+            273,
+            428,
+            405
+          ]
+        },
+        "Extension host ready (from process start)": {
+          "median": 2680,
+          "p90": 3082,
+          "min": 2220,
+          "max": 3082,
+          "n": 5,
+          "runs": [
+            2845,
+            3082,
+            2220,
+            2680,
+            2657
+          ]
+        }
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: enabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: enabled, configured: /private/tmp/ebp-w5b6_183/friedliver-patched/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host, active: /private/tmp/ebp-w5b6_183/friedliver-patched/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host/v24.21.0-arm64-c3a7e8f2-501)",
+      "launches": {
+        "Workbench ready": {
+          "first": 3286,
+          "later": 2252,
+          "later_min": 1947,
+          "later_max": 2711
+        },
+        "Extension host ready": {
+          "first": 5604,
+          "later": 2680,
+          "later_min": 2220,
+          "later_max": 3082
+        },
+        "Process start \u2192 main started": {
+          "first": 655,
+          "later": 581,
+          "later_min": 472,
+          "later_max": 643
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 2318,
+          "later": 371,
+          "later_min": 235,
+          "later_max": 428
+        },
+        "node_cache_kb": [
+          4406,
+          4469,
+          4532,
+          4595,
+          4658,
+          4721
+        ]
+      },
+      "idle_n_procs": {
+        "median": 11,
+        "p90": 11,
+        "min": 10,
+        "max": 11,
+        "n": 3,
+        "runs": [
+          10,
+          11,
+          11
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1569,
+        "p90": 1587.1,
+        "min": 1479.3,
+        "max": 1587.1,
+        "n": 3,
+        "runs": [
+          1479.3,
+          1587.1,
+          1568.7
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 562,
+        "p90": 563.5,
+        "min": 523.9,
+        "max": 563.5,
+        "n": 3,
+        "runs": [
+          523.9,
+          563.5,
+          562.2
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 6.26,
+        "p90": 6.59,
+        "min": 5.82,
+        "max": 6.59,
+        "n": 3,
+        "runs": [
+          5.82,
+          6.59,
+          6.26
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 24,
+        "p90": 25.99,
+        "min": 23.98,
+        "max": 25.99,
+        "n": 3,
+        "runs": [
+          23.98,
+          25.99,
+          24.43
+        ]
+      },
+      "files20_n_procs": {
+        "median": 11,
+        "p90": 12,
+        "min": 11,
+        "max": 12,
+        "n": 3,
+        "runs": [
+          12,
+          11,
+          11
+        ]
+      },
+      "files20_rss_mb": {
+        "median": 1599,
+        "p90": 1627.7,
+        "min": 1580.6,
+        "max": 1627.7,
+        "n": 3,
+        "runs": [
+          1627.7,
+          1599.4,
+          1580.6
+        ]
+      },
+      "files20_footprint_mb": {
+        "median": 569,
+        "p90": 585.8,
+        "min": 564.2,
+        "max": 585.8,
+        "n": 3,
+        "runs": [
+          585.8,
+          569.3,
+          564.2
+        ]
+      },
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "FriedLiver Helper (Renderer)": 3.41,
+        "FriedLiver Helper": 2.41,
+        "FriedLiver Helper (Plugin)": 0.31,
+        "FriedLiver": 0.12,
+        "com.apple.launchd.KirWzhN": 0.0,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": [],
+      "open5mb_delta_ms": 348
+    },
+    "friedliver-patched+caret-smooth": {
+      "label": "FriedLiver patched + caret-smooth",
+      "version": "1.142.0",
+      "base": "friedliver-patched",
+      "settings": {
+        "editor.cursorBlinking": "smooth"
+      },
+      "vscode_base": "1.142.0",
+      "install_mb": 518,
+      "cold_window_ms": {
+        "median": 994,
+        "p90": 1214,
+        "min": 900,
+        "max": 1214,
+        "n": 5,
+        "runs": [
+          1091,
+          900,
+          1214,
+          905,
+          994
+        ]
+      },
+      "cold_workbench_ms": {
+        "median": 1485,
+        "p90": 2147,
+        "min": 1412,
+        "max": 2147,
+        "n": 5,
+        "runs": [
+          2147,
+          1455,
+          1807,
+          1412,
+          1485
+        ]
+      },
+      "cold_exthost_ms": {
+        "median": 1750,
+        "p90": 2622,
+        "min": 1666,
+        "max": 2622,
+        "n": 5,
+        "runs": [
+          2622,
+          1722,
+          2128,
+          1666,
+          1750
+        ]
+      },
+      "cold_restore_ms": {
+        "median": 23,
+        "p90": 37,
+        "min": 22,
+        "max": 37,
+        "n": 5,
+        "runs": [
+          37,
+          23,
+          28,
+          23,
+          22
+        ]
+      },
+      "big5mb_restore_ms": {
+        "median": 512,
+        "p90": 591,
+        "min": 339,
+        "max": 591,
+        "n": 3,
+        "runs": [
+          591,
+          512,
+          339
+        ]
+      },
+      "big5mb_workbench_ms": {
+        "median": 1778,
+        "p90": 1820,
+        "min": 1614,
+        "max": 1820,
+        "n": 3,
+        "runs": [
+          1820,
+          1614,
+          1778
+        ]
+      },
+      "phases": {
+        "Process start \u2192 main started": {
+          "median": 189,
+          "p90": 201,
+          "min": 178,
+          "max": 201,
+          "n": 5,
+          "runs": [
+            189,
+            178,
+            201,
+            179,
+            197
+          ]
+        },
+        "Main: switches, locale, app ready": {
+          "median": 111,
+          "p90": 134,
+          "min": 99,
+          "max": 134,
+          "n": 5,
+          "runs": [
+            128,
+            111,
+            134,
+            99,
+            104
+          ]
+        },
+        "Main services \u2192 window opened": {
+          "median": 307,
+          "p90": 483,
+          "min": 296,
+          "max": 483,
+          "n": 5,
+          "runs": [
+            426,
+            307,
+            483,
+            301,
+            296
+          ]
+        },
+        "Renderer start \u2192 workbench JS load": {
+          "median": 183,
+          "p90": 222,
+          "min": 176,
+          "max": 222,
+          "n": 5,
+          "runs": [
+            212,
+            183,
+            222,
+            176,
+            176
+          ]
+        },
+        "Workbench JS load + evaluate": {
+          "median": 233,
+          "p90": 456,
+          "min": 230,
+          "max": 456,
+          "n": 5,
+          "runs": [
+            456,
+            231,
+            257,
+            230,
+            233
+          ]
+        },
+        "Workbench main \u2192 services start": {
+          "median": 37,
+          "p90": 44,
+          "min": 35,
+          "max": 44,
+          "n": 5,
+          "runs": [
+            44,
+            42,
+            37,
+            35,
+            36
+          ]
+        },
+        "Workbench services, contributions, restore": {
+          "median": 443,
+          "p90": 692,
+          "min": 392,
+          "max": 692,
+          "n": 5,
+          "runs": [
+            692,
+            403,
+            473,
+            392,
+            443
+          ]
+        },
+        "\u00b7 BlockStartup contributions": {
+          "median": 12,
+          "p90": 17,
+          "min": 10,
+          "max": 17,
+          "n": 5,
+          "runs": [
+            13,
+            10,
+            12,
+            10,
+            17
+          ]
+        },
+        "\u00b7 BlockRestore contributions": {
+          "median": 17,
+          "p90": 18,
+          "min": 14,
+          "max": 18,
+          "n": 5,
+          "runs": [
+            17,
+            14,
+            17,
+            16,
+            18
+          ]
+        },
+        "\u00b7 Editor restore": {
+          "median": 23,
+          "p90": 37,
+          "min": 22,
+          "max": 37,
+          "n": 5,
+          "runs": [
+            37,
+            23,
+            28,
+            23,
+            22
+          ]
+        },
+        "Extension scan + registration (renderer)": {
+          "median": 183,
+          "p90": 302,
+          "min": 153,
+          "max": 302,
+          "n": 5,
+          "runs": [
+            302,
+            183,
+            183,
+            153,
+            179
+          ]
+        },
+        "Extension host: connect to renderer": {
+          "median": 1,
+          "p90": 2,
+          "min": 0,
+          "max": 2,
+          "n": 5,
+          "runs": [
+            2,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "median": 267,
+          "p90": 475,
+          "min": 254,
+          "max": 475,
+          "n": 5,
+          "runs": [
+            475,
+            267,
+            321,
+            254,
+            265
+          ]
+        },
+        "Extension host ready (from process start)": {
+          "median": 1750,
+          "p90": 2622,
+          "min": 1666,
+          "max": 2622,
+          "n": 5,
+          "runs": [
+            2622,
+            1722,
+            2128,
+            1666,
+            1750
+          ]
+        }
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: enabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: enabled, configured: /private/tmp/ebp-w5b6_183/friedliver-patched+caret-smooth/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host, active: /private/tmp/ebp-w5b6_183/friedliver-patched+caret-smooth/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host/v24.21.0-arm64-c3a7e8f2-501)",
+      "launches": {
+        "Workbench ready": {
+          "first": 2833,
+          "later": 1485,
+          "later_min": 1412,
+          "later_max": 2147
+        },
+        "Extension host ready": {
+          "first": 4113,
+          "later": 1750,
+          "later_min": 1666,
+          "later_max": 2622
+        },
+        "Process start \u2192 main started": {
+          "first": 245,
+          "later": 189,
+          "later_min": 178,
+          "later_max": 201
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 1280,
+          "later": 267,
+          "later_min": 254,
+          "later_max": 475
+        },
+        "node_cache_kb": [
+          4406,
+          4469,
+          4532,
+          4595,
+          4658,
+          4721
+        ]
+      },
+      "idle_n_procs": {
+        "median": 11,
+        "p90": 11,
+        "min": 10,
+        "max": 11,
+        "n": 3,
+        "runs": [
+          10,
+          11,
+          11
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1585,
+        "p90": 1623.2,
+        "min": 1465.6,
+        "max": 1623.2,
+        "n": 3,
+        "runs": [
+          1465.6,
+          1623.2,
+          1585.4
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 552,
+        "p90": 552.1,
+        "min": 509.0,
+        "max": 552.1,
+        "n": 3,
+        "runs": [
+          509.0,
+          552.1,
+          551.9
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 1.99,
+        "p90": 2.27,
+        "min": 1.83,
+        "max": 2.27,
+        "n": 3,
+        "runs": [
+          1.83,
+          2.27,
+          1.99
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 23,
+        "p90": 26.18,
+        "min": 20.54,
+        "max": 26.18,
+        "n": 3,
+        "runs": [
+          20.54,
+          26.18,
+          22.67
+        ]
+      },
+      "files20_n_procs": {
+        "median": 11,
+        "p90": 11,
+        "min": 11,
+        "max": 11,
+        "n": 3,
+        "runs": [
+          11,
+          11,
+          11
+        ]
+      },
+      "files20_rss_mb": {
+        "median": 1572,
+        "p90": 1595.7,
+        "min": 1562.2,
+        "max": 1595.7,
+        "n": 3,
+        "runs": [
+          1572.0,
+          1562.2,
+          1595.7
+        ]
+      },
+      "files20_footprint_mb": {
+        "median": 552,
+        "p90": 573.1,
+        "min": 544.9,
+        "max": 573.1,
+        "n": 3,
+        "runs": [
+          551.5,
+          544.9,
+          573.1
+        ]
+      },
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "FriedLiver Helper": 0.92,
+        "FriedLiver Helper (Renderer)": 0.81,
+        "FriedLiver Helper (Plugin)": 0.26,
+        "FriedLiver": 0.1,
+        "com.apple.launchd.KirWzhN": 0.0,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": [],
+      "open5mb_delta_ms": 489
+    },
+    "friedliver-patched+welcome": {
+      "label": "FriedLiver patched + welcome",
+      "version": "1.142.0",
+      "base": "friedliver-patched",
+      "settings": {
+        "workbench.startupEditor": "welcomePage"
+      },
+      "vscode_base": "1.142.0",
+      "install_mb": 518,
+      "cold_window_ms": {
+        "median": 974,
+        "p90": 1058,
+        "min": 795,
+        "max": 1058,
+        "n": 5,
+        "runs": [
+          974,
+          1053,
+          1058,
+          795,
+          845
+        ]
+      },
+      "cold_workbench_ms": {
+        "median": 1745,
+        "p90": 1806,
+        "min": 1388,
+        "max": 1806,
+        "n": 5,
+        "runs": [
+          1745,
+          1792,
+          1806,
+          1388,
+          1461
+        ]
+      },
+      "cold_exthost_ms": {
+        "median": 2087,
+        "p90": 2090,
+        "min": 1694,
+        "max": 2090,
+        "n": 5,
+        "runs": [
+          2087,
+          2090,
+          2087,
+          1728,
+          1694
+        ]
+      },
+      "cold_restore_ms": {
+        "median": 39,
+        "p90": 45,
+        "min": 33,
+        "max": 45,
+        "n": 5,
+        "runs": [
+          33,
+          45,
+          39,
+          36,
+          39
+        ]
+      },
+      "big5mb_restore_ms": {
+        "median": 615,
+        "p90": 625,
+        "min": 586,
+        "max": 625,
+        "n": 3,
+        "runs": [
+          625,
+          615,
+          586
+        ]
+      },
+      "big5mb_workbench_ms": {
+        "median": 1825,
+        "p90": 1838,
+        "min": 1786,
+        "max": 1838,
+        "n": 3,
+        "runs": [
+          1786,
+          1825,
+          1838
+        ]
+      },
+      "phases": {
+        "Process start \u2192 main started": {
+          "median": 174,
+          "p90": 197,
+          "min": 140,
+          "max": 197,
+          "n": 5,
+          "runs": [
+            197,
+            176,
+            174,
+            140,
+            140
+          ]
+        },
+        "Main: switches, locale, app ready": {
+          "median": 117,
+          "p90": 125,
+          "min": 88,
+          "max": 125,
+          "n": 5,
+          "runs": [
+            125,
+            117,
+            125,
+            88,
+            109
+          ]
+        },
+        "Main services \u2192 window opened": {
+          "median": 333,
+          "p90": 417,
+          "min": 286,
+          "max": 417,
+          "n": 5,
+          "runs": [
+            333,
+            375,
+            417,
+            286,
+            327
+          ]
+        },
+        "Renderer start \u2192 workbench JS load": {
+          "median": 204,
+          "p90": 253,
+          "min": 162,
+          "max": 253,
+          "n": 5,
+          "runs": [
+            253,
+            230,
+            204,
+            162,
+            175
+          ]
+        },
+        "Workbench JS load + evaluate": {
+          "median": 283,
+          "p90": 336,
+          "min": 219,
+          "max": 336,
+          "n": 5,
+          "runs": [
+            283,
+            291,
+            336,
+            241,
+            219
+          ]
+        },
+        "Workbench main \u2192 services start": {
+          "median": 40,
+          "p90": 44,
+          "min": 34,
+          "max": 44,
+          "n": 5,
+          "runs": [
+            43,
+            44,
+            40,
+            34,
+            37
+          ]
+        },
+        "Workbench services, contributions, restore": {
+          "median": 510,
+          "p90": 559,
+          "min": 437,
+          "max": 559,
+          "n": 5,
+          "runs": [
+            511,
+            559,
+            510,
+            437,
+            454
+          ]
+        },
+        "\u00b7 BlockStartup contributions": {
+          "median": 12,
+          "p90": 21,
+          "min": 10,
+          "max": 21,
+          "n": 5,
+          "runs": [
+            10,
+            16,
+            12,
+            10,
+            21
+          ]
+        },
+        "\u00b7 BlockRestore contributions": {
+          "median": 17,
+          "p90": 22,
+          "min": 15,
+          "max": 22,
+          "n": 5,
+          "runs": [
+            15,
+            22,
+            18,
+            15,
+            17
+          ]
+        },
+        "\u00b7 Editor restore": {
+          "median": 39,
+          "p90": 45,
+          "min": 33,
+          "max": 45,
+          "n": 5,
+          "runs": [
+            33,
+            45,
+            39,
+            36,
+            39
+          ]
+        },
+        "Extension scan + registration (renderer)": {
+          "median": 164,
+          "p90": 185,
+          "min": 134,
+          "max": 185,
+          "n": 5,
+          "runs": [
+            185,
+            172,
+            164,
+            153,
+            134
+          ]
+        },
+        "Extension host: connect to renderer": {
+          "median": 1,
+          "p90": 1,
+          "min": 0,
+          "max": 1,
+          "n": 5,
+          "runs": [
+            1,
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "median": 298,
+          "p90": 342,
+          "min": 233,
+          "max": 342,
+          "n": 5,
+          "runs": [
+            342,
+            298,
+            281,
+            340,
+            233
+          ]
+        },
+        "Extension host ready (from process start)": {
+          "median": 2087,
+          "p90": 2090,
+          "min": 1694,
+          "max": 2090,
+          "n": 5,
+          "runs": [
+            2087,
+            2090,
+            2087,
+            1728,
+            1694
+          ]
+        }
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: enabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: enabled, configured: /private/tmp/ebp-w5b6_183/friedliver-patched+welcome/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host, active: /private/tmp/ebp-w5b6_183/friedliver-patched+welcome/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host/v24.21.0-arm64-c3a7e8f2-501)",
+      "launches": {
+        "Workbench ready": {
+          "first": 2730,
+          "later": 1745,
+          "later_min": 1388,
+          "later_max": 1806
+        },
+        "Extension host ready": {
+          "first": 4497,
+          "later": 2087,
+          "later_min": 1694,
+          "later_max": 2090
+        },
+        "Process start \u2192 main started": {
+          "first": 232,
+          "later": 174,
+          "later_min": 140,
+          "later_max": 197
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 1767,
+          "later": 298,
+          "later_min": 233,
+          "later_max": 342
+        },
+        "node_cache_kb": [
+          4406,
+          4469,
+          4532,
+          4595,
+          4658,
+          4721
+        ]
+      },
+      "idle_n_procs": {
+        "median": 11,
+        "p90": 11,
+        "min": 10,
+        "max": 11,
+        "n": 3,
+        "runs": [
+          10,
+          11,
+          11
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1596,
+        "p90": 1629.5,
+        "min": 1491.2,
+        "max": 1629.5,
+        "n": 3,
+        "runs": [
+          1491.2,
+          1596.0,
+          1629.5
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 563,
+        "p90": 570.5,
+        "min": 530.1,
+        "max": 570.5,
+        "n": 3,
+        "runs": [
+          530.1,
+          570.5,
+          563.0
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 6.1,
+        "p90": 6.29,
+        "min": 5.99,
+        "max": 6.29,
+        "n": 3,
+        "runs": [
+          5.99,
+          6.1,
+          6.29
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 25,
+        "p90": 25.47,
+        "min": 22.51,
+        "max": 25.47,
+        "n": 3,
+        "runs": [
+          22.51,
+          25.47,
+          25.45
+        ]
+      },
+      "files20_n_procs": {
+        "median": 11,
+        "p90": 11,
+        "min": 11,
+        "max": 11,
+        "n": 3,
+        "runs": [
+          11,
+          11,
+          11
+        ]
+      },
+      "files20_rss_mb": {
+        "median": 1648,
+        "p90": 1663.0,
+        "min": 1632.8,
+        "max": 1663.0,
+        "n": 3,
+        "runs": [
+          1663.0,
+          1647.6,
+          1632.8
+        ]
+      },
+      "files20_footprint_mb": {
+        "median": 590,
+        "p90": 593.6,
+        "min": 586.6,
+        "max": 593.6,
+        "n": 3,
+        "runs": [
+          593.6,
+          590.2,
+          586.6
+        ]
+      },
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "FriedLiver Helper (Renderer)": 3.38,
+        "FriedLiver Helper": 2.47,
+        "FriedLiver Helper (Plugin)": 0.25,
+        "FriedLiver": 0.1,
+        "com.apple.launchd.KirWzhN": 0.0,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": [],
+      "open5mb_delta_ms": 576
+    }
+  },
+  "ab": {
+    "friedliver-patched vs friedliver": {
+      "arm": "friedliver-patched",
+      "ref": "friedliver",
+      "rows": [
+        {
+          "metric": "Workbench ready",
+          "unit": "ms",
+          "base": 2519,
+          "arm": 2252,
+          "delta": -267,
+          "pct": -10.599444223898374,
+          "spread": 2043,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "First window",
+          "unit": "ms",
+          "base": 1600,
+          "arm": 1529,
+          "delta": -71,
+          "pct": -4.4375,
+          "spread": 1345,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Extension host ready",
+          "unit": "ms",
+          "base": 2771,
+          "arm": 2680,
+          "delta": -91,
+          "pct": -3.2840129916997474,
+          "spread": 2270,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Process start \u2192 main started",
+          "unit": "ms",
+          "base": 518,
+          "arm": 581,
+          "delta": 63,
+          "pct": 12.162162162162163,
+          "spread": 373,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Main: switches, locale, app ready",
+          "unit": "ms",
+          "base": 174,
+          "arm": 175,
+          "delta": 1,
+          "pct": 0.5747126436781609,
+          "spread": 258,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Main services \u2192 window opened",
+          "unit": "ms",
+          "base": 454,
+          "arm": 410,
+          "delta": -44,
+          "pct": -9.691629955947137,
+          "spread": 280,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Renderer start \u2192 workbench JS load",
+          "unit": "ms",
+          "base": 332,
+          "arm": 326,
+          "delta": -6,
+          "pct": -1.8072289156626504,
+          "spread": 245,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench JS load + evaluate",
+          "unit": "ms",
+          "base": 358,
+          "arm": 314,
+          "delta": -44,
+          "pct": -12.290502793296088,
+          "spread": 363,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench main \u2192 services start",
+          "unit": "ms",
+          "base": 47,
+          "arm": 52,
+          "delta": 5,
+          "pct": 10.638297872340425,
+          "spread": 112,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench services, contributions, restore",
+          "unit": "ms",
+          "base": 591,
+          "arm": 539,
+          "delta": -52,
+          "pct": -8.79864636209814,
+          "spread": 517,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 BlockStartup contributions",
+          "unit": "ms",
+          "base": 16,
+          "arm": 14,
+          "delta": -2,
+          "pct": -12.5,
+          "spread": 12,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 BlockRestore contributions",
+          "unit": "ms",
+          "base": 20,
+          "arm": 17,
+          "delta": -3,
+          "pct": -15.0,
+          "spread": 14,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 Editor restore",
+          "unit": "ms",
+          "base": 50,
+          "arm": 26,
+          "delta": -24,
+          "pct": -48.0,
+          "spread": 46,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 635.7,
+          "arm": 562.2,
+          "delta": -73.5,
+          "pct": -11.562057574327513,
+          "spread": 134.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1731.5,
+          "arm": 1568.7,
+          "delta": -162.79999999999995,
+          "pct": -9.40225238232746,
+          "spread": 282.6999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 2.03,
+          "arm": 6.26,
+          "delta": 4.23,
+          "pct": 208.37438423645324,
+          "spread": 0.7699999999999996,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "worse"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 27.27,
+          "arm": 24.43,
+          "delta": -2.84,
+          "pct": -10.414374770810413,
+          "spread": 5.389999999999997,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "20 files: footprint",
+          "unit": "mb",
+          "base": 636.9,
+          "arm": 569.3,
+          "delta": -67.60000000000002,
+          "pct": -10.613911132045851,
+          "spread": 26.399999999999977,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        }
+      ]
+    },
+    "friedliver-patched+caret-smooth vs friedliver": {
+      "arm": "friedliver-patched+caret-smooth",
+      "ref": "friedliver",
+      "rows": [
+        {
+          "metric": "Workbench ready",
+          "unit": "ms",
+          "base": 2519,
+          "arm": 1485,
+          "delta": -1034,
+          "pct": -41.04803493449782,
+          "spread": 2043,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "First window",
+          "unit": "ms",
+          "base": 1600,
+          "arm": 994,
+          "delta": -606,
+          "pct": -37.875,
+          "spread": 1345,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Extension host ready",
+          "unit": "ms",
+          "base": 2771,
+          "arm": 1750,
+          "delta": -1021,
+          "pct": -36.84590400577409,
+          "spread": 2270,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Process start \u2192 main started",
+          "unit": "ms",
+          "base": 518,
+          "arm": 189,
+          "delta": -329,
+          "pct": -63.51351351351351,
+          "spread": 373,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Main: switches, locale, app ready",
+          "unit": "ms",
+          "base": 174,
+          "arm": 111,
+          "delta": -63,
+          "pct": -36.206896551724135,
+          "spread": 258,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Main services \u2192 window opened",
+          "unit": "ms",
+          "base": 454,
+          "arm": 307,
+          "delta": -147,
+          "pct": -32.378854625550666,
+          "spread": 280,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Renderer start \u2192 workbench JS load",
+          "unit": "ms",
+          "base": 332,
+          "arm": 183,
+          "delta": -149,
+          "pct": -44.87951807228915,
+          "spread": 245,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench JS load + evaluate",
+          "unit": "ms",
+          "base": 358,
+          "arm": 233,
+          "delta": -125,
+          "pct": -34.91620111731844,
+          "spread": 363,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench main \u2192 services start",
+          "unit": "ms",
+          "base": 47,
+          "arm": 37,
+          "delta": -10,
+          "pct": -21.27659574468085,
+          "spread": 112,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench services, contributions, restore",
+          "unit": "ms",
+          "base": 591,
+          "arm": 443,
+          "delta": -148,
+          "pct": -25.042301184433164,
+          "spread": 517,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 BlockStartup contributions",
+          "unit": "ms",
+          "base": 16,
+          "arm": 12,
+          "delta": -4,
+          "pct": -25.0,
+          "spread": 12,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 BlockRestore contributions",
+          "unit": "ms",
+          "base": 20,
+          "arm": 17,
+          "delta": -3,
+          "pct": -15.0,
+          "spread": 14,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 Editor restore",
+          "unit": "ms",
+          "base": 50,
+          "arm": 23,
+          "delta": -27,
+          "pct": -54.0,
+          "spread": 46,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 635.7,
+          "arm": 551.9,
+          "delta": -83.80000000000007,
+          "pct": -13.182318703791108,
+          "spread": 134.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1731.5,
+          "arm": 1585.4,
+          "delta": -146.0999999999999,
+          "pct": -8.437770719029738,
+          "spread": 282.6999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 2.03,
+          "arm": 1.99,
+          "delta": -0.039999999999999813,
+          "pct": -1.9704433497536855,
+          "spread": 0.43999999999999995,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 27.27,
+          "arm": 22.67,
+          "delta": -4.599999999999998,
+          "pct": -16.868353502016863,
+          "spread": 5.640000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "20 files: footprint",
+          "unit": "mb",
+          "base": 636.9,
+          "arm": 551.5,
+          "delta": -85.39999999999998,
+          "pct": -13.408698382791645,
+          "spread": 28.200000000000045,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        }
+      ]
+    },
+    "friedliver-patched+welcome vs friedliver": {
+      "arm": "friedliver-patched+welcome",
+      "ref": "friedliver",
+      "rows": [
+        {
+          "metric": "Workbench ready",
+          "unit": "ms",
+          "base": 2519,
+          "arm": 1745,
+          "delta": -774,
+          "pct": -30.72647876141326,
+          "spread": 2043,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "First window",
+          "unit": "ms",
+          "base": 1600,
+          "arm": 974,
+          "delta": -626,
+          "pct": -39.125,
+          "spread": 1345,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Extension host ready",
+          "unit": "ms",
+          "base": 2771,
+          "arm": 2087,
+          "delta": -684,
+          "pct": -24.684229520028868,
+          "spread": 2270,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Process start \u2192 main started",
+          "unit": "ms",
+          "base": 518,
+          "arm": 174,
+          "delta": -344,
+          "pct": -66.40926640926641,
+          "spread": 373,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Main: switches, locale, app ready",
+          "unit": "ms",
+          "base": 174,
+          "arm": 117,
+          "delta": -57,
+          "pct": -32.758620689655174,
+          "spread": 258,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Main services \u2192 window opened",
+          "unit": "ms",
+          "base": 454,
+          "arm": 333,
+          "delta": -121,
+          "pct": -26.651982378854626,
+          "spread": 280,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Renderer start \u2192 workbench JS load",
+          "unit": "ms",
+          "base": 332,
+          "arm": 204,
+          "delta": -128,
+          "pct": -38.55421686746988,
+          "spread": 245,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench JS load + evaluate",
+          "unit": "ms",
+          "base": 358,
+          "arm": 283,
+          "delta": -75,
+          "pct": -20.949720670391063,
+          "spread": 363,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench main \u2192 services start",
+          "unit": "ms",
+          "base": 47,
+          "arm": 40,
+          "delta": -7,
+          "pct": -14.893617021276595,
+          "spread": 112,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Workbench services, contributions, restore",
+          "unit": "ms",
+          "base": 591,
+          "arm": 510,
+          "delta": -81,
+          "pct": -13.705583756345177,
+          "spread": 517,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 BlockStartup contributions",
+          "unit": "ms",
+          "base": 16,
+          "arm": 12,
+          "delta": -4,
+          "pct": -25.0,
+          "spread": 12,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 BlockRestore contributions",
+          "unit": "ms",
+          "base": 20,
+          "arm": 17,
+          "delta": -3,
+          "pct": -15.0,
+          "spread": 14,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 Editor restore",
+          "unit": "ms",
+          "base": 50,
+          "arm": 39,
+          "delta": -11,
+          "pct": -22.0,
+          "spread": 46,
+          "n": [
+            5,
+            5
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 635.7,
+          "arm": 563.0,
+          "delta": -72.70000000000005,
+          "pct": -11.436212049708988,
+          "spread": 134.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1731.5,
+          "arm": 1596.0,
+          "delta": -135.5,
+          "pct": -7.825584753104245,
+          "spread": 282.6999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 2.03,
+          "arm": 6.1,
+          "delta": 4.07,
+          "pct": 200.4926108374385,
+          "spread": 0.42999999999999994,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "worse"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 27.27,
+          "arm": 25.45,
+          "delta": -1.8200000000000003,
+          "pct": -6.674000733406675,
+          "spread": 5.389999999999997,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "20 files: footprint",
+          "unit": "mb",
+          "base": 636.9,
+          "arm": 590.2,
+          "delta": -46.69999999999993,
+          "pct": -7.332391270215094,
+          "spread": 26.399999999999977,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "better"
+        }
+      ]
+    }
+  }
+}

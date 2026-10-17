@@ -1,0 +1,8 @@
+2026-10-17 21:30:55.168 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-17 21:30:55.396 [info] Started local extension host with pid 7381.
+2026-10-17 21:30:55.661 [info] [DefaultAccount] Authentication provider is not available. {"id":"","name":"","enterprise":false}
+2026-10-17 21:30:55.843 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false
+2026-10-17 21:30:55.924 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-17 21:30:56.091 [warning] [CloudSandboxApi] No 'github' session with scopes [read:user, user:email, repo, workflow]
+2026-10-17 21:30:58.600 [info] [perf] Render performance baseline is 20ms
+2026-10-17 21:31:00.846 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false
