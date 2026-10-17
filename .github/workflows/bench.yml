@@ -19,6 +19,10 @@ on:
         description: 'slow-shell,large-repo, "all" or "none" (run on VS Code + FriedLiver arms only)'
         required: false
         default: 'all'
+      shell_sleep:
+        description: 'Seconds the slow-shell .zshrc sleeps (0 < s <= 9)'
+        required: false
+        default: '1.0'
   schedule:
     - cron: '0 3 * * 1'   # Mondays 03:00 UTC
 
@@ -39,6 +43,7 @@ jobs:
       BENCH_VARIANTS: ${{ inputs.variants || 'friedliver+settings-perf' }}
       BENCH_SCENARIOS: ${{ inputs.scenarios || 'all' }}
       FRIEDLIVER_REF: ${{ inputs.friedliver_ref }}
+      BENCH_SHELL_SLEEP: ${{ inputs.shell_sleep || '1.0' }}
     steps:
       - uses: actions/checkout@v4
         with:

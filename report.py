@@ -218,7 +218,8 @@ sh_arms = [a for a in fam if S[a]['shell_slow_exthost_ms'] or S[a]['shell_fast_e
 if sh_arms:
     dx = lambda f, sl: num(sl['median'] - f['median']) if f and sl else '–'
     md += ['', '## Scenario: slow login shell', '',
-           '`.zshrc` sleeps 1.0 s (as nvm or oh-my-zsh can). Each arm gets its own profile with a probe extension: it activates on `*` and calls `workspace.findFiles`, the extension-host file search that also serves Quick Open. '
+           f"`.zshrc` sleeps {M.get('shell_sleep', 1.0):g} s (as nvm or oh-my-zsh can)."
+           ' Each arm gets its own profile with a probe extension: it activates on `*` and calls `workspace.findFiles`, the extension-host file search that also serves Quick Open. '
            'Extension host ready is measured from process start (perf mark). File search is measured from just before `open` (wall clock). Median [min–max] of 3 runs, ms.', '',
            '| Arm | Ext host ready, fast shell | Ext host ready, slow shell | Δ | First file-search result, fast shell | Slow shell | Δ |',
            '|---|---:|---:|---:|---:|---:|---:|']

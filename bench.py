@@ -102,6 +102,9 @@ APPS = [a for a in APPS if IN_CI or not a.get('ci_only')]
 ARMS = make_arms(APPS, set(stats.split_list(os.environ.get('BENCH_ONLY', ''))),
                  stats.split_list(os.environ.get('BENCH_VARIANTS', 'none')))
 SCENARIOS = stats.split_list(os.environ.get('BENCH_SCENARIOS', 'none'), ['slow-shell', 'large-repo'])
+SHELL_SLEEP = float(os.environ.get('BENCH_SHELL_SLEEP') or 1.0)   # seconds the slow .zshrc sleeps
+if not 0 < SHELL_SLEEP <= 9:   # VS Code's shell-env timeout is 10 s
+    raise SystemExit(f'BENCH_SHELL_SLEEP must be in (0, 9], got {SHELL_SLEEP}')
 BY_ID = {a['id']: a for a in ARMS}
 
 # ---------------------------------------------------------------- helpers
@@ -349,10 +352,10 @@ def cold(app, kind='cold', i=0):
     rd = run_dir(app, kind, i)
     rec = dict(app=app['id'], kind=kind, i=i, free_gb_before=round(free_bytes() / 1024**3, 2))
     home = ensure_profile(app)[0]
-    if kind.startswith('shell'):              # slow-shell scenario: a login shell that takes 1 s (nvm/oh-my-zsh)
+    if kind.startswith('shell'):              # slow-shell scenario: a login shell that takes SHELL_SLEEP s (nvm/oh-my-zsh)
         zshrc = os.path.join(home, '.zshrc')
         if kind == 'shell-slow':
-            open(zshrc, 'w').write('sleep 1.0\n')
+            open(zshrc, 'w').write(f'sleep {SHELL_SLEEP}\n')
         elif os.path.exists(zshrc):
             os.remove(zshrc)
         if os.path.exists(os.path.join(home, 'probe.json')):
@@ -497,7 +500,7 @@ def machine_info():
                 fixture=dict(repo='microsoft/vscode-extension-samples',
                              commit=sh('git', '-C', FIX, 'rev-parse', 'HEAD').strip(),
                              big_file_bytes=os.path.getsize(BIG)),
-                scenarios=SCENARIOS,
+                scenarios=SCENARIOS, shell_sleep=SHELL_SLEEP,
                 bigrepo=os.path.isdir(BIGREPO) and dict(repo='microsoft/TypeScript',
                              commit=sh('git', '-C', BIGREPO, 'rev-parse', 'HEAD').strip(),
                              files=len(sh('git', '-C', BIGREPO, 'ls-files').splitlines())))
