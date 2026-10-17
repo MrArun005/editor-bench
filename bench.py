@@ -116,9 +116,10 @@ APPS = [a for a in APPS if IN_CI or not a.get('ci_only')]
 ARMS = make_arms(APPS, set(stats.split_list(os.environ.get('BENCH_ONLY', ''))),
                  stats.split_list(os.environ.get('BENCH_VARIANTS', 'none')))
 SCENARIOS = stats.split_list(os.environ.get('BENCH_SCENARIOS', 'none'), ['slow-shell', 'large-repo'])
-SUITE = os.environ.get('BENCH_SUITE') or 'full'      # 'idle': warm-up + idle x3 only (bisecting idle CPU)
-if SUITE not in ('full', 'idle'):
-    raise SystemExit(f'BENCH_SUITE must be full or idle, got {SUITE!r}')
+# 'idle': warm-up + idle x3 only (bisecting idle CPU); 'idle-editor': the same with one .ts file open and focused
+SUITE = os.environ.get('BENCH_SUITE') or 'full'
+if SUITE not in ('full', 'idle', 'idle-editor'):
+    raise SystemExit(f'BENCH_SUITE must be full, idle or idle-editor, got {SUITE!r}')
 SHELL_SLEEP = float(os.environ.get('BENCH_SHELL_SLEEP') or 1.0)   # seconds the slow .zshrc sleeps
 if not 0 < SHELL_SLEEP <= 9:   # VS Code's shell-env timeout is 10 s
     raise SystemExit(f'BENCH_SHELL_SLEEP must be in (0, 9], got {SHELL_SLEEP}')
@@ -464,6 +465,9 @@ def idle(app, kind='idle', i=0):
     args = []
     if app['vscode']:
         args = [BIGREPO] if kind == 'bigrepo' else [FIX] + (twenty_files() if kind == 'files20' else [])
+        if kind == 'idle' and SUITE == 'idle-editor':
+            args.append(twenty_files()[0])     # opened last, so it has focus: a caret sits in it while idle
+            rec['editor'] = os.path.relpath(args[-1], FIX)
     ww = subprocess.Popen([WINWAIT, tag_of(app), '120'], stdout=subprocess.PIPE, text=True)
     time.sleep(0.2)
     t0 = time.time()
@@ -568,7 +572,7 @@ def run(only=None):
     log('warm-up (discarded) - also the first-ever launch of each fresh profile')
     for a in apps:
         cold(a, 'warmup', 0)
-    if SUITE == 'idle':
+    if SUITE in ('idle', 'idle-editor'):
         for r in range(1, SAMPLES + 1):
             log(f'idle round {r}/{SAMPLES}')
             for a in apps:

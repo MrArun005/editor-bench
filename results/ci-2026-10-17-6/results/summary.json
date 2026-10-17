@@ -1,0 +1,3450 @@
+{
+  "machine": {
+    "ci": true,
+    "runner": "GitHub Actions 1000005906",
+    "run_url": "https://github.com/MrArun005/editor-bench/actions/runs/39073005329",
+    "fetch": {
+      "friedliver": {
+        "source": "gh release MrArun005/FriedLiver-Code",
+        "version": "v1.142.0-5",
+        "hash": "sha256 verified",
+        "codesign": "valid",
+        "spctl": "<app>: rejected\norigin=FriedLiver Self-Signed Code Signing",
+        "status": "ok"
+      },
+      "friedliver-patched": {
+        "source": "gh MrArun005/FriedLiver-Code 39055910922",
+        "version": "run 39055910922: perf/core@3f198b5401 (workflow_dispatch)",
+        "hash": "trusted run; artifact sha256 digest verified",
+        "codesign": "valid",
+        "spctl": "<app>: rejected\norigin=FriedLiver Self-Signed Code Signing",
+        "status": "ok"
+      }
+    },
+    "model": "Apple Virtual Machine 1 / VirtualMac2,1",
+    "chip": "Apple M1 (Virtual)",
+    "cores": "3",
+    "ram": "7 GB",
+    "macos": "26.6.2 (25G83)",
+    "power_at_start": "AC ?",
+    "date": "2026-10-17",
+    "apps": {
+      "friedliver": {
+        "label": "FriedLiver",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 563,
+        "base": null,
+        "settings": null,
+        "env": null,
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      },
+      "friedliver-patched": {
+        "label": "FriedLiver patched",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver-patched/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 518,
+        "base": null,
+        "settings": null,
+        "env": null,
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      },
+      "friedliver+blink": {
+        "label": "FriedLiver + blink",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 563,
+        "base": "friedliver",
+        "settings": {
+          "editor.cursorBlinking": "blink"
+        },
+        "env": null,
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      },
+      "friedliver+deferred-activation": {
+        "label": "FriedLiver + deferred-activation",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 563,
+        "base": "friedliver",
+        "settings": {
+          "extensions.experimental.deferredStartupFinishedActivation": true
+        },
+        "env": null,
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      },
+      "friedliver+one-tsserver": {
+        "label": "FriedLiver + one-tsserver",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 563,
+        "base": "friedliver",
+        "settings": {
+          "typescript.tsserver.useSyntaxServer": "never"
+        },
+        "env": null,
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      },
+      "friedliver+no-welcome": {
+        "label": "FriedLiver + no-welcome",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 563,
+        "base": "friedliver",
+        "settings": {
+          "workbench.startupEditor": "none"
+        },
+        "env": null,
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      },
+      "friedliver+watcher-excludes": {
+        "label": "FriedLiver + watcher-excludes",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 563,
+        "base": "friedliver",
+        "settings": {
+          "files.watcherExclude": {
+            "**/node_modules/*/**": true,
+            "**/.venv/**": true,
+            "**/venv/**": true,
+            "**/__pycache__/**": true,
+            "**/.mypy_cache/**": true,
+            "**/.pytest_cache/**": true,
+            "**/.next/**": true,
+            "**/.nuxt/**": true,
+            "**/.turbo/**": true,
+            "**/.parcel-cache/**": true,
+            "**/.gradle/**": true
+          }
+        },
+        "env": null,
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      },
+      "friedliver-patched+no-compile-cache": {
+        "label": "FriedLiver patched + no-compile-cache",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver-patched/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 518,
+        "base": "friedliver-patched",
+        "settings": {},
+        "env": {
+          "NODE_DISABLE_COMPILE_CACHE": "1"
+        },
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      },
+      "friedliver-patched+no-fast-shell": {
+        "label": "FriedLiver patched + no-fast-shell",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver-patched/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 518,
+        "base": "friedliver-patched",
+        "settings": {
+          "friedliver.fastShellEnv": false
+        },
+        "env": null,
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      },
+      "friedliver-patched+caret-smooth": {
+        "label": "FriedLiver patched + caret-smooth",
+        "path": "/Users/runner/work/_temp/bench/apps/friedliver-patched/FriedLiver.app",
+        "version": "1.142.0",
+        "install_mb": 518,
+        "base": "friedliver-patched",
+        "settings": {
+          "editor.cursorBlinking": "smooth"
+        },
+        "env": null,
+        "vscode_base": "1.142.0",
+        "commit": "d956e8a6ac"
+      }
+    },
+    "fixture": {
+      "repo": "microsoft/vscode-extension-samples",
+      "commit": "65c1c44800eeac6fb065a54823ee5ae62c79540a",
+      "big_file_bytes": 5242880
+    },
+    "scenarios": [],
+    "shell_sleep": 1.0,
+    "suite": "idle",
+    "bigrepo": false
+  },
+  "apps": {
+    "friedliver": {
+      "label": "FriedLiver",
+      "version": "1.142.0",
+      "base": null,
+      "settings": null,
+      "vscode_base": "1.142.0",
+      "install_mb": 563,
+      "cold_window_ms": null,
+      "cold_workbench_ms": null,
+      "cold_exthost_ms": null,
+      "cold_restore_ms": null,
+      "big5mb_restore_ms": null,
+      "big5mb_workbench_ms": null,
+      "phases": {
+        "Process start \u2192 main started": null,
+        "Main: switches, locale, app ready": null,
+        "Main services \u2192 window opened": null,
+        "Renderer start \u2192 workbench JS load": null,
+        "Workbench JS load + evaluate": null,
+        "Workbench main \u2192 services start": null,
+        "Workbench services, contributions, restore": null,
+        "\u00b7 BlockStartup contributions": null,
+        "\u00b7 BlockRestore contributions": null,
+        "\u00b7 Editor restore": null,
+        "Extension scan + registration (renderer)": null,
+        "Extension host: connect to renderer": null,
+        "Workbench ready \u2192 extension host ready": null,
+        "Extension host ready (from process start)": null
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: disabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: disabled, configured: /Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app/Contents/Resources/app/node-compile-cache/extension-host, active: none)",
+      "launches": {
+        "Workbench ready": {
+          "first": 5515,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Extension host ready": {
+          "first": 8398,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Process start \u2192 main started": {
+          "first": 901,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 2883,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "node_cache_kb": [
+          0
+        ]
+      },
+      "idle_n_procs": {
+        "median": 9,
+        "p90": 10,
+        "min": 9,
+        "max": 10,
+        "n": 3,
+        "runs": [
+          10,
+          9,
+          9
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1275,
+        "p90": 1307.0,
+        "min": 1266.1,
+        "max": 1307.0,
+        "n": 3,
+        "runs": [
+          1307.0,
+          1275.2,
+          1266.1
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 408,
+        "p90": 437.8,
+        "min": 406.5,
+        "max": 437.8,
+        "n": 3,
+        "runs": [
+          437.8,
+          406.5,
+          408.0
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 0.44,
+        "p90": 0.45,
+        "min": 0.4,
+        "max": 0.45,
+        "n": 3,
+        "runs": [
+          0.45,
+          0.44,
+          0.4
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 12,
+        "p90": 20.93,
+        "min": 10.31,
+        "max": 20.93,
+        "n": 3,
+        "runs": [
+          20.93,
+          11.82,
+          10.31
+        ]
+      },
+      "files20_n_procs": null,
+      "files20_rss_mb": null,
+      "files20_footprint_mb": null,
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "renderer": 0.2,
+        "main": 0.1,
+        "extensionHostProcess": 0.03,
+        "gpu": 0.03,
+        "watcherMain": 0.03,
+        "sharedProcessMain": 0.02,
+        "network": 0.02,
+        "MTLCompilerService": 0,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": []
+    },
+    "friedliver-patched": {
+      "label": "FriedLiver patched",
+      "version": "1.142.0",
+      "base": null,
+      "settings": null,
+      "vscode_base": "1.142.0",
+      "install_mb": 518,
+      "cold_window_ms": null,
+      "cold_workbench_ms": null,
+      "cold_exthost_ms": null,
+      "cold_restore_ms": null,
+      "big5mb_restore_ms": null,
+      "big5mb_workbench_ms": null,
+      "phases": {
+        "Process start \u2192 main started": null,
+        "Main: switches, locale, app ready": null,
+        "Main services \u2192 window opened": null,
+        "Renderer start \u2192 workbench JS load": null,
+        "Workbench JS load + evaluate": null,
+        "Workbench main \u2192 services start": null,
+        "Workbench services, contributions, restore": null,
+        "\u00b7 BlockStartup contributions": null,
+        "\u00b7 BlockRestore contributions": null,
+        "\u00b7 Editor restore": null,
+        "Extension scan + registration (renderer)": null,
+        "Extension host: connect to renderer": null,
+        "Workbench ready \u2192 extension host ready": null,
+        "Extension host ready (from process start)": null
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: enabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: enabled, configured: /private/tmp/ebp-oukcr7h6/friedliver-patched/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host, active: /private/tmp/ebp-oukcr7h6/friedliver-patched/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host/v24.21.0-arm64-c3a7e8f2-501)",
+      "launches": {
+        "Workbench ready": {
+          "first": 3548,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Extension host ready": {
+          "first": 6067,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Process start \u2192 main started": {
+          "first": 863,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 2519,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "node_cache_kb": [
+          4406
+        ]
+      },
+      "idle_n_procs": {
+        "median": 9,
+        "p90": 9,
+        "min": 9,
+        "max": 9,
+        "n": 3,
+        "runs": [
+          9,
+          9,
+          9
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1272,
+        "p90": 1281.5,
+        "min": 1256.1,
+        "max": 1281.5,
+        "n": 3,
+        "runs": [
+          1281.5,
+          1271.9,
+          1256.1
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 399,
+        "p90": 426.2,
+        "min": 398.6,
+        "max": 426.2,
+        "n": 3,
+        "runs": [
+          426.2,
+          399.2,
+          398.6
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 0.43,
+        "p90": 0.48,
+        "min": 0.33,
+        "max": 0.48,
+        "n": 3,
+        "runs": [
+          0.48,
+          0.43,
+          0.33
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 12,
+        "p90": 13.68,
+        "min": 11.0,
+        "max": 13.68,
+        "n": 3,
+        "runs": [
+          13.68,
+          12.3,
+          11.0
+        ]
+      },
+      "files20_n_procs": null,
+      "files20_rss_mb": null,
+      "files20_footprint_mb": null,
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "renderer": 0.2,
+        "main": 0.12,
+        "extensionHostProcess": 0.03,
+        "gpu": 0.03,
+        "watcherMain": 0.03,
+        "sharedProcessMain": 0.02,
+        "network": 0.0,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": []
+    },
+    "friedliver+blink": {
+      "label": "FriedLiver + blink",
+      "version": "1.142.0",
+      "base": "friedliver",
+      "settings": {
+        "editor.cursorBlinking": "blink"
+      },
+      "vscode_base": "1.142.0",
+      "install_mb": 563,
+      "cold_window_ms": null,
+      "cold_workbench_ms": null,
+      "cold_exthost_ms": null,
+      "cold_restore_ms": null,
+      "big5mb_restore_ms": null,
+      "big5mb_workbench_ms": null,
+      "phases": {
+        "Process start \u2192 main started": null,
+        "Main: switches, locale, app ready": null,
+        "Main services \u2192 window opened": null,
+        "Renderer start \u2192 workbench JS load": null,
+        "Workbench JS load + evaluate": null,
+        "Workbench main \u2192 services start": null,
+        "Workbench services, contributions, restore": null,
+        "\u00b7 BlockStartup contributions": null,
+        "\u00b7 BlockRestore contributions": null,
+        "\u00b7 Editor restore": null,
+        "Extension scan + registration (renderer)": null,
+        "Extension host: connect to renderer": null,
+        "Workbench ready \u2192 extension host ready": null,
+        "Extension host ready (from process start)": null
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: disabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: disabled, configured: /Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app/Contents/Resources/app/node-compile-cache/extension-host, active: none)",
+      "launches": {
+        "Workbench ready": {
+          "first": 4426,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Extension host ready": {
+          "first": 5990,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Process start \u2192 main started": {
+          "first": 859,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 1564,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "node_cache_kb": [
+          0
+        ]
+      },
+      "idle_n_procs": {
+        "median": 9,
+        "p90": 9,
+        "min": 9,
+        "max": 9,
+        "n": 3,
+        "runs": [
+          9,
+          9,
+          9
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1300,
+        "p90": 1322.5,
+        "min": 1279.8,
+        "max": 1322.5,
+        "n": 3,
+        "runs": [
+          1322.5,
+          1279.8,
+          1300.5
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 412,
+        "p90": 435.0,
+        "min": 407.9,
+        "max": 435.0,
+        "n": 3,
+        "runs": [
+          435.0,
+          411.7,
+          407.9
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 0.41,
+        "p90": 0.41,
+        "min": 0.36,
+        "max": 0.41,
+        "n": 3,
+        "runs": [
+          0.41,
+          0.36,
+          0.41
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 14,
+        "p90": 15.63,
+        "min": 13.14,
+        "max": 15.63,
+        "n": 3,
+        "runs": [
+          13.97,
+          15.63,
+          13.14
+        ]
+      },
+      "files20_n_procs": null,
+      "files20_rss_mb": null,
+      "files20_footprint_mb": null,
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "renderer": 0.18,
+        "main": 0.1,
+        "gpu": 0.03,
+        "watcherMain": 0.03,
+        "extensionHostProcess": 0.02,
+        "sharedProcessMain": 0.02,
+        "network": 0.0,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": []
+    },
+    "friedliver+deferred-activation": {
+      "label": "FriedLiver + deferred-activation",
+      "version": "1.142.0",
+      "base": "friedliver",
+      "settings": {
+        "extensions.experimental.deferredStartupFinishedActivation": true
+      },
+      "vscode_base": "1.142.0",
+      "install_mb": 563,
+      "cold_window_ms": null,
+      "cold_workbench_ms": null,
+      "cold_exthost_ms": null,
+      "cold_restore_ms": null,
+      "big5mb_restore_ms": null,
+      "big5mb_workbench_ms": null,
+      "phases": {
+        "Process start \u2192 main started": null,
+        "Main: switches, locale, app ready": null,
+        "Main services \u2192 window opened": null,
+        "Renderer start \u2192 workbench JS load": null,
+        "Workbench JS load + evaluate": null,
+        "Workbench main \u2192 services start": null,
+        "Workbench services, contributions, restore": null,
+        "\u00b7 BlockStartup contributions": null,
+        "\u00b7 BlockRestore contributions": null,
+        "\u00b7 Editor restore": null,
+        "Extension scan + registration (renderer)": null,
+        "Extension host: connect to renderer": null,
+        "Workbench ready \u2192 extension host ready": null,
+        "Extension host ready (from process start)": null
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: disabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: disabled, configured: /Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app/Contents/Resources/app/node-compile-cache/extension-host, active: none)",
+      "launches": {
+        "Workbench ready": {
+          "first": 2217,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Extension host ready": {
+          "first": 3275,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Process start \u2192 main started": {
+          "first": 196,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 1058,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "node_cache_kb": [
+          0
+        ]
+      },
+      "idle_n_procs": {
+        "median": 9,
+        "p90": 9,
+        "min": 9,
+        "max": 9,
+        "n": 3,
+        "runs": [
+          9,
+          9,
+          9
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1308,
+        "p90": 1355.1,
+        "min": 1272.0,
+        "max": 1355.1,
+        "n": 3,
+        "runs": [
+          1355.1,
+          1272.0,
+          1308.0
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 413,
+        "p90": 431.0,
+        "min": 408.9,
+        "max": 431.0,
+        "n": 3,
+        "runs": [
+          431.0,
+          408.9,
+          412.7
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 0.48,
+        "p90": 0.53,
+        "min": 0.39,
+        "max": 0.53,
+        "n": 3,
+        "runs": [
+          0.48,
+          0.53,
+          0.39
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 14,
+        "p90": 14.28,
+        "min": 10.78,
+        "max": 14.28,
+        "n": 3,
+        "runs": [
+          14.28,
+          14.23,
+          10.78
+        ]
+      },
+      "files20_n_procs": null,
+      "files20_rss_mb": null,
+      "files20_footprint_mb": null,
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "renderer": 0.23,
+        "main": 0.12,
+        "extensionHostProcess": 0.03,
+        "gpu": 0.03,
+        "watcherMain": 0.03,
+        "sharedProcessMain": 0.02,
+        "network": 0.02,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": []
+    },
+    "friedliver+one-tsserver": {
+      "label": "FriedLiver + one-tsserver",
+      "version": "1.142.0",
+      "base": "friedliver",
+      "settings": {
+        "typescript.tsserver.useSyntaxServer": "never"
+      },
+      "vscode_base": "1.142.0",
+      "install_mb": 563,
+      "cold_window_ms": null,
+      "cold_workbench_ms": null,
+      "cold_exthost_ms": null,
+      "cold_restore_ms": null,
+      "big5mb_restore_ms": null,
+      "big5mb_workbench_ms": null,
+      "phases": {
+        "Process start \u2192 main started": null,
+        "Main: switches, locale, app ready": null,
+        "Main services \u2192 window opened": null,
+        "Renderer start \u2192 workbench JS load": null,
+        "Workbench JS load + evaluate": null,
+        "Workbench main \u2192 services start": null,
+        "Workbench services, contributions, restore": null,
+        "\u00b7 BlockStartup contributions": null,
+        "\u00b7 BlockRestore contributions": null,
+        "\u00b7 Editor restore": null,
+        "Extension scan + registration (renderer)": null,
+        "Extension host: connect to renderer": null,
+        "Workbench ready \u2192 extension host ready": null,
+        "Extension host ready (from process start)": null
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: disabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: disabled, configured: /Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app/Contents/Resources/app/node-compile-cache/extension-host, active: none)",
+      "launches": {
+        "Workbench ready": {
+          "first": 2158,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Extension host ready": {
+          "first": 3187,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Process start \u2192 main started": {
+          "first": 212,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 1029,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "node_cache_kb": [
+          0
+        ]
+      },
+      "idle_n_procs": {
+        "median": 9,
+        "p90": 9,
+        "min": 9,
+        "max": 9,
+        "n": 3,
+        "runs": [
+          9,
+          9,
+          9
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1269,
+        "p90": 1295.3,
+        "min": 1267.6,
+        "max": 1295.3,
+        "n": 3,
+        "runs": [
+          1295.3,
+          1267.6,
+          1269.4
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 409,
+        "p90": 435.4,
+        "min": 405.6,
+        "max": 435.4,
+        "n": 3,
+        "runs": [
+          435.4,
+          408.9,
+          405.6
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 0.4,
+        "p90": 0.51,
+        "min": 0.38,
+        "max": 0.51,
+        "n": 3,
+        "runs": [
+          0.51,
+          0.4,
+          0.38
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 15,
+        "p90": 14.79,
+        "min": 12.52,
+        "max": 14.79,
+        "n": 3,
+        "runs": [
+          14.79,
+          12.52,
+          14.75
+        ]
+      },
+      "files20_n_procs": null,
+      "files20_rss_mb": null,
+      "files20_footprint_mb": null,
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "renderer": 0.2,
+        "main": 0.1,
+        "extensionHostProcess": 0.03,
+        "gpu": 0.03,
+        "watcherMain": 0.03,
+        "sharedProcessMain": 0.02,
+        "network": 0.0,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": []
+    },
+    "friedliver+no-welcome": {
+      "label": "FriedLiver + no-welcome",
+      "version": "1.142.0",
+      "base": "friedliver",
+      "settings": {
+        "workbench.startupEditor": "none"
+      },
+      "vscode_base": "1.142.0",
+      "install_mb": 563,
+      "cold_window_ms": null,
+      "cold_workbench_ms": null,
+      "cold_exthost_ms": null,
+      "cold_restore_ms": null,
+      "big5mb_restore_ms": null,
+      "big5mb_workbench_ms": null,
+      "phases": {
+        "Process start \u2192 main started": null,
+        "Main: switches, locale, app ready": null,
+        "Main services \u2192 window opened": null,
+        "Renderer start \u2192 workbench JS load": null,
+        "Workbench JS load + evaluate": null,
+        "Workbench main \u2192 services start": null,
+        "Workbench services, contributions, restore": null,
+        "\u00b7 BlockStartup contributions": null,
+        "\u00b7 BlockRestore contributions": null,
+        "\u00b7 Editor restore": null,
+        "Extension scan + registration (renderer)": null,
+        "Extension host: connect to renderer": null,
+        "Workbench ready \u2192 extension host ready": null,
+        "Extension host ready (from process start)": null
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: disabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: disabled, configured: /Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app/Contents/Resources/app/node-compile-cache/extension-host, active: none)",
+      "launches": {
+        "Workbench ready": {
+          "first": 2705,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Extension host ready": {
+          "first": 4257,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Process start \u2192 main started": {
+          "first": 317,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 1552,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "node_cache_kb": [
+          0
+        ]
+      },
+      "idle_n_procs": {
+        "median": 9,
+        "p90": 9,
+        "min": 9,
+        "max": 9,
+        "n": 3,
+        "runs": [
+          9,
+          9,
+          9
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1288,
+        "p90": 1300.0,
+        "min": 1257.1,
+        "max": 1300.0,
+        "n": 3,
+        "runs": [
+          1288.1,
+          1300.0,
+          1257.1
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 404,
+        "p90": 424.6,
+        "min": 395.1,
+        "max": 424.6,
+        "n": 3,
+        "runs": [
+          424.6,
+          403.5,
+          395.1
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 0.51,
+        "p90": 1.15,
+        "min": 0.3,
+        "max": 1.15,
+        "n": 3,
+        "runs": [
+          1.15,
+          0.51,
+          0.3
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 16,
+        "p90": 18.4,
+        "min": 14.18,
+        "max": 18.4,
+        "n": 3,
+        "runs": [
+          16.04,
+          18.4,
+          14.18
+        ]
+      },
+      "files20_n_procs": null,
+      "files20_rss_mb": null,
+      "files20_footprint_mb": null,
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "renderer": 0.21,
+        "main": 0.12,
+        "extensionHostProcess": 0.05,
+        "gpu": 0.05,
+        "watcherMain": 0.05,
+        "sharedProcessMain": 0.02,
+        "network": 0.02,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": []
+    },
+    "friedliver+watcher-excludes": {
+      "label": "FriedLiver + watcher-excludes",
+      "version": "1.142.0",
+      "base": "friedliver",
+      "settings": {
+        "files.watcherExclude": {
+          "**/node_modules/*/**": true,
+          "**/.venv/**": true,
+          "**/venv/**": true,
+          "**/__pycache__/**": true,
+          "**/.mypy_cache/**": true,
+          "**/.pytest_cache/**": true,
+          "**/.next/**": true,
+          "**/.nuxt/**": true,
+          "**/.turbo/**": true,
+          "**/.parcel-cache/**": true,
+          "**/.gradle/**": true
+        }
+      },
+      "vscode_base": "1.142.0",
+      "install_mb": 563,
+      "cold_window_ms": null,
+      "cold_workbench_ms": null,
+      "cold_exthost_ms": null,
+      "cold_restore_ms": null,
+      "big5mb_restore_ms": null,
+      "big5mb_workbench_ms": null,
+      "phases": {
+        "Process start \u2192 main started": null,
+        "Main: switches, locale, app ready": null,
+        "Main services \u2192 window opened": null,
+        "Renderer start \u2192 workbench JS load": null,
+        "Workbench JS load + evaluate": null,
+        "Workbench main \u2192 services start": null,
+        "Workbench services, contributions, restore": null,
+        "\u00b7 BlockStartup contributions": null,
+        "\u00b7 BlockRestore contributions": null,
+        "\u00b7 Editor restore": null,
+        "Extension scan + registration (renderer)": null,
+        "Extension host: connect to renderer": null,
+        "Workbench ready \u2192 extension host ready": null,
+        "Extension host ready (from process start)": null
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: disabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: disabled, configured: /Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app/Contents/Resources/app/node-compile-cache/extension-host, active: none)",
+      "launches": {
+        "Workbench ready": {
+          "first": 2440,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Extension host ready": {
+          "first": 3421,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Process start \u2192 main started": {
+          "first": 284,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 981,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "node_cache_kb": [
+          0
+        ]
+      },
+      "idle_n_procs": {
+        "median": 9,
+        "p90": 9,
+        "min": 9,
+        "max": 9,
+        "n": 3,
+        "runs": [
+          9,
+          9,
+          9
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1302,
+        "p90": 1322.8,
+        "min": 1291.6,
+        "max": 1322.8,
+        "n": 3,
+        "runs": [
+          1301.9,
+          1291.6,
+          1322.8
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 412,
+        "p90": 433.7,
+        "min": 409.3,
+        "max": 433.7,
+        "n": 3,
+        "runs": [
+          433.7,
+          412.5,
+          409.3
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 0.4,
+        "p90": 0.53,
+        "min": 0.26,
+        "max": 0.53,
+        "n": 3,
+        "runs": [
+          0.4,
+          0.53,
+          0.26
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 16,
+        "p90": 19.35,
+        "min": 13.84,
+        "max": 19.35,
+        "n": 3,
+        "runs": [
+          19.35,
+          16.45,
+          13.84
+        ]
+      },
+      "files20_n_procs": null,
+      "files20_rss_mb": null,
+      "files20_footprint_mb": null,
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "renderer": 0.18,
+        "main": 0.1,
+        "extensionHostProcess": 0.03,
+        "gpu": 0.03,
+        "sharedProcessMain": 0.02,
+        "watcherMain": 0.02,
+        "network": 0.02,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": []
+    },
+    "friedliver-patched+no-compile-cache": {
+      "label": "FriedLiver patched + no-compile-cache",
+      "version": "1.142.0",
+      "base": "friedliver-patched",
+      "settings": {},
+      "vscode_base": "1.142.0",
+      "install_mb": 518,
+      "cold_window_ms": null,
+      "cold_workbench_ms": null,
+      "cold_exthost_ms": null,
+      "cold_restore_ms": null,
+      "big5mb_restore_ms": null,
+      "big5mb_workbench_ms": null,
+      "phases": {
+        "Process start \u2192 main started": null,
+        "Main: switches, locale, app ready": null,
+        "Main services \u2192 window opened": null,
+        "Renderer start \u2192 workbench JS load": null,
+        "Workbench JS load + evaluate": null,
+        "Workbench main \u2192 services start": null,
+        "Workbench services, contributions, restore": null,
+        "\u00b7 BlockStartup contributions": null,
+        "\u00b7 BlockRestore contributions": null,
+        "\u00b7 Editor restore": null,
+        "Extension scan + registration (renderer)": null,
+        "Extension host: connect to renderer": null,
+        "Workbench ready \u2192 extension host ready": null,
+        "Extension host ready (from process start)": null
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: disabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: disabled, configured: /private/tmp/ebp-oukcr7h6/friedliver-patched+no-compile-cache/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host, active: none)",
+      "launches": {
+        "Workbench ready": {
+          "first": 3209,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Extension host ready": {
+          "first": 4966,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Process start \u2192 main started": {
+          "first": 641,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 1757,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "node_cache_kb": [
+          0
+        ]
+      },
+      "idle_n_procs": {
+        "median": 9,
+        "p90": 9,
+        "min": 9,
+        "max": 9,
+        "n": 3,
+        "runs": [
+          9,
+          9,
+          9
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1265,
+        "p90": 1272.3,
+        "min": 1256.8,
+        "max": 1272.3,
+        "n": 3,
+        "runs": [
+          1272.3,
+          1265.3,
+          1256.8
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 403,
+        "p90": 424.4,
+        "min": 400.8,
+        "max": 424.4,
+        "n": 3,
+        "runs": [
+          424.4,
+          403.1,
+          400.8
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 0.33,
+        "p90": 0.41,
+        "min": 0.26,
+        "max": 0.41,
+        "n": 3,
+        "runs": [
+          0.33,
+          0.26,
+          0.41
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 16,
+        "p90": 17.45,
+        "min": 12.23,
+        "max": 17.45,
+        "n": 3,
+        "runs": [
+          12.23,
+          16.41,
+          17.45
+        ]
+      },
+      "files20_n_procs": null,
+      "files20_rss_mb": null,
+      "files20_footprint_mb": null,
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "renderer": 0.15,
+        "main": 0.08,
+        "extensionHostProcess": 0.03,
+        "watcherMain": 0.03,
+        "gpu": 0.02,
+        "sharedProcessMain": 0.02,
+        "network": 0.0,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": []
+    },
+    "friedliver-patched+no-fast-shell": {
+      "label": "FriedLiver patched + no-fast-shell",
+      "version": "1.142.0",
+      "base": "friedliver-patched",
+      "settings": {
+        "friedliver.fastShellEnv": false
+      },
+      "vscode_base": "1.142.0",
+      "install_mb": 518,
+      "cold_window_ms": null,
+      "cold_workbench_ms": null,
+      "cold_exthost_ms": null,
+      "cold_restore_ms": null,
+      "big5mb_restore_ms": null,
+      "big5mb_workbench_ms": null,
+      "phases": {
+        "Process start \u2192 main started": null,
+        "Main: switches, locale, app ready": null,
+        "Main services \u2192 window opened": null,
+        "Renderer start \u2192 workbench JS load": null,
+        "Workbench JS load + evaluate": null,
+        "Workbench main \u2192 services start": null,
+        "Workbench services, contributions, restore": null,
+        "\u00b7 BlockStartup contributions": null,
+        "\u00b7 BlockRestore contributions": null,
+        "\u00b7 Editor restore": null,
+        "Extension scan + registration (renderer)": null,
+        "Extension host: connect to renderer": null,
+        "Workbench ready \u2192 extension host ready": null,
+        "Extension host ready (from process start)": null
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: enabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: enabled, configured: /private/tmp/ebp-oukcr7h6/friedliver-patched+no-fast-shell/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host, active: /private/tmp/ebp-oukcr7h6/friedliver-patched+no-fast-shell/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host/v24.21.0-arm64-c3a7e8f2-501)",
+      "launches": {
+        "Workbench ready": {
+          "first": 2260,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Extension host ready": {
+          "first": 3828,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Process start \u2192 main started": {
+          "first": 295,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 1568,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "node_cache_kb": [
+          4406
+        ]
+      },
+      "idle_n_procs": {
+        "median": 9,
+        "p90": 9,
+        "min": 9,
+        "max": 9,
+        "n": 3,
+        "runs": [
+          9,
+          9,
+          9
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1279,
+        "p90": 1295.1,
+        "min": 1258.0,
+        "max": 1295.1,
+        "n": 3,
+        "runs": [
+          1295.1,
+          1258.0,
+          1279.2
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 401,
+        "p90": 425.8,
+        "min": 399.6,
+        "max": 425.8,
+        "n": 3,
+        "runs": [
+          425.8,
+          399.6,
+          401.0
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 0.51,
+        "p90": 0.51,
+        "min": 0.5,
+        "max": 0.51,
+        "n": 3,
+        "runs": [
+          0.51,
+          0.5,
+          0.51
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 13,
+        "p90": 13.81,
+        "min": 13.14,
+        "max": 13.81,
+        "n": 3,
+        "runs": [
+          13.81,
+          13.14,
+          13.14
+        ]
+      },
+      "files20_n_procs": null,
+      "files20_rss_mb": null,
+      "files20_footprint_mb": null,
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "renderer": 0.26,
+        "main": 0.1,
+        "extensionHostProcess": 0.03,
+        "gpu": 0.03,
+        "watcherMain": 0.03,
+        "sharedProcessMain": 0.02,
+        "network": 0.02,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": []
+    },
+    "friedliver-patched+caret-smooth": {
+      "label": "FriedLiver patched + caret-smooth",
+      "version": "1.142.0",
+      "base": "friedliver-patched",
+      "settings": {
+        "editor.cursorBlinking": "smooth"
+      },
+      "vscode_base": "1.142.0",
+      "install_mb": 518,
+      "cold_window_ms": null,
+      "cold_workbench_ms": null,
+      "cold_exthost_ms": null,
+      "cold_restore_ms": null,
+      "big5mb_restore_ms": null,
+      "big5mb_workbench_ms": null,
+      "phases": {
+        "Process start \u2192 main started": null,
+        "Main: switches, locale, app ready": null,
+        "Main services \u2192 window opened": null,
+        "Renderer start \u2192 workbench JS load": null,
+        "Workbench JS load + evaluate": null,
+        "Workbench main \u2192 services start": null,
+        "Workbench services, contributions, restore": null,
+        "\u00b7 BlockStartup contributions": null,
+        "\u00b7 BlockRestore contributions": null,
+        "\u00b7 Editor restore": null,
+        "Extension scan + registration (renderer)": null,
+        "Extension host: connect to renderer": null,
+        "Workbench ready \u2192 extension host ready": null,
+        "Extension host ready (from process start)": null
+      },
+      "slowest_contribs": [],
+      "compile_cache": [
+        "extension-host: packaged cache inactive: enabled",
+        "main: packaged cache inactive: disabled"
+      ],
+      "compile_cache_line": "[node-compile-cache] extension-host: packaged cache inactive (status: enabled, configured: /private/tmp/ebp-oukcr7h6/friedliver-patched+caret-smooth/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host, active: /private/tmp/ebp-oukcr7h6/friedliver-patched+caret-smooth/udd/CachedData/d956e8a6ac5d904486557eea07e1d6bd62a4d36f/node/extension-host/v24.21.0-arm64-c3a7e8f2-501)",
+      "launches": {
+        "Workbench ready": {
+          "first": 1697,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Extension host ready": {
+          "first": 2955,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Process start \u2192 main started": {
+          "first": 174,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "Workbench ready \u2192 extension host ready": {
+          "first": 1258,
+          "later": null,
+          "later_min": null,
+          "later_max": null
+        },
+        "node_cache_kb": [
+          4406
+        ]
+      },
+      "idle_n_procs": {
+        "median": 9,
+        "p90": 9,
+        "min": 9,
+        "max": 9,
+        "n": 3,
+        "runs": [
+          9,
+          9,
+          9
+        ]
+      },
+      "idle_rss_mb": {
+        "median": 1276,
+        "p90": 1294.5,
+        "min": 1251.4,
+        "max": 1294.5,
+        "n": 3,
+        "runs": [
+          1275.9,
+          1294.5,
+          1251.4
+        ]
+      },
+      "idle_footprint_mb": {
+        "median": 401,
+        "p90": 422.4,
+        "min": 399.4,
+        "max": 422.4,
+        "n": 3,
+        "runs": [
+          422.4,
+          399.4,
+          400.7
+        ]
+      },
+      "idle_cpu_pct": {
+        "median": 0.38,
+        "p90": 0.38,
+        "min": 0.38,
+        "max": 0.38,
+        "n": 3,
+        "runs": [
+          0.38,
+          0.38,
+          0.38
+        ]
+      },
+      "idle_cpu_open_pct": {
+        "median": 12,
+        "p90": 13.62,
+        "min": 10.18,
+        "max": 13.62,
+        "n": 3,
+        "runs": [
+          13.62,
+          10.18,
+          12.14
+        ]
+      },
+      "files20_n_procs": null,
+      "files20_rss_mb": null,
+      "files20_footprint_mb": null,
+      "bigrepo_n_procs": null,
+      "bigrepo_rss_mb": null,
+      "bigrepo_footprint_mb": null,
+      "bigrepo_cpu_pct": null,
+      "bigrepo_cpu_open_pct": null,
+      "shell_fast_exthost_ms": null,
+      "shell_fast_search_ms": null,
+      "shell_fast_workbench_ms": null,
+      "shell_slow_exthost_ms": null,
+      "shell_slow_search_ms": null,
+      "shell_slow_workbench_ms": null,
+      "idle_cpu_by_proc": {
+        "renderer": 0.18,
+        "main": 0.1,
+        "watcherMain": 0.03,
+        "extensionHostProcess": 0.02,
+        "gpu": 0.02,
+        "sharedProcessMain": 0.02,
+        "network": 0.02,
+        "chrome_crashpad_handler": 0.0
+      },
+      "errors": []
+    }
+  },
+  "ab": {
+    "friedliver-patched vs friedliver": {
+      "arm": "friedliver-patched",
+      "ref": "friedliver",
+      "rows": [
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 408.0,
+          "arm": 399.2,
+          "delta": -8.800000000000011,
+          "pct": -2.1568627450980418,
+          "spread": 31.30000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1275.2,
+          "arm": 1271.9,
+          "delta": -3.2999999999999545,
+          "pct": -0.2587829360100341,
+          "spread": 40.90000000000009,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 0.44,
+          "arm": 0.43,
+          "delta": -0.010000000000000009,
+          "pct": -2.2727272727272747,
+          "spread": 0.14999999999999997,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: renderer",
+          "unit": "pct",
+          "base": 0.2,
+          "arm": 0.2,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.04999999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: gpu",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: extensionHostProcess",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: sharedProcessMain",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: network",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.0,
+          "delta": -0.02,
+          "pct": -100.0,
+          "spread": 0.02,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: main",
+          "unit": "pct",
+          "base": 0.1,
+          "arm": 0.12,
+          "delta": 0.01999999999999999,
+          "pct": 19.99999999999999,
+          "spread": 0.06999999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 11.82,
+          "arm": 12.3,
+          "delta": 0.4800000000000004,
+          "pct": 4.0609137055837605,
+          "spread": 10.62,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    },
+    "friedliver+blink vs friedliver": {
+      "arm": "friedliver+blink",
+      "ref": "friedliver",
+      "rows": [
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 408.0,
+          "arm": 411.7,
+          "delta": 3.6999999999999886,
+          "pct": 0.9068627450980365,
+          "spread": 31.30000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1275.2,
+          "arm": 1300.5,
+          "delta": 25.299999999999955,
+          "pct": 1.9840025094102849,
+          "spread": 42.700000000000045,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 0.44,
+          "arm": 0.41,
+          "delta": -0.030000000000000027,
+          "pct": -6.818181818181825,
+          "spread": 0.04999999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: renderer",
+          "unit": "pct",
+          "base": 0.2,
+          "arm": 0.18,
+          "delta": -0.020000000000000018,
+          "pct": -10.000000000000009,
+          "spread": 0.04000000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: gpu",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.020000000000000004,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: extensionHostProcess",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.02,
+          "delta": -0.009999999999999998,
+          "pct": -33.33333333333333,
+          "spread": 0.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: sharedProcessMain",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: network",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.0,
+          "delta": -0.02,
+          "pct": -100.0,
+          "spread": 0.03,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: main",
+          "unit": "pct",
+          "base": 0.1,
+          "arm": 0.1,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.03,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 11.82,
+          "arm": 13.97,
+          "delta": 2.1500000000000004,
+          "pct": 18.18950930626058,
+          "spread": 10.62,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    },
+    "friedliver+deferred-activation vs friedliver": {
+      "arm": "friedliver+deferred-activation",
+      "ref": "friedliver",
+      "rows": [
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 408.0,
+          "arm": 412.7,
+          "delta": 4.699999999999989,
+          "pct": 1.1519607843137227,
+          "spread": 31.30000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1275.2,
+          "arm": 1308.0,
+          "delta": 32.799999999999955,
+          "pct": 2.5721455457967344,
+          "spread": 83.09999999999991,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 0.44,
+          "arm": 0.48,
+          "delta": 0.03999999999999998,
+          "pct": 9.090909090909086,
+          "spread": 0.14,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: renderer",
+          "unit": "pct",
+          "base": 0.2,
+          "arm": 0.23,
+          "delta": 0.03,
+          "pct": 15.0,
+          "spread": 0.06,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: gpu",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: extensionHostProcess",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.030000000000000002,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: sharedProcessMain",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.02,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: network",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.02,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: main",
+          "unit": "pct",
+          "base": 0.1,
+          "arm": 0.12,
+          "delta": 0.01999999999999999,
+          "pct": 19.99999999999999,
+          "spread": 0.03,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 11.82,
+          "arm": 14.23,
+          "delta": 2.41,
+          "pct": 20.38917089678511,
+          "spread": 10.62,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    },
+    "friedliver+one-tsserver vs friedliver": {
+      "arm": "friedliver+one-tsserver",
+      "ref": "friedliver",
+      "rows": [
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 408.0,
+          "arm": 408.9,
+          "delta": 0.8999999999999773,
+          "pct": 0.2205882352941121,
+          "spread": 31.30000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1275.2,
+          "arm": 1269.4,
+          "delta": -5.7999999999999545,
+          "pct": -0.45483061480551706,
+          "spread": 40.90000000000009,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 0.44,
+          "arm": 0.4,
+          "delta": -0.03999999999999998,
+          "pct": -9.090909090909086,
+          "spread": 0.13,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: renderer",
+          "unit": "pct",
+          "base": 0.2,
+          "arm": 0.2,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.07,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: gpu",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.020000000000000004,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: extensionHostProcess",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.030000000000000002,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: sharedProcessMain",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: network",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.0,
+          "delta": -0.02,
+          "pct": -100.0,
+          "spread": 0.02,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: main",
+          "unit": "pct",
+          "base": 0.1,
+          "arm": 0.1,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.020000000000000004,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 11.82,
+          "arm": 14.75,
+          "delta": 2.9299999999999997,
+          "pct": 24.788494077834176,
+          "spread": 10.62,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    },
+    "friedliver+no-welcome vs friedliver": {
+      "arm": "friedliver+no-welcome",
+      "ref": "friedliver",
+      "rows": [
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 408.0,
+          "arm": 403.5,
+          "delta": -4.5,
+          "pct": -1.1029411764705883,
+          "spread": 31.30000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1275.2,
+          "arm": 1288.1,
+          "delta": 12.899999999999864,
+          "pct": 1.011606022584682,
+          "spread": 42.90000000000009,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 0.44,
+          "arm": 0.51,
+          "delta": 0.07,
+          "pct": 15.909090909090912,
+          "spread": 0.8499999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: renderer",
+          "unit": "pct",
+          "base": 0.2,
+          "arm": 0.21,
+          "delta": 0.009999999999999981,
+          "pct": 4.99999999999999,
+          "spread": 0.43000000000000005,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: gpu",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.05,
+          "delta": 0.020000000000000004,
+          "pct": 66.66666666666669,
+          "spread": 0.16,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: extensionHostProcess",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.05,
+          "delta": 0.020000000000000004,
+          "pct": 66.66666666666669,
+          "spread": 0.05,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: sharedProcessMain",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: network",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: main",
+          "unit": "pct",
+          "base": 0.1,
+          "arm": 0.12,
+          "delta": 0.01999999999999999,
+          "pct": 19.99999999999999,
+          "spread": 0.16999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 11.82,
+          "arm": 16.04,
+          "delta": 4.219999999999999,
+          "pct": 35.70219966159052,
+          "spread": 10.62,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    },
+    "friedliver+watcher-excludes vs friedliver": {
+      "arm": "friedliver+watcher-excludes",
+      "ref": "friedliver",
+      "rows": [
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 408.0,
+          "arm": 412.5,
+          "delta": 4.5,
+          "pct": 1.1029411764705883,
+          "spread": 31.30000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1275.2,
+          "arm": 1301.9,
+          "delta": 26.700000000000045,
+          "pct": 2.093789209535762,
+          "spread": 40.90000000000009,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 0.44,
+          "arm": 0.4,
+          "delta": -0.03999999999999998,
+          "pct": -9.090909090909086,
+          "spread": 0.27,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: renderer",
+          "unit": "pct",
+          "base": 0.2,
+          "arm": 0.18,
+          "delta": -0.020000000000000018,
+          "pct": -10.000000000000009,
+          "spread": 0.07999999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: gpu",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: extensionHostProcess",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: sharedProcessMain",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.030000000000000002,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: network",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.02,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: main",
+          "unit": "pct",
+          "base": 0.1,
+          "arm": 0.1,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.07999999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 11.82,
+          "arm": 16.45,
+          "delta": 4.629999999999999,
+          "pct": 39.170896785109974,
+          "spread": 10.62,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    },
+    "friedliver-patched+no-compile-cache vs friedliver": {
+      "arm": "friedliver-patched+no-compile-cache",
+      "ref": "friedliver",
+      "rows": [
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 408.0,
+          "arm": 403.1,
+          "delta": -4.899999999999977,
+          "pct": -1.2009803921568571,
+          "spread": 31.30000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1275.2,
+          "arm": 1265.3,
+          "delta": -9.900000000000091,
+          "pct": -0.7763488080301201,
+          "spread": 40.90000000000009,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 0.44,
+          "arm": 0.33,
+          "delta": -0.10999999999999999,
+          "pct": -24.999999999999996,
+          "spread": 0.14999999999999997,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: renderer",
+          "unit": "pct",
+          "base": 0.2,
+          "arm": 0.15,
+          "delta": -0.05000000000000002,
+          "pct": -25.000000000000007,
+          "spread": 0.1,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: gpu",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.02,
+          "delta": -0.009999999999999998,
+          "pct": -33.33333333333333,
+          "spread": 0.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: extensionHostProcess",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: sharedProcessMain",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.02,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: network",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.0,
+          "delta": -0.02,
+          "pct": -100.0,
+          "spread": 0.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: main",
+          "unit": "pct",
+          "base": 0.1,
+          "arm": 0.08,
+          "delta": -0.020000000000000004,
+          "pct": -20.000000000000004,
+          "spread": 0.01999999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 11.82,
+          "arm": 16.41,
+          "delta": 4.59,
+          "pct": 38.83248730964467,
+          "spread": 10.62,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    },
+    "friedliver-patched+no-fast-shell vs friedliver": {
+      "arm": "friedliver-patched+no-fast-shell",
+      "ref": "friedliver",
+      "rows": [
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 408.0,
+          "arm": 401.0,
+          "delta": -7.0,
+          "pct": -1.715686274509804,
+          "spread": 31.30000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1275.2,
+          "arm": 1279.2,
+          "delta": 4.0,
+          "pct": 0.3136762860727729,
+          "spread": 40.90000000000009,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 0.44,
+          "arm": 0.51,
+          "delta": 0.07,
+          "pct": 15.909090909090912,
+          "spread": 0.04999999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: renderer",
+          "unit": "pct",
+          "base": 0.2,
+          "arm": 0.26,
+          "delta": 0.06,
+          "pct": 30.0,
+          "spread": 0.05000000000000002,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: gpu",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: extensionHostProcess",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: sharedProcessMain",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: network",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: main",
+          "unit": "pct",
+          "base": 0.1,
+          "arm": 0.1,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.03,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 11.82,
+          "arm": 13.14,
+          "delta": 1.3200000000000003,
+          "pct": 11.167512690355332,
+          "spread": 10.62,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    },
+    "friedliver-patched+caret-smooth vs friedliver": {
+      "arm": "friedliver-patched+caret-smooth",
+      "ref": "friedliver",
+      "rows": [
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 408.0,
+          "arm": 400.7,
+          "delta": -7.300000000000011,
+          "pct": -1.7892156862745126,
+          "spread": 31.30000000000001,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1275.2,
+          "arm": 1275.9,
+          "delta": 0.7000000000000455,
+          "pct": 0.05489335006273882,
+          "spread": 43.09999999999991,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 0.44,
+          "arm": 0.38,
+          "delta": -0.06,
+          "pct": -13.636363636363635,
+          "spread": 0.04999999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: renderer",
+          "unit": "pct",
+          "base": 0.2,
+          "arm": 0.18,
+          "delta": -0.020000000000000018,
+          "pct": -10.000000000000009,
+          "spread": 0.03,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: gpu",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.02,
+          "delta": -0.009999999999999998,
+          "pct": -33.33333333333333,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: extensionHostProcess",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.02,
+          "delta": -0.009999999999999998,
+          "pct": -33.33333333333333,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: sharedProcessMain",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: network",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.02,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: main",
+          "unit": "pct",
+          "base": 0.1,
+          "arm": 0.1,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.020000000000000004,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 11.82,
+          "arm": 12.14,
+          "delta": 0.3200000000000003,
+          "pct": 2.7072758037225064,
+          "spread": 10.62,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    },
+    "friedliver-patched+no-compile-cache vs friedliver-patched": {
+      "arm": "friedliver-patched+no-compile-cache",
+      "ref": "friedliver-patched",
+      "rows": [
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 399.2,
+          "arm": 403.1,
+          "delta": 3.900000000000034,
+          "pct": 0.9769539078156398,
+          "spread": 27.599999999999966,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1271.9,
+          "arm": 1265.3,
+          "delta": -6.600000000000136,
+          "pct": -0.5189087192389445,
+          "spread": 25.40000000000009,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 0.43,
+          "arm": 0.33,
+          "delta": -0.09999999999999998,
+          "pct": -23.255813953488367,
+          "spread": 0.14999999999999997,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: renderer",
+          "unit": "pct",
+          "base": 0.2,
+          "arm": 0.15,
+          "delta": -0.05000000000000002,
+          "pct": -25.000000000000007,
+          "spread": 0.1,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: gpu",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.02,
+          "delta": -0.009999999999999998,
+          "pct": -33.33333333333333,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: extensionHostProcess",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: sharedProcessMain",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.02,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: main",
+          "unit": "pct",
+          "base": 0.12,
+          "arm": 0.08,
+          "delta": -0.039999999999999994,
+          "pct": -33.33333333333333,
+          "spread": 0.06999999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 12.3,
+          "arm": 16.41,
+          "delta": 4.109999999999999,
+          "pct": 33.414634146341456,
+          "spread": 5.219999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    },
+    "friedliver-patched+no-fast-shell vs friedliver-patched": {
+      "arm": "friedliver-patched+no-fast-shell",
+      "ref": "friedliver-patched",
+      "rows": [
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 399.2,
+          "arm": 401.0,
+          "delta": 1.8000000000000114,
+          "pct": 0.4509018036072173,
+          "spread": 27.599999999999966,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1271.9,
+          "arm": 1279.2,
+          "delta": 7.2999999999999545,
+          "pct": 0.5739444924915444,
+          "spread": 37.09999999999991,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 0.43,
+          "arm": 0.51,
+          "delta": 0.08000000000000002,
+          "pct": 18.6046511627907,
+          "spread": 0.14999999999999997,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: renderer",
+          "unit": "pct",
+          "base": 0.2,
+          "arm": 0.26,
+          "delta": 0.06,
+          "pct": 30.0,
+          "spread": 0.05000000000000002,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: gpu",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: extensionHostProcess",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.03,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: sharedProcessMain",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: network",
+          "unit": "pct",
+          "base": 0.0,
+          "arm": 0.02,
+          "delta": 0.02,
+          "pct": null,
+          "spread": 0.02,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: main",
+          "unit": "pct",
+          "base": 0.12,
+          "arm": 0.1,
+          "delta": -0.01999999999999999,
+          "pct": -16.66666666666666,
+          "spread": 0.06999999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 12.3,
+          "arm": 13.14,
+          "delta": 0.8399999999999999,
+          "pct": 6.829268292682926,
+          "spread": 2.6799999999999997,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    },
+    "friedliver-patched+caret-smooth vs friedliver-patched": {
+      "arm": "friedliver-patched+caret-smooth",
+      "ref": "friedliver-patched",
+      "rows": [
+        {
+          "metric": "Idle footprint",
+          "unit": "mb",
+          "base": 399.2,
+          "arm": 400.7,
+          "delta": 1.5,
+          "pct": 0.37575150300601207,
+          "spread": 27.599999999999966,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle RSS",
+          "unit": "mb",
+          "base": 1271.9,
+          "arm": 1275.9,
+          "delta": 4.0,
+          "pct": 0.3144901328720811,
+          "spread": 43.09999999999991,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "Idle CPU (ready+60\u2192120 s)",
+          "unit": "pct",
+          "base": 0.43,
+          "arm": 0.38,
+          "delta": -0.04999999999999999,
+          "pct": -11.627906976744184,
+          "spread": 0.14999999999999997,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: renderer",
+          "unit": "pct",
+          "base": 0.2,
+          "arm": 0.18,
+          "delta": -0.020000000000000018,
+          "pct": -10.000000000000009,
+          "spread": 0.04999999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: gpu",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.02,
+          "delta": -0.009999999999999998,
+          "pct": -33.33333333333333,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: extensionHostProcess",
+          "unit": "pct",
+          "base": 0.03,
+          "arm": 0.02,
+          "delta": -0.009999999999999998,
+          "pct": -33.33333333333333,
+          "spread": 0.009999999999999998,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: sharedProcessMain",
+          "unit": "pct",
+          "base": 0.02,
+          "arm": 0.02,
+          "delta": 0.0,
+          "pct": 0.0,
+          "spread": 0.0,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: network",
+          "unit": "pct",
+          "base": 0.0,
+          "arm": 0.02,
+          "delta": 0.02,
+          "pct": null,
+          "spread": 0.02,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "\u00b7 idle CPU: main",
+          "unit": "pct",
+          "base": 0.12,
+          "arm": 0.1,
+          "delta": -0.01999999999999999,
+          "pct": -16.66666666666666,
+          "spread": 0.06999999999999999,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        },
+        {
+          "metric": "CPU, first 60 s after window",
+          "unit": "pct",
+          "base": 12.3,
+          "arm": 12.14,
+          "delta": -0.16000000000000014,
+          "pct": -1.3008130081300824,
+          "spread": 3.4399999999999995,
+          "n": [
+            3,
+            3
+          ],
+          "verdict": "noise"
+        }
+      ]
+    }
+  }
+}

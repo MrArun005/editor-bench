@@ -24,7 +24,7 @@ on:
         required: false
         default: '1.0'
       suite:
-        description: '"full" (cold, 5 MB, idle, 20 files) or "idle" (warm-up + 3 idle runs per arm, for bisecting idle CPU)'
+        description: '"full" (cold, 5 MB, idle, 20 files), "idle" (warm-up + 3 idle runs per arm) or "idle-editor" (same, one .ts file open and focused)'
         required: false
         default: 'full'
   schedule:

@@ -1,0 +1,10 @@
+2026-10-17 22:34:55.781 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-17 22:34:56.191 [info] Started local extension host with pid 4521.
+2026-10-17 22:34:56.233 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false
+2026-10-17 22:34:56.450 [info] Started initializing default profile extensions in extensions installation folder. file:///private/tmp/ebp-oukcr7h6/friedliver%2Bblink/ext
+2026-10-17 22:34:56.713 [info] Completed initializing default profile extensions in extensions installation folder. file:///private/tmp/ebp-oukcr7h6/friedliver%2Bblink/ext
+2026-10-17 22:34:56.892 [info] [DefaultAccount] Authentication provider is not available. {"id":"","name":"","enterprise":false}
+2026-10-17 22:34:56.953 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-17 22:34:57.730 [warning] [CloudSandboxApi] No 'github' session with scopes [read:user, user:email, repo, workflow]
+2026-10-17 22:34:59.712 [info] [perf] Render performance baseline is 21ms
+2026-10-17 22:35:01.235 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false

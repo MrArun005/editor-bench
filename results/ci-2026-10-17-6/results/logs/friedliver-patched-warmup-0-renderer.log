@@ -1,0 +1,9 @@
+2026-10-17 22:34:11.950 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-17 22:34:12.344 [info] Started local extension host with pid 3386.
+2026-10-17 22:34:12.491 [info] Started initializing default profile extensions in extensions installation folder. file:///private/tmp/ebp-oukcr7h6/friedliver-patched/ext
+2026-10-17 22:34:13.050 [info] Completed initializing default profile extensions in extensions installation folder. file:///private/tmp/ebp-oukcr7h6/friedliver-patched/ext
+2026-10-17 22:34:13.503 [info] [DefaultAccount] Authentication provider is not available. {"id":"","name":"","enterprise":false}
+2026-10-17 22:34:14.200 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false
+2026-10-17 22:34:15.457 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-17 22:34:17.955 [info] [perf] Render performance baseline is 51ms
+2026-10-17 22:34:19.204 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false

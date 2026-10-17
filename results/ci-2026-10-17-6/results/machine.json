@@ -1,0 +1,179 @@
+{
+  "ci": true,
+  "runner": "GitHub Actions 1000005906",
+  "run_url": "https://github.com/MrArun005/editor-bench/actions/runs/39073005329",
+  "fetch": {
+    "friedliver": {
+      "source": "gh release MrArun005/FriedLiver-Code",
+      "version": "v1.142.0-5",
+      "hash": "sha256 verified",
+      "codesign": "valid",
+      "spctl": "<app>: rejected\norigin=FriedLiver Self-Signed Code Signing",
+      "status": "ok"
+    },
+    "friedliver-patched": {
+      "source": "gh MrArun005/FriedLiver-Code 39055910922",
+      "version": "run 39055910922: perf/core@3f198b5401 (workflow_dispatch)",
+      "hash": "trusted run; artifact sha256 digest verified",
+      "codesign": "valid",
+      "spctl": "<app>: rejected\norigin=FriedLiver Self-Signed Code Signing",
+      "status": "ok"
+    }
+  },
+  "model": "Apple Virtual Machine 1 / VirtualMac2,1",
+  "chip": "Apple M1 (Virtual)",
+  "cores": "3",
+  "ram": "7 GB",
+  "macos": "26.6.2 (25G83)",
+  "power_at_start": "AC ?",
+  "date": "2026-10-17",
+  "apps": {
+    "friedliver": {
+      "label": "FriedLiver",
+      "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 563,
+      "base": null,
+      "settings": null,
+      "env": null,
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    },
+    "friedliver-patched": {
+      "label": "FriedLiver patched",
+      "path": "/Users/runner/work/_temp/bench/apps/friedliver-patched/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 518,
+      "base": null,
+      "settings": null,
+      "env": null,
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    },
+    "friedliver+blink": {
+      "label": "FriedLiver + blink",
+      "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 563,
+      "base": "friedliver",
+      "settings": {
+        "editor.cursorBlinking": "blink"
+      },
+      "env": null,
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    },
+    "friedliver+deferred-activation": {
+      "label": "FriedLiver + deferred-activation",
+      "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 563,
+      "base": "friedliver",
+      "settings": {
+        "extensions.experimental.deferredStartupFinishedActivation": true
+      },
+      "env": null,
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    },
+    "friedliver+one-tsserver": {
+      "label": "FriedLiver + one-tsserver",
+      "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 563,
+      "base": "friedliver",
+      "settings": {
+        "typescript.tsserver.useSyntaxServer": "never"
+      },
+      "env": null,
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    },
+    "friedliver+no-welcome": {
+      "label": "FriedLiver + no-welcome",
+      "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 563,
+      "base": "friedliver",
+      "settings": {
+        "workbench.startupEditor": "none"
+      },
+      "env": null,
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    },
+    "friedliver+watcher-excludes": {
+      "label": "FriedLiver + watcher-excludes",
+      "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 563,
+      "base": "friedliver",
+      "settings": {
+        "files.watcherExclude": {
+          "**/node_modules/*/**": true,
+          "**/.venv/**": true,
+          "**/venv/**": true,
+          "**/__pycache__/**": true,
+          "**/.mypy_cache/**": true,
+          "**/.pytest_cache/**": true,
+          "**/.next/**": true,
+          "**/.nuxt/**": true,
+          "**/.turbo/**": true,
+          "**/.parcel-cache/**": true,
+          "**/.gradle/**": true
+        }
+      },
+      "env": null,
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    },
+    "friedliver-patched+no-compile-cache": {
+      "label": "FriedLiver patched + no-compile-cache",
+      "path": "/Users/runner/work/_temp/bench/apps/friedliver-patched/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 518,
+      "base": "friedliver-patched",
+      "settings": {},
+      "env": {
+        "NODE_DISABLE_COMPILE_CACHE": "1"
+      },
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    },
+    "friedliver-patched+no-fast-shell": {
+      "label": "FriedLiver patched + no-fast-shell",
+      "path": "/Users/runner/work/_temp/bench/apps/friedliver-patched/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 518,
+      "base": "friedliver-patched",
+      "settings": {
+        "friedliver.fastShellEnv": false
+      },
+      "env": null,
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    },
+    "friedliver-patched+caret-smooth": {
+      "label": "FriedLiver patched + caret-smooth",
+      "path": "/Users/runner/work/_temp/bench/apps/friedliver-patched/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 518,
+      "base": "friedliver-patched",
+      "settings": {
+        "editor.cursorBlinking": "smooth"
+      },
+      "env": null,
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    }
+  },
+  "fixture": {
+    "repo": "microsoft/vscode-extension-samples",
+    "commit": "65c1c44800eeac6fb065a54823ee5ae62c79540a",
+    "big_file_bytes": 5242880
+  },
+  "scenarios": [],
+  "shell_sleep": 1.0,
+  "suite": "idle",
+  "bigrepo": false
+}
