@@ -34,7 +34,6 @@ jobs:
     runs-on: macos-latest     # Apple Silicon (arm64)
     timeout-minutes: 150
     env:
-      GH_TOKEN: ${{ secrets.FRIEDLIVER_TOKEN || github.token }}   # FriedLiver-Code is public; PAT only if that changes
       # Inputs reach scripts only as environment variables. A scheduled run has no inputs: same defaults.
       BENCH_ONLY: ${{ inputs.apps || 'vscode,friedliver' }}
       BENCH_VARIANTS: ${{ inputs.variants || 'friedliver+settings-perf' }}
@@ -42,6 +41,8 @@ jobs:
       FRIEDLIVER_REF: ${{ inputs.friedliver_ref }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false   # no token left in .git/config for the benchmark step
 
       - name: Unit tests (parsing, stats, URL building)
         run: python3 -m unittest discover -s tests -v
@@ -53,6 +54,9 @@ jobs:
           sw_vers; sysctl -n machdep.cpu.brand_string hw.memsize hw.ncpu; df -h /
 
       - name: Download + verify apps (official sources)
+        # The token is exposed to this step only: the benchmark step runs third-party binaries.
+        env:
+          GH_TOKEN: ${{ secrets.FRIEDLIVER_TOKEN || github.token }}   # FriedLiver-Code is public; PAT only if that changes
         run: python3 fetch_apps.py "$BENCH_SCRATCH"
 
       - name: Workspace fixtures (pinned commits)

@@ -23,10 +23,13 @@ def quote_url(url):
     return urllib.parse.urlunsplit(p._replace(path=urllib.parse.quote(urllib.parse.unquote(p.path))))
 
 def parse_ref(ref):
-    """friedliver_ref input -> ('tag', tag, None) | ('run', run_id, artifact name). Validated: it reaches gh."""
-    m = re.fullmatch(r'(\d+)(?:/([A-Za-z0-9][\w.-]*))?', ref)
+    """friedliver_ref input -> ('tag', tag, None) | ('run', run_id, FL_ARTIFACT). Validated: it reaches gh.
+    A run's artifact may only be the macOS build artifact; nothing else from a run is ever executed."""
+    m = re.fullmatch(r'(\d+)(?:/(.*))?', ref)
     if m:
-        return 'run', m[1], m[2] or FL_ARTIFACT
+        if m[2] not in (None, FL_ARTIFACT):
+            raise ValueError(f'only the {FL_ARTIFACT} artifact can be benchmarked, got {m[2]!r}')
+        return 'run', m[1], FL_ARTIFACT
     if re.fullmatch(r'[A-Za-z0-9][\w.+-]*', ref):
         return 'tag', ref, None
     raise ValueError(f'friedliver_ref must be a release tag or <run id>[/<artifact>], got {ref!r}')
@@ -112,6 +115,9 @@ def friedliver_patched():
     if kind == 'tag':
         url, name, want, version = friedliver(ref, 'flp')
         return url, 'friedliver-patched.dmg', want, version
+    run = json.loads(subprocess.run(['gh', 'api', f'repos/{FL_REPO}/actions/runs/{ref}'],
+                                    capture_output=True, text=True, check=True).stdout)
+    check_run(run)
     arts = json.loads(subprocess.run(['gh', 'api', f'repos/{FL_REPO}/actions/runs/{ref}/artifacts?per_page=100'],
                                      capture_output=True, text=True, check=True).stdout)['artifacts']
     art = next(a for a in arts if a['name'] == artifact)
@@ -126,10 +132,28 @@ def friedliver_patched():
     inner_dir = os.path.join(DL, 'flp-inner')
     subprocess.run(['ditto', '-x', '-k', outer, inner_dir], check=True)
     inner = glob.glob(os.path.join(inner_dir, '*.zip'))[0]
-    run = json.loads(subprocess.run(['gh', 'api', f'repos/{FL_REPO}/actions/runs/{ref}', '--jq', '{sha: .head_sha, branch: .head_branch}'],
-                                    capture_output=True, text=True, check=True).stdout)
-    return ('file://' + inner, 'friedliver-patched.zip', ('verified', 'artifact sha256 digest verified'),
-            f"run {ref}: {run['branch']}@{run['sha'][:10]}")
+    return ('file://' + inner, 'friedliver-patched.zip', ('verified', 'trusted run; artifact sha256 digest verified'),
+            f"run {ref}: {run['head_branch']}@{run['head_sha'][:10]} ({run['event']})")
+
+TRUSTED_BRANCH = re.compile(r'main|(?:perf|release|ui)/[A-Za-z0-9._/-]+|v\d[A-Za-z0-9.+-]*')
+
+def check_run(run):
+    """Gate for the patched lane: the bench executes whatever the artifact holds, so only Build FriedLiver runs
+    triggered by a push or a dispatch on the upstream repo itself (never a fork PR) from a trusted branch or a
+    v* tag qualify. `run` is the GET /repos/{FL_REPO}/actions/runs/{id} payload. Raises ValueError."""
+    head = (run.get('head_repository') or {}).get('full_name')
+    branch = run.get('head_branch') or ''
+    problems = [msg for ok, msg in (
+        ((run.get('repository') or {}).get('full_name') == FL_REPO, 'run is not in ' + FL_REPO),
+        (run.get('path') == '.github/workflows/build.yml', f"workflow {run.get('path')!r} is not build.yml"),
+        (run.get('name') == 'Build FriedLiver', f"workflow name {run.get('name')!r} is not 'Build FriedLiver'"),
+        (run.get('event') in ('push', 'workflow_dispatch'), f"event {run.get('event')!r} is not push/workflow_dispatch"),
+        (head == FL_REPO, f'head repository {head!r} is not {FL_REPO} (fork runs are refused)'),
+        (bool(TRUSTED_BRANCH.fullmatch(branch)) and '..' not in branch,
+         f'branch {branch!r} is not main, perf/*, release/*, ui/* or a v* tag'),
+    ) if not ok]
+    if problems:
+        raise ValueError('untrusted run: ' + '; '.join(problems))
 
 RESOLVERS = [('friedliver', friedliver, False), ('cursor', cursor, True), ('antigravity-ide', antigravity_ide, True),
              ('vscode', vscode, True), ('antigravity', antigravity, True), ('opencode', opencode, True)]

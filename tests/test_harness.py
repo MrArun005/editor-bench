@@ -26,14 +26,49 @@ class RefTest(unittest.TestCase):
     def test_tag(self):
         self.assertEqual(fetch_apps.parse_ref('v1.142.0-5'), ('tag', 'v1.142.0-5', None))
 
-    def test_run_id_default_and_named_artifact(self):
+    def test_run_id_only_with_the_fixed_artifact(self):
         self.assertEqual(fetch_apps.parse_ref('39043981497'), ('run', '39043981497', 'friedliver-fork-macos-arm64'))
-        self.assertEqual(fetch_apps.parse_ref('39043981497/my-art.1'), ('run', '39043981497', 'my-art.1'))
+        self.assertEqual(fetch_apps.parse_ref('39043981497/friedliver-fork-macos-arm64'),
+                         ('run', '39043981497', 'friedliver-fork-macos-arm64'))
+        with self.assertRaises(ValueError):
+            fetch_apps.parse_ref('39043981497/my-art.1')
 
     def test_rejects_junk(self):
         for bad in ('', 'v1;rm -rf /', '../x', '123/../../x', '--help', 'a b'):
             with self.assertRaises(ValueError, msg=bad):
                 fetch_apps.parse_ref(bad)
+
+
+class RunGateTest(unittest.TestCase):
+    """Only artifacts of trusted Build FriedLiver runs on the upstream repo may be benchmarked (and executed)."""
+    GOOD = dict(path='.github/workflows/build.yml', name='Build FriedLiver', event='push', head_branch='main',
+                head_repository=dict(full_name='MrArun005/FriedLiver-Code'), repository=dict(full_name='MrArun005/FriedLiver-Code'))
+
+    def run_with(self, **kw):
+        return fetch_apps.check_run(dict(self.GOOD, **kw))
+
+    def test_accepts_trusted_runs(self):
+        for branch in ('main', 'perf/compile-cache', 'release/v1.142.0-5', 'ui/x', 'v1.142.0-5'):
+            self.run_with(head_branch=branch)
+        self.run_with(event='workflow_dispatch', head_branch='perf/x')
+
+    def test_rejects_fork_runs(self):
+        with self.assertRaises(ValueError):
+            self.run_with(head_repository=dict(full_name='evil/FriedLiver-Code'))
+        with self.assertRaises(ValueError):
+            self.run_with(head_repository=None)
+
+    def test_rejects_other_workflows_and_events(self):
+        for kw in (dict(path='.github/workflows/ci.yml'), dict(path='.github/workflows/build.yml@refs/pull/1/merge'),
+                   dict(name='Build FriedLiver (evil)'), dict(event='pull_request'), dict(event='pull_request_target'),
+                   dict(event='workflow_run'), dict(repository=dict(full_name='evil/x'))):
+            with self.assertRaises(ValueError, msg=kw):
+                self.run_with(**kw)
+
+    def test_rejects_other_branches(self):
+        for branch in ('feat/x', 'perf', 'mainx', 'perf/../main', '', None, 'x/main', 'vx', 'release/'):
+            with self.assertRaises(ValueError, msg=branch):
+                self.run_with(head_branch=branch)
 
 
 class MarkerTest(unittest.TestCase):
