@@ -420,11 +420,18 @@ def collect_logs(app, kind, i, rec):
         rec['slow_contribs'] = stats.slow_contribs(text)
         os.makedirs(LOGS, exist_ok=True)
         shutil.copy(renderer[0], os.path.join(LOGS, f"{app['id']}-{kind}-{i}-renderer.log"))
-    main_log = os.path.join(runs[-1], 'main.log')
-    if os.path.exists(main_log):
-        cc = [l.strip()[:300] for l in open(main_log, errors='replace') if 'compile cache' in l.lower()]
-        if cc:
-            rec['compile_cache'] = cc[:3]
+    cc = []                                   # one status line per process (main, shared, pty host, ext host)
+    for f in sorted(glob.glob(os.path.join(runs[-1], '**', '*.log'), recursive=True)):
+        cc += [l[:400] for l in stats.cache_lines(open(f, errors='replace').read())]
+    if cc:
+        rec['compile_cache'] = cc
+    rec['node_cache'] = node_cache(app)
+
+def node_cache(app):
+    """Files and KB in <udd>/CachedData/<commit>/node (FriedLiver's writable Node compile cache)."""
+    files = [f for f in glob.glob(os.path.join(tag_of(app), 'udd', 'CachedData', '*', 'node', '**'), recursive=True)
+             if os.path.isfile(f)]
+    return dict(files=len(files), kb=sum(os.path.getsize(f) for f in files) // 1024)
 
 def idle(app, kind='idle', i=0):
     """Ready (first window) +60 s: memory snapshot (CPU over those 60 s = cpu_open_pct); then CPU average
@@ -458,6 +465,7 @@ def idle(app, kind='idle', i=0):
     if not ok:
         rec['error'] = 'no window' if win is None else 'low memory abort'
     rec['killed_stragglers'] = quit_app(app)
+    rec['node_cache'] = node_cache(app)
     record(rec)
     time.sleep(GAP_S)
 

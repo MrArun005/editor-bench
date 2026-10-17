@@ -47,6 +47,24 @@ def slowest(app, n=8):
     return [(cid, round(statistics.median(ms)), len(ms), len(cold)) for cid, ms in top]
 
 
+def launch_split(app):
+    """Launch 1 (the warm-up: fresh profile, every cache empty) vs launches 2-6 (the 5 cold runs), for the
+    metrics a compile cache should move, plus the node compile-cache folder after each launch."""
+    warm = next((r for r in RUNS if r['app'] == app and r['kind'] == 'warmup' and not r.get('error')), None)
+    if not warm or 'marks' not in warm:
+        return None
+    out = {}
+    for label, key in (('Workbench ready', 'workbench_ms'), ('Extension host ready', 'exthost_ms'),
+                       ('Process start → main started', 'Process start → main started'),
+                       ('Workbench ready → extension host ready', 'Workbench ready → extension host ready')):
+        later = vals(app, 'cold', key)
+        out[label] = dict(first=value(warm, key), later=round(statistics.median(later)) if later else None,
+                          later_min=min(later, default=None), later_max=max(later, default=None))
+    cache = [r.get('node_cache') for r in RUNS if r['app'] == app and r['kind'] in ('warmup', 'cold')]
+    out['node_cache_kb'] = [c['kb'] if c else None for c in cache]
+    return out
+
+
 IDLE_KEYS = ('n_procs', 'rss_mb', 'footprint_mb', 'cpu_pct', 'cpu_open_pct')
 S = {}
 for a in APPS:
@@ -59,7 +77,12 @@ for a in APPS:
                     big5mb_workbench_ms=agg(a, 'big5mb', 'workbench_ms'),
                     phases={p: agg(a, 'cold', p) for p, _, _ in stats.PHASES},
                     slowest_contribs=slowest(a),
-                    compile_cache=next((r['compile_cache'] for r in RUNS if r['app'] == a and r.get('compile_cache')), None),
+                    compile_cache=sorted({l.split(' (status')[0].replace('[node-compile-cache] ', '') + ': '
+                                          + l.split('status: ')[1].split(',')[0]
+                                          for r in RUNS if r['app'] == a for l in r.get('compile_cache') or [] if 'status: ' in l}),
+                    compile_cache_line=next((l for r in RUNS if r['app'] == a for l in r.get('compile_cache') or []
+                                             if 'extension-host' in l), None),
+                    launches=launch_split(a),
                     **{f'idle_{k}': agg(a, 'idle', k) for k in IDLE_KEYS},
                     **{f'files20_{k}': agg(a, 'files20', k) for k in ('n_procs', 'rss_mb', 'footprint_mb')},
                     **{f'bigrepo_{k}': agg(a, 'bigrepo', k) for k in IDLE_KEYS},
@@ -160,9 +183,23 @@ if fam:
         sc = S[a]['slowest_contribs']
         md.append(f"- **{S[a]['label']}**: " + (', '.join(f'`{c}` {ms} ms ({k}/{n})' for c, ms, k, n in sc)
                                               if sc else 'none above the threshold'))
-    cc = [(S[a]['label'], S[a]['compile_cache']) for a in fam if S[a]['compile_cache']]
-    if cc:
-        md += ['', 'Node compile cache (main.log): ' + '; '.join(f"{l}: `{c[0]}`" for l, c in cc)]
+    md += ['', '### Node compile cache', '',
+           'Status per process, from the `[node-compile-cache]` line each process writes to its log; folder size of `CachedData/<commit>/node` after each launch (launch 1 = warm-up, 2–6 = the cold runs).', '',
+           '| Arm | Status per process | Folder KB after launches 1…6 |', '|---|---|---|']
+    for a in fam:
+        L = S[a]['launches'] or {}
+        md.append(f"| {S[a]['label']} | {'; '.join(S[a]['compile_cache']) or 'no status line'} | "
+                  f"{' → '.join('–' if k is None else str(k) for k in L.get('node_cache_kb', [])) or '–'} |")
+    ext = [(S[a]['label'], S[a]['compile_cache_line']) for a in fam if S[a]['compile_cache_line']]
+    if ext:
+        md += [''] + [f'- {l}: `{c}`' for l, c in ext]
+    md += ['', '### Launch 1 (fresh profile, empty caches) vs launches 2–6', '',
+           '| Arm | Metric | Launch 1 | Launches 2–6 median [min–max] | Δ |', '|---|---|---:|---:|---:|']
+    for a in fam:
+        for metric, d in (S[a]['launches'] or {}).items():
+            if metric == 'node_cache_kb' or d['first'] is None or d['later'] is None:
+                continue
+            md.append(f"| {S[a]['label']} | {metric} | {d['first']:,} | {d['later']:,} [{d['later_min']:,}–{d['later_max']:,}] | {d['later'] - d['first']:+,} |")
 md += ['', '## Memory, processes and idle CPU', '',
        'Workspace open; snapshot at ready + 60 s; idle CPU over the next 60 s. Median [min–max] of 3 runs.', '',
        '| Arm | Processes | Physical footprint (MB) | Sum of RSS (MB) | Idle CPU (% of one core) | CPU in the first 60 s (%) | After 20 files: footprint / RSS (MB) |',

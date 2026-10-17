@@ -125,3 +125,8 @@ def split_list(text, all_items=()):
     if text == 'none':
         return []
     return [t.strip() for t in text.split(',') if t.strip()]
+
+
+def cache_lines(log_text):
+    """'[node-compile-cache] <kind>: ... (status: ..., configured: ..., active: ...)' lines, one per process log."""
+    return [l[l.index('[node-compile-cache]'):].strip() for l in log_text.splitlines() if '[node-compile-cache]' in l]

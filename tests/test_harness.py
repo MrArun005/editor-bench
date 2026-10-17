@@ -113,6 +113,16 @@ class LogTest(unittest.TestCase):
         self.assertEqual(stats.slow_contribs(log), [('a.b', 120), ('workbench.contrib.chat', 45)])
 
 
+class CompileCacheLogTest(unittest.TestCase):
+    def test_cache_lines(self):
+        log = ("2026-10-18 01:00:00.000 [info] [node-compile-cache] extension-host: packaged cache inactive "
+               "(status: enabled, configured: /u/CachedData/abc/node/extension-host, active: /u/CachedData/abc/node/extension-host)\n"
+               "2026-10-18 01:00:00.100 [info] unrelated\n")
+        self.assertEqual(stats.cache_lines(log), ['[node-compile-cache] extension-host: packaged cache inactive '
+                         '(status: enabled, configured: /u/CachedData/abc/node/extension-host, active: /u/CachedData/abc/node/extension-host)'])
+        self.assertEqual(stats.cache_lines('nothing here'), [])
+
+
 class CompareTest(unittest.TestCase):
     def test_beyond_noise(self):
         c = stats.compare([2800, 2820, 2840], [2500, 2510, 2520], 'ms')
