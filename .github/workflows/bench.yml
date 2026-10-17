@@ -1,0 +1,76 @@
+name: editor-bench
+
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Comma-separated app ids to run (empty = all): friedliver,cursor,antigravity-ide,vscode,antigravity,opencode'
+        required: false
+        default: ''
+  schedule:
+    - cron: '0 3 * * 1'   # Mondays 03:00 UTC
+
+permissions:
+  contents: read
+
+concurrency:
+  group: editor-bench
+  cancel-in-progress: false
+
+jobs:
+  bench:
+    runs-on: macos-latest     # Apple Silicon (arm64)
+    timeout-minutes: 150
+    env:
+      GH_TOKEN: ${{ secrets.FRIEDLIVER_TOKEN || github.token }}   # FriedLiver-Code is public; PAT only if that changes
+      BENCH_ONLY: ${{ inputs.only }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scratch dir
+        run: |
+          echo "BENCH_SCRATCH=$RUNNER_TEMP/bench" >> "$GITHUB_ENV"
+          echo "BENCH_APPS=$RUNNER_TEMP/bench/apps.json" >> "$GITHUB_ENV"
+          sw_vers; sysctl -n machdep.cpu.brand_string hw.memsize hw.ncpu; df -h /
+
+      - name: Download + verify apps (official sources)
+        run: python3 fetch_apps.py "$BENCH_SCRATCH"
+
+      - name: Workspace fixture (pinned commit)
+        run: ./setup_fixture.sh "$BENCH_SCRATCH/fixture"
+
+      - name: Build window watcher
+        run: swiftc -O winwait.swift -o "$BENCH_SCRATCH/winwait"
+
+      - name: Benchmark (sequential, one app at a time)
+        run: |
+          python3 bench.py preflight
+          python3 bench.py run
+          python3 bench.py postflight
+
+      - name: Report
+        if: always()
+        run: |
+          if [ -s results/raw-runs.jsonl ]; then python3 report.py; fi
+          {
+            if [ -f REPORT.md ]; then cat REPORT.md; else echo "No results produced."; fi
+            echo
+            echo "---"
+            echo "Charts: download the **editor-bench-report** artifact and open \`report.html\` (job summaries strip inline SVG)."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: editor-bench-report
+          path: |
+            results/*.json
+            results/*.jsonl
+            REPORT.md
+            report.html
+          if-no-files-found: warn
+
+      - name: Cleanup throwaway profiles
+        if: always()
+        run: python3 bench.py cleanup; rm -rf "$BENCH_SCRATCH"

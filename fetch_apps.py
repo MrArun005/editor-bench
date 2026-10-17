@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+"""Download every app under test from its official source into <scratch>/apps, verify it, and
+write <scratch>/apps.json ({id: app path}) for bench.py plus results/fetch.json (provenance).
+
+Verification policy: a published hash is checked when the vendor publishes one; codesign -v must
+pass; spctl (Gatekeeper/notarization) must pass for vendor builds. FriedLiver release builds are
+ad-hoc signed, so for it the release's SHA256SUMS.txt is the integrity check and the spctl
+rejection is recorded, not fatal. An app that fails verification is skipped, never run.
+"""
+import base64, glob, hashlib, json, os, re, shutil, subprocess, sys, urllib.request
+
+SCRATCH = sys.argv[1]
+APPS = os.path.join(SCRATCH, 'apps')
+DL = os.path.join(SCRATCH, 'dl')
+RES = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
+for d in (APPS, DL, RES):
+    os.makedirs(d, exist_ok=True)
+
+def get(url):
+    req = urllib.request.Request(url, headers={'User-Agent': 'editor-bench'})
+    return urllib.request.urlopen(req, timeout=60).read()
+
+def download(url, name):
+    path = os.path.join(DL, name)
+    subprocess.run(['curl', '-fsSL', '--retry', '3', '-o', path, url], check=True)
+    return path
+
+def digest(path, algo):
+    h = hashlib.new(algo)
+    with open(path, 'rb') as f:
+        for chunk in iter(lambda: f.read(1 << 20), b''):
+            h.update(chunk)
+    return h
+
+def extract(archive, dest_id):
+    dest = os.path.join(APPS, dest_id)
+    os.makedirs(dest, exist_ok=True)
+    if archive.endswith('.dmg'):
+        mnt = os.path.join(DL, dest_id + '-mnt')
+        subprocess.run(['hdiutil', 'attach', '-nobrowse', '-readonly', '-noautoopen', '-mountpoint', mnt, archive],
+                       check=True, capture_output=True)
+        try:
+            app = glob.glob(os.path.join(mnt, '*.app'))[0]
+            subprocess.run(['ditto', app, os.path.join(dest, os.path.basename(app))], check=True)
+        finally:
+            subprocess.run(['hdiutil', 'detach', mnt, '-force'], capture_output=True)
+    else:
+        subprocess.run(['ditto', '-x', '-k', archive, dest], check=True)
+    os.remove(archive)
+    return glob.glob(os.path.join(dest, '*.app'))[0]
+
+def yml_field(text, key):
+    m = re.search(rf'^\s*-?\s*{key}:\s*(\S+)', text, re.M)
+    return m and m.group(1).strip('\'"')
+
+# --- per-vendor resolvers: return (url, archive name, expected hash or None, version) -------------
+
+def vscode():
+    return 'https://update.code.visualstudio.com/latest/darwin-arm64/stable', 'vscode.zip', None, None
+
+def cursor():
+    return ('https://api2.cursor.sh/updates/download/golden/darwin-arm64/cursor/latest', 'cursor.dmg', None, None)
+
+def antigravity_ide():
+    d = json.loads(get('https://antigravity-ide-auto-updater-974169037036.us-central1.run.app/api/update/darwin-arm64/stable/latest'))
+    return d['url'], 'antigravity-ide.zip', ('sha256', d['sha256hash']), d.get('productVersion')
+
+def antigravity():
+    y = get('https://antigravity-hub-auto-updater-974169037036.us-central1.run.app/manifest/latest-arm64-mac.yml').decode()
+    sha = base64.b64decode(yml_field(y, 'sha512')).hex()
+    return yml_field(y, 'url'), 'antigravity.zip', ('sha512', sha), yml_field(y, 'version')
+
+def opencode():
+    base = 'https://github.com/anomalyco/opencode/releases/latest/download/'
+    y = get(base + 'latest-mac.yml').decode()
+    files = re.findall(r'- url:\s*(\S+)\s*\n\s*sha512:\s*(\S+)', y)
+    url, sha = next((u, s) for u, s in files if u.endswith('arm64.zip'))
+    return base + url, 'opencode.zip', ('sha512', base64.b64decode(sha).hex()), yml_field(y, 'version')
+
+def friedliver():
+    out = os.path.join(DL, 'fl')
+    os.makedirs(out, exist_ok=True)
+    subprocess.run(['gh', 'release', 'download', '-R', 'MrArun005/FriedLiver-Code', '--clobber', '-D', out,
+                    '-p', 'FriedLiver-darwin-arm64-*.dmg', '-p', 'SHA256SUMS.txt'], check=True)
+    dmg = glob.glob(os.path.join(out, '*.dmg'))[0]
+    sums = open(os.path.join(out, 'SHA256SUMS.txt')).read()
+    want = next(l.split()[0] for l in sums.splitlines() if l.strip().endswith(os.path.basename(dmg)))
+    tag = json.loads(subprocess.run(['gh', 'release', 'view', '-R', 'MrArun005/FriedLiver-Code', '--json', 'tagName'],
+                                    capture_output=True, text=True, check=True).stdout)['tagName']
+    return 'file://' + dmg, 'friedliver.dmg', ('sha256', want), tag
+
+RESOLVERS = [('friedliver', friedliver, False), ('cursor', cursor, True), ('antigravity-ide', antigravity_ide, True),
+             ('vscode', vscode, True), ('antigravity', antigravity, True), ('opencode', opencode, True)]
+
+apps, report = {}, {}
+only = set(os.environ.get('BENCH_ONLY', '').split(',')) - {''}
+for app_id, resolve, need_notarized in RESOLVERS:
+    if only and app_id not in only:
+        continue
+    rec = report[app_id] = {}
+    try:
+        url, name, want, version = resolve()
+        rec.update(source=url if not url.startswith('file://') else 'gh release MrArun005/FriedLiver-Code', version=version)
+        archive = url[7:] if url.startswith('file://') else download(url, name)
+        if want:
+            got = digest(archive, want[0]).hexdigest()
+            rec['hash'] = f'{want[0]} ' + ('verified' if got == want[1] else f'MISMATCH {got} != {want[1]}')
+            if got != want[1]:
+                raise RuntimeError('hash mismatch')
+        else:
+            rec['hash'] = 'vendor publishes no hash'
+        app = extract(archive, app_id)
+        cs = subprocess.run(['codesign', '-v', '--deep', '--strict', app], capture_output=True, text=True)
+        sp = subprocess.run(['spctl', '-a', '-vv', app], capture_output=True, text=True)
+        rec['codesign'] = 'valid' if cs.returncode == 0 else 'INVALID: ' + cs.stderr.strip()[:200]
+        rec['spctl'] = sp.stderr.strip().replace(app, '<app>')[:200]
+        if cs.returncode != 0 or (need_notarized and sp.returncode != 0):
+            raise RuntimeError('signature verification failed')
+        apps[app_id] = app
+        rec['status'] = 'ok'
+    except Exception as e:  # one vendor being down must not sink the whole run
+        rec['status'] = f'skipped: {e}'
+    print(app_id, rec, flush=True)
+
+shutil.rmtree(DL, ignore_errors=True)
+json.dump(apps, open(os.path.join(SCRATCH, 'apps.json'), 'w'), indent=2)
+json.dump(report, open(os.path.join(RES, 'fetch.json'), 'w'), indent=2)
+if not apps:
+    sys.exit('no app could be fetched and verified')

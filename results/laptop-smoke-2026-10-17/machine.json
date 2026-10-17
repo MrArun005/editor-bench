@@ -1,0 +1,60 @@
+{
+  "model": "MacBook Air / Mac14,2",
+  "chip": "Apple M2",
+  "cores": "8 (4 Performance and 4 Efficiency)",
+  "ram": "8 GB",
+  "macos": "27.0 (26A428)",
+  "power_at_start": "battery 27%",
+  "date": "2026-10-17",
+  "apps": {
+    "friedliver": {
+      "label": "FriedLiver",
+      "path": "/Applications/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 562,
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    },
+    "cursor": {
+      "label": "Cursor",
+      "path": "/Applications/Cursor.app",
+      "version": "3.19.7",
+      "install_mb": 1250,
+      "vscode_base": "1.128.0",
+      "commit": "90de232739"
+    },
+    "antigravity-ide": {
+      "label": "Antigravity IDE",
+      "path": "/Applications/Antigravity IDE.app",
+      "version": "2.5.5",
+      "install_mb": 733,
+      "vscode_base": "2.5.5",
+      "commit": "ecfbad74d9"
+    },
+    "vscode": {
+      "label": "VS Code (stock)",
+      "path": "/private/tmp/claude-501/-Users-arunmallikarjun-HRMS/607dfe49-a562-4c39-8755-d4057bf35d87/scratchpad/bench/vscode/Visual Studio Code.app",
+      "version": "1.142.0",
+      "install_mb": 865,
+      "vscode_base": "1.142.0",
+      "commit": "6d62b1d5da"
+    },
+    "antigravity": {
+      "label": "Antigravity (agent app)",
+      "path": "/Applications/Antigravity.app",
+      "version": "2.0.0",
+      "install_mb": 422
+    },
+    "opencode": {
+      "label": "OpenCode Desktop",
+      "path": "/Applications/OpenCode.app",
+      "version": "1.18.21",
+      "install_mb": 408
+    }
+  },
+  "fixture": {
+    "repo": "microsoft/vscode-extension-samples",
+    "commit": "65c1c44800eeac6fb065a54823ee5ae62c79540a",
+    "big_file_bytes": 5242880
+  }
+}
