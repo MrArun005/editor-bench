@@ -1,0 +1,102 @@
+{
+  "ci": true,
+  "runner": "GitHub Actions 1000005861",
+  "run_url": "https://github.com/MrArun005/editor-bench/actions/runs/39051446594",
+  "fetch": {
+    "friedliver": {
+      "source": "gh release MrArun005/FriedLiver-Code",
+      "version": "v1.142.0-4",
+      "hash": "sha256 verified",
+      "codesign": "valid",
+      "spctl": "<app>: rejected",
+      "status": "ok"
+    },
+    "cursor": {
+      "source": "https://api2.cursor.sh/updates/download/golden/darwin-arm64/cursor/latest",
+      "version": null,
+      "hash": "vendor publishes no hash",
+      "codesign": "valid",
+      "spctl": "<app>: accepted\nsource=Notarized Developer ID\norigin=Developer ID Application: Hilary Stout (VDXQ22DGB9)",
+      "status": "ok"
+    },
+    "antigravity-ide": {
+      "source": "https://edgedl.me.gvt1.com/edgedl/release2/j0qc3/antigravity/stable/2.5.5-4923483625488384/darwin-arm/Antigravity IDE.zip",
+      "version": "1.107.0",
+      "status": "skipped: Command '['curl', '-fsSL', '--retry', '3', '-o', '/Users/runner/work/_temp/bench/dl/antigravity-ide.zip', 'https://edgedl.me.gvt1.com/edgedl/release2/j0qc3/antigravity/stable/2.5.5-4923483625488384/darwin-arm/Antigravity IDE.zip']' returned non-zero exit status 3."
+    },
+    "vscode": {
+      "source": "https://update.code.visualstudio.com/latest/darwin-arm64/stable",
+      "version": null,
+      "hash": "vendor publishes no hash",
+      "codesign": "valid",
+      "spctl": "<app>: accepted\nsource=Notarized Developer ID\norigin=Developer ID Application: Microsoft Corporation (UBF8T346G9)",
+      "status": "ok"
+    },
+    "antigravity": {
+      "source": "https://storage.googleapis.com/antigravity-public/antigravity-hub/2.24.0-5780333019398144/darwin-arm/Antigravity.zip",
+      "version": "2.24.0",
+      "hash": "sha512 verified",
+      "codesign": "valid",
+      "spctl": "<app>: accepted\nsource=Notarized Developer ID\norigin=Developer ID Application: Google LLC (EQHXZ8M8AV)",
+      "status": "ok"
+    },
+    "opencode": {
+      "source": "https://github.com/anomalyco/opencode/releases/latest/download/opencode-desktop-mac-arm64.zip",
+      "version": "1.19.3",
+      "hash": "sha512 verified",
+      "codesign": "valid",
+      "spctl": "<app>: accepted\nsource=Notarized Developer ID\norigin=Developer ID Application: Anomaly Innovations, Inc. (5NZ4Q7NXJ4)",
+      "status": "ok"
+    }
+  },
+  "model": "Apple Virtual Machine 1 / VirtualMac2,1",
+  "chip": "Apple M1 (Virtual)",
+  "cores": "3",
+  "ram": "7 GB",
+  "macos": "26.6.2 (25G83)",
+  "power_at_start": "AC ?",
+  "date": "2026-10-17",
+  "apps": {
+    "friedliver": {
+      "label": "FriedLiver",
+      "path": "/Users/runner/work/_temp/bench/apps/friedliver/FriedLiver.app",
+      "version": "1.142.0",
+      "install_mb": 562,
+      "vscode_base": "1.142.0",
+      "commit": "d956e8a6ac"
+    },
+    "cursor": {
+      "label": "Cursor",
+      "path": "/Users/runner/work/_temp/bench/apps/cursor/Cursor.app",
+      "version": "3.25.6",
+      "install_mb": 974,
+      "vscode_base": "1.128.0",
+      "commit": "f0df777c41"
+    },
+    "vscode": {
+      "label": "VS Code (stock)",
+      "path": "/Users/runner/work/_temp/bench/apps/vscode/Visual Studio Code.app",
+      "version": "1.142.0",
+      "install_mb": 865,
+      "vscode_base": "1.142.0",
+      "commit": "6d62b1d5da"
+    },
+    "antigravity": {
+      "label": "Antigravity (agent app)",
+      "path": "/Users/runner/work/_temp/bench/apps/antigravity/Antigravity.app",
+      "version": "2.24.0",
+      "install_mb": 466
+    },
+    "opencode": {
+      "label": "OpenCode Desktop",
+      "path": "/Users/runner/work/_temp/bench/apps/opencode/OpenCode.app",
+      "version": "1.19.3",
+      "install_mb": 410
+    }
+  },
+  "fixture": {
+    "repo": "microsoft/vscode-extension-samples",
+    "commit": "65c1c44800eeac6fb065a54823ee5ae62c79540a",
+    "big_file_bytes": 5242880
+  }
+}
