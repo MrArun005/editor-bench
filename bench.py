@@ -11,8 +11,12 @@ Safety model (the owner's 8 GB laptop has crashed under load before):
   * a run is aborted (app killed) if free memory drops below 2 GB.
 
 Usage: bench.py preflight | run [--only id,id] | postflight | cleanup
+Selection (env, set by the workflow): BENCH_ONLY apps, BENCH_VARIANTS arms like friedliver+settings-perf,
+BENCH_SCENARIOS slow-shell,large-repo. The patched FriedLiver build runs whenever fetch_apps.py fetched it.
 """
-import json, os, re, signal, stat, subprocess, sys, tempfile, time, datetime, shutil, statistics
+import glob, json, os, re, signal, stat, subprocess, sys, tempfile, time, datetime, shutil, statistics
+
+import stats
 
 SCRATCH = os.environ.get('BENCH_SCRATCH',
     '/private/tmp/claude-501/-Users-arunmallikarjun-HRMS/607dfe49-a562-4c39-8755-d4057bf35d87/scratchpad/bench')
@@ -20,6 +24,9 @@ REPO = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(REPO, 'results')
 FIX = os.path.join(SCRATCH, 'fixture')
 BIG = os.path.join(FIX, 'big-5mb.txt')
+BIGREPO = os.path.join(SCRATCH, 'bigrepo')        # large-repo scenario: pinned shallow microsoft/TypeScript
+LOGS = os.path.join(RES, 'logs')
+SAMPLES = 3                                       # idle / files20 / scenario repeats per arm
 # Profile root: VS Code derives its main IPC socket path from --user-data-dir and unix socket paths
 # are capped at 103 chars, so SCRATCH is too long. The root is a fresh mkdtemp dir in /private/tmp
 # (atomic, unpredictable name, mode 0700) - never a fixed name another user could pre-create.
@@ -53,13 +60,49 @@ APPS = [
     # where that profile is throwaway: on a CI runner.
     dict(id='opencode', label='OpenCode Desktop', path='/Applications/OpenCode.app', vscode=False,
          bundle='ai.opencode.desktop', extra=[DEAD_PROXY], ci_only=True),
+    # A FriedLiver build from a tag or a workflow-run artifact (workflow input friedliver_ref). Same bundle id
+    # as the release is fine: processes are attributed by profile path, never by bundle id.
+    dict(id='friedliver-patched', label='FriedLiver patched', path=None, vscode=True, bundle='com.friedliver.app',
+         ci_only=True),
 ]
+AB_IDS = {'vscode', 'friedliver', 'friedliver-patched'}   # arms the scenarios run on
+# Settings variants: the same binary, with these merged into the throwaway profile's settings.json.
+VARIANTS = {
+    'settings-perf': {
+        'editor.cursorBlinking': 'blink',
+        'workbench.startupEditor': 'none',
+        'typescript.tsserver.useSyntaxServer': 'never',
+        'files.watcherExclude': {g: True for g in (
+            '**/.git/objects/**', '**/.git/subtree-cache/**', '**/.hg/store/**',   # upstream defaults, kept
+            '**/.venv/**', '**/__pycache__/**', '**/.next/**', '**/.turbo/**', '**/.gradle/**',
+            '**/target/**', '**/dist/**', '**/build/**', '**/node_modules/**')},
+        # 1.142.0: time-slices onStartupFinished activation into 50 ms budgets
+        # (extensions.contribution.ts#L312, extHostExtensionService.ts#L622-L667)
+        'extensions.experimental.deferredStartupFinishedActivation': True,
+    },
+}
+
+def make_arms(apps, only, variants):
+    """Selected apps (all if `only` is empty; the patched build whenever present) + one arm per variant
+    '<base>+<variant>' whose base binary was fetched."""
+    by = {a['id']: a for a in apps}
+    arms = [a for a in apps if not only or a['id'] in only or a['id'] == 'friedliver-patched']
+    for v in variants:
+        base, _, name = v.partition('+')
+        if name not in VARIANTS:
+            raise SystemExit(f'unknown variant {v!r}; known: {", ".join(VARIANTS)}')
+        if base in by:
+            arms.append(dict(by[base], id=v, base=base, label=f"{by[base]['label']} + {name}", settings=VARIANTS[name]))
+    return arms
 IN_CI = os.environ.get('GITHUB_ACTIONS') == 'true'
 if os.path.exists(os.environ.get('BENCH_APPS', '')):  # CI: {id: path} written by fetch_apps.py; missing ids = skipped
     _paths = json.load(open(os.environ['BENCH_APPS']))
     APPS = [dict(a, path=_paths[a['id']]) for a in APPS if a['id'] in _paths]
 APPS = [a for a in APPS if IN_CI or not a.get('ci_only')]
-BY_ID = {a['id']: a for a in APPS}
+ARMS = make_arms(APPS, set(stats.split_list(os.environ.get('BENCH_ONLY', ''))),
+                 stats.split_list(os.environ.get('BENCH_VARIANTS', 'none')))
+SCENARIOS = stats.split_list(os.environ.get('BENCH_SCENARIOS', 'none'), ['slow-shell', 'large-repo'])
+BY_ID = {a['id']: a for a in ARMS}
 
 # ---------------------------------------------------------------- helpers
 
@@ -81,7 +124,7 @@ def power():
 
 def tag_of(app):
     ensure_root()
-    return os.path.join(PROF, app['id']) + '/'
+    return os.path.join(PROF, app.get('prof', app['id'])) + '/'
 
 def procs(tag, exclude=()):
     """Processes carrying `tag` in argv/env, plus all their descendants."""
@@ -177,8 +220,35 @@ def ensure_profile(app):
         st = os.path.join(udd, 'User', 'settings.json')
         if not os.path.exists(st):
             # Only change from defaults: never self-update during (or because of) the benchmark.
-            json.dump({'update.mode': 'none'}, open(st, 'w'))
+            # Variant arms add their settings on top.
+            json.dump({'update.mode': 'none', **app.get('settings', {})}, open(st, 'w'), indent=1)
+        if app.get('probe'):
+            install_probe(ext, os.path.join(home, 'probe.json'))
     return home, udd, ext
+
+PROBE_ID = 'bench.probe-0.0.1'
+
+def install_probe(ext, out):
+    """A 10-line extension, activated on '*', that records when it activated and when the first file-search
+    result arrived (workspace.findFiles runs through the same extension-host file search as Quick Open).
+    Registered through extensions.json, the way an installed extension is."""
+    d = os.path.join(ext, PROBE_ID)
+    if os.path.exists(d):
+        return
+    os.makedirs(d)
+    json.dump(dict(name='probe', publisher='bench', version='0.0.1', engines=dict(vscode='^1.80.0'),
+                   activationEvents=['*'], main='./extension.js'), open(os.path.join(d, 'package.json'), 'w'))
+    open(os.path.join(d, 'extension.js'), 'w').write(f"""const vscode = require('vscode'), fs = require('fs');
+exports.activate = () => {{
+  const t = {{ activated: Date.now() }};
+  const done = () => fs.writeFileSync({json.dumps(out)}, JSON.stringify(t));
+  vscode.workspace.findFiles('**/*.ts', undefined, 1).then(r => {{ t.found = Date.now(); t.n = r.length; done(); }},
+    e => {{ t.error = String(e); done(); }});
+}};
+""")
+    json.dump([dict(identifier=dict(id='bench.probe'), version='0.0.1', relativeLocation=PROBE_ID,
+                    location={'$mid': 1, 'scheme': 'file', 'path': d})],
+              open(os.path.join(ext, 'extensions.json'), 'w'))
 
 def launch(app, args, run_dir):
     home, udd, ext = ensure_profile(app)
@@ -278,12 +348,20 @@ def cold(app, kind='cold', i=0):
         return record(dict(app=app['id'], kind=kind, i=i, error='free memory < 2 GB, skipped'))
     rd = run_dir(app, kind, i)
     rec = dict(app=app['id'], kind=kind, i=i, free_gb_before=round(free_bytes() / 1024**3, 2))
+    home = ensure_profile(app)[0]
+    if kind.startswith('shell'):              # slow-shell scenario: a login shell that takes 1 s (nvm/oh-my-zsh)
+        zshrc = os.path.join(home, '.zshrc')
+        if kind == 'shell-slow':
+            open(zshrc, 'w').write('sleep 1.0\n')
+        elif os.path.exists(zshrc):
+            os.remove(zshrc)
+        if os.path.exists(os.path.join(home, 'probe.json')):
+            os.remove(os.path.join(home, 'probe.json'))
     args = []
     if app['vscode']:
         args = [f'--prof-append-timers={rd}/timers.txt',
-                '--prof-duration-markers=code/willLoadMainBundle-code/didStartWorkbench',
                 '--prof-duration-markers=code/willRestoreEditors-code/didRestoreEditors',
-                '--prof-duration-markers=ellapsed',
+                '--prof-duration-markers=ellapsed', *stats.marker_args(),
                 f'--prof-duration-markers-file={rd}/markers.txt', FIX]
         if kind == 'big5mb':
             args += ['--goto', f'{BIG}:1']
@@ -303,9 +381,10 @@ def cold(app, kind='cold', i=0):
             time.sleep(0.25)
         if os.path.exists(mk):
             time.sleep(0.5)
-            p = open(mk).read().split()
-            m = dict(zip(p[0::2], map(int, p[1::2])))
-            rec['workbench_ms'] = m.get('code/willLoadMainBundle-code/didStartWorkbench')
+            m = stats.parse_markers(open(mk).read())
+            rec['marks'] = stats.offsets(m)
+            rec['workbench_ms'] = rec['marks'].get('code/didStartWorkbench')
+            rec['exthost_ms'] = rec['marks'].get('code/extHost/ready')
             rec['restore_ms'] = m.get('code/willRestoreEditors-code/didRestoreEditors')
             rec['ellapsed_ms'] = m.get('ellapsed')
             if os.path.exists(f'{rd}/timers.txt'):
@@ -316,32 +395,60 @@ def cold(app, kind='cold', i=0):
         t = time.time()
         while procs(tag_of(app)) and time.time() - t < 30:
             time.sleep(0.5)
+        collect_logs(app, kind, i, rec)
+        probe = os.path.join(home, 'probe.json')
+        if app.get('probe') and os.path.exists(probe):
+            p = json.load(open(probe))
+            rec['probe_activated_ms'] = round(p['activated'] - t0 * 1000)
+            rec['search_ms'] = p.get('found') and round(p['found'] - t0 * 1000)
+            rec['search_error'] = p.get('error')
     else:
         guarded_sleep(app, 5)
     rec['killed_stragglers'] = quit_app(app)
     record(rec)
     time.sleep(GAP_S)
 
+def collect_logs(app, kind, i, rec):
+    """Keep this run's renderer.log (in results/logs/) and pull out the slow workbench contributions
+    and the Node compile-cache status line from main.log."""
+    runs = sorted(glob.glob(os.path.join(tag_of(app), 'udd', 'logs', '*')))
+    if not runs:
+        return
+    renderer = sorted(glob.glob(os.path.join(runs[-1], '**', 'renderer.log'), recursive=True))
+    if renderer:
+        text = open(renderer[0], errors='replace').read()
+        rec['slow_contribs'] = stats.slow_contribs(text)
+        os.makedirs(LOGS, exist_ok=True)
+        shutil.copy(renderer[0], os.path.join(LOGS, f"{app['id']}-{kind}-{i}-renderer.log"))
+    main_log = os.path.join(runs[-1], 'main.log')
+    if os.path.exists(main_log):
+        cc = [l.strip()[:300] for l in open(main_log, errors='replace') if 'compile cache' in l.lower()]
+        if cc:
+            rec['compile_cache'] = cc[:3]
+
 def idle(app, kind='idle', i=0):
-    """Ready (first window) +60 s: memory snapshot; then CPU average over the next 60 s."""
+    """Ready (first window) +60 s: memory snapshot (CPU over those 60 s = cpu_open_pct); then CPU average
+    over the next 60 s (cpu_pct)."""
     if not pre_run_gate(app):
         return record(dict(app=app['id'], kind=kind, i=i, error='free memory < 2 GB, skipped'))
     rd = run_dir(app, kind, i)
     rec = dict(app=app['id'], kind=kind, i=i, free_gb_before=round(free_bytes() / 1024**3, 2))
     args = []
     if app['vscode']:
-        args = [FIX] + (twenty_files() if kind == 'files20' else [])
+        args = [BIGREPO] if kind == 'bigrepo' else [FIX] + (twenty_files() if kind == 'files20' else [])
     ww = subprocess.Popen([WINWAIT, tag_of(app), '120'], stdout=subprocess.PIPE, text=True)
     time.sleep(0.2)
     t0 = time.time()
     launch(app, args, rd)
     win = wait_window(ww, 120)
     rec['window_ms'] = win and round((win - t0) * 1000)
+    s0, t_s0 = snapshot(tag_of(app), exclude={ww.pid}), time.time()
     ok = win is not None and guarded_sleep(app, 60)
     if ok:
         s1 = snapshot(tag_of(app), exclude={ww.pid})
-        rec.update(n_procs=s1['n_procs'], rss_mb=s1['rss_mb'], footprint_mb=s1['footprint_mb'], procs=s1['procs'])
-        if kind == 'idle':
+        rec.update(n_procs=s1['n_procs'], rss_mb=s1['rss_mb'], footprint_mb=s1['footprint_mb'], procs=s1['procs'],
+                   cpu_open_pct=round((s1['cpu_s'] - s0['cpu_s']) / (time.time() - t_s0) * 100, 2))
+        if kind in ('idle', 'bigrepo'):
             t1 = time.time()
             ok = guarded_sleep(app, 60)
             if ok:
@@ -360,7 +467,7 @@ def machine_info():
     hw = sh('system_profiler', 'SPHardwareDataType')
     pick = lambda k: next((l.split(':', 1)[1].strip() for l in hw.splitlines() if l.strip().startswith(k)), '?')
     apps = {}
-    for a in APPS:
+    for a in ARMS:
         info = sh('/usr/libexec/PlistBuddy', '-c', 'Print CFBundleShortVersionString', f'{a["path"]}/Contents/Info.plist').strip()
         pj = os.path.join(a['path'], 'Contents/Resources/app/product.json')
         extra = {}
@@ -368,7 +475,8 @@ def machine_info():
             d = json.load(open(pj))
             extra = dict(vscode_base=d.get('vscodeVersion') or d.get('version'), commit=(d.get('commit') or '')[:10])
         size_mb = int(sh('du', '-sk', a['path']).split()[0]) // 1024
-        apps[a['id']] = dict(label=a['label'], path=a['path'], version=info, install_mb=size_mb, **extra)
+        apps[a['id']] = dict(label=a['label'], path=a['path'], version=info, install_mb=size_mb, base=a.get('base'),
+                             settings=a.get('settings'), **extra)
     fetch = os.path.join(RES, 'fetch.json')
     return dict(ci=IN_CI, runner=os.environ.get('RUNNER_NAME'), run_url=(
                     f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
@@ -380,7 +488,11 @@ def machine_info():
                 power_at_start=power(), date=datetime.date.today().isoformat(), apps=apps,
                 fixture=dict(repo='microsoft/vscode-extension-samples',
                              commit=sh('git', '-C', FIX, 'rev-parse', 'HEAD').strip(),
-                             big_file_bytes=os.path.getsize(BIG)))
+                             big_file_bytes=os.path.getsize(BIG)),
+                scenarios=SCENARIOS,
+                bigrepo=os.path.isdir(BIGREPO) and dict(repo='microsoft/TypeScript',
+                             commit=sh('git', '-C', BIGREPO, 'rev-parse', 'HEAD').strip(),
+                             files=len(sh('git', '-C', BIGREPO, 'ls-files').splitlines())))
 
 GUARD_DIRS = ['~/Library/Application Support/Cursor', '~/Library/Application Support/Antigravity IDE',
               '~/Library/Application Support/Antigravity', '~/Library/Application Support/Code',
@@ -419,8 +531,10 @@ def postflight():
     log('real-profile paths modified during the benchmark:', touched or 'none')
 
 def run(only=None):
-    apps = [a for a in APPS if not only or a['id'] in only]
+    apps = [a for a in ARMS if not only or a['id'] in only]
     vs = [a for a in apps if a['vscode']]
+    ab = [a for a in vs if a.get('base', a['id']) in AB_IDS]
+    log('arms:', [a['id'] for a in apps], 'scenarios:', SCENARIOS)
     log('warm-up (discarded) - also the first-ever launch of each fresh profile')
     for a in apps:
         cold(a, 'warmup', 0)
@@ -432,10 +546,30 @@ def run(only=None):
         log(f'5 MB file round {r}/3')
         for a in vs:
             cold(a, 'big5mb', r)
-    for a in apps:
-        idle(a, 'idle', 1)
-    for a in vs:
-        idle(a, 'files20', 1)
+    for r in range(1, SAMPLES + 1):
+        log(f'idle round {r}/{SAMPLES}')
+        for a in apps:
+            idle(a, 'idle', r)
+        for a in vs:
+            idle(a, 'files20', r)
+    if 'slow-shell' in SCENARIOS:
+        # own profile per arm (HOME with or without a slow .zshrc, plus the file-search probe extension)
+        sh_arms = [dict(a, prof=a['id'] + '@shell', probe=True) for a in ab]
+        log('slow-shell warm-up (discarded)')
+        for a in sh_arms:
+            cold(a, 'shell-warmup', 0)
+        for r in range(1, SAMPLES + 1):
+            log(f'slow-shell round {r}/{SAMPLES}')
+            for a in sh_arms:
+                cold(a, 'shell-fast', r)
+                cold(a, 'shell-slow', r)
+    if 'large-repo' in SCENARIOS:
+        if not os.path.isdir(BIGREPO):
+            log('large-repo: no checkout at', BIGREPO, '- skipped')
+        for r in range(1, SAMPLES + 1 if os.path.isdir(BIGREPO) else 1):
+            log(f'large-repo round {r}/{SAMPLES}')
+            for a in ab:
+                idle(a, 'bigrepo', r)
     log('done')
 
 if __name__ == '__main__':
@@ -449,7 +583,7 @@ if __name__ == '__main__':
         run(only)
     elif cmd == 'one':                          # bench.py one <app> <kind>  (debug a single run)
         a = BY_ID[sys.argv[2]]
-        (idle if sys.argv[3] in ('idle', 'files20') else cold)(a, sys.argv[3], 0)
+        (idle if sys.argv[3] in ('idle', 'files20', 'bigrepo') else cold)(a, sys.argv[3], 0)
     elif cmd == 'selftest':                     # cleanup must reject anything but our own roots
         real = tempfile.mkdtemp(prefix='ebp-', dir=PROF_PARENT)
         try:

@@ -7,14 +7,29 @@ pass; spctl (Gatekeeper/notarization) must pass for vendor builds. FriedLiver re
 ad-hoc signed, so for it the release's SHA256SUMS.txt is the integrity check and the spctl
 rejection is recorded, not fatal. An app that fails verification is skipped, never run.
 """
-import base64, glob, hashlib, json, os, re, shutil, subprocess, sys, urllib.request
+import base64, glob, hashlib, json, os, re, shutil, subprocess, sys, urllib.parse, urllib.request
 
-SCRATCH = sys.argv[1]
-APPS = os.path.join(SCRATCH, 'apps')
-DL = os.path.join(SCRATCH, 'dl')
+import stats
+
+SCRATCH = APPS = DL = None   # set in main()
 RES = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
-for d in (APPS, DL, RES):
-    os.makedirs(d, exist_ok=True)
+FL_REPO = 'MrArun005/FriedLiver-Code'
+FL_ARTIFACT = 'friedliver-fork-macos-arm64'
+
+def quote_url(url):
+    """Percent-encode the path (vendors hand out paths with spaces, e.g. "Antigravity IDE.zip").
+    Unquote first so an already-encoded URL is unchanged; the query is left as given."""
+    p = urllib.parse.urlsplit(url)
+    return urllib.parse.urlunsplit(p._replace(path=urllib.parse.quote(urllib.parse.unquote(p.path))))
+
+def parse_ref(ref):
+    """friedliver_ref input -> ('tag', tag, None) | ('run', run_id, artifact name). Validated: it reaches gh."""
+    m = re.fullmatch(r'(\d+)(?:/([A-Za-z0-9][\w.-]*))?', ref)
+    if m:
+        return 'run', m[1], m[2] or FL_ARTIFACT
+    if re.fullmatch(r'[A-Za-z0-9][\w.+-]*', ref):
+        return 'tag', ref, None
+    raise ValueError(f'friedliver_ref must be a release tag or <run id>[/<artifact>], got {ref!r}')
 
 def get(url):
     req = urllib.request.Request(url, headers={'User-Agent': 'editor-bench'})
@@ -22,7 +37,7 @@ def get(url):
 
 def download(url, name):
     path = os.path.join(DL, name)
-    subprocess.run(['curl', '-fsSL', '--retry', '3', '-o', path, url], check=True)
+    subprocess.run(['curl', '-fsSL', '--retry', '3', '-o', path, quote_url(url)], check=True)
     return path
 
 def digest(path, algo):
@@ -77,53 +92,102 @@ def opencode():
     url, sha = next((u, s) for u, s in files if u.endswith('arm64.zip'))
     return base + url, 'opencode.zip', ('sha512', base64.b64decode(sha).hex()), yml_field(y, 'version')
 
-def friedliver():
-    out = os.path.join(DL, 'fl')
+def friedliver(tag=None, sub='fl'):
+    """A FriedLiver release (latest, or `tag`): the DMG, checked against the release's SHA256SUMS.txt."""
+    out = os.path.join(DL, sub)
     os.makedirs(out, exist_ok=True)
-    subprocess.run(['gh', 'release', 'download', '-R', 'MrArun005/FriedLiver-Code', '--clobber', '-D', out,
+    subprocess.run(['gh', 'release', 'download', *([tag] if tag else []), '-R', FL_REPO, '--clobber', '-D', out,
                     '-p', 'FriedLiver-darwin-arm64-*.dmg', '-p', 'SHA256SUMS.txt'], check=True)
     dmg = glob.glob(os.path.join(out, '*.dmg'))[0]
     sums = open(os.path.join(out, 'SHA256SUMS.txt')).read()
     want = next(l.split()[0] for l in sums.splitlines() if l.strip().endswith(os.path.basename(dmg)))
-    tag = json.loads(subprocess.run(['gh', 'release', 'view', '-R', 'MrArun005/FriedLiver-Code', '--json', 'tagName'],
+    tag = json.loads(subprocess.run(['gh', 'release', 'view', *([tag] if tag else []), '-R', FL_REPO, '--json', 'tagName'],
                                     capture_output=True, text=True, check=True).stdout)['tagName']
     return 'file://' + dmg, 'friedliver.dmg', ('sha256', want), tag
+
+def friedliver_patched():
+    """FRIEDLIVER_REF: a release tag, or a Build FriedLiver run id (+ artifact name). A run artifact is
+    checked against the artifact digest GitHub records at upload; its inner zip holds the .app."""
+    kind, ref, artifact = parse_ref(os.environ['FRIEDLIVER_REF'])
+    if kind == 'tag':
+        url, name, want, version = friedliver(ref, 'flp')
+        return url, 'friedliver-patched.dmg', want, version
+    arts = json.loads(subprocess.run(['gh', 'api', f'repos/{FL_REPO}/actions/runs/{ref}/artifacts?per_page=100'],
+                                     capture_output=True, text=True, check=True).stdout)['artifacts']
+    art = next(a for a in arts if a['name'] == artifact)
+    if art.get('expired') or not (art.get('digest') or '').startswith('sha256:'):
+        raise RuntimeError(f'artifact {artifact} of run {ref} is expired or has no digest')
+    outer = os.path.join(DL, 'flp-artifact.zip')
+    with open(outer, 'wb') as f:
+        subprocess.run(['gh', 'api', f'repos/{FL_REPO}/actions/artifacts/{art["id"]}/zip'], stdout=f, check=True)
+    got = digest(outer, 'sha256').hexdigest()
+    if got != art['digest'][7:]:
+        raise RuntimeError(f'artifact digest MISMATCH {got} != {art["digest"]}')
+    inner_dir = os.path.join(DL, 'flp-inner')
+    subprocess.run(['ditto', '-x', '-k', outer, inner_dir], check=True)
+    inner = glob.glob(os.path.join(inner_dir, '*.zip'))[0]
+    run = json.loads(subprocess.run(['gh', 'api', f'repos/{FL_REPO}/actions/runs/{ref}', '--jq', '{sha: .head_sha, branch: .head_branch}'],
+                                    capture_output=True, text=True, check=True).stdout)
+    return ('file://' + inner, 'friedliver-patched.zip', ('verified', 'artifact sha256 digest verified'),
+            f"run {ref}: {run['branch']}@{run['sha'][:10]}")
 
 RESOLVERS = [('friedliver', friedliver, False), ('cursor', cursor, True), ('antigravity-ide', antigravity_ide, True),
              ('vscode', vscode, True), ('antigravity', antigravity, True), ('opencode', opencode, True)]
 
-apps, report = {}, {}
-only = set(os.environ.get('BENCH_ONLY', '').split(',')) - {''}
-for app_id, resolve, need_notarized in RESOLVERS:
-    if only and app_id not in only:
-        continue
-    rec = report[app_id] = {}
-    try:
-        url, name, want, version = resolve()
-        rec.update(source=url if not url.startswith('file://') else 'gh release MrArun005/FriedLiver-Code', version=version)
-        archive = url[7:] if url.startswith('file://') else download(url, name)
-        if want:
-            got = digest(archive, want[0]).hexdigest()
-            rec['hash'] = f'{want[0]} ' + ('verified' if got == want[1] else f'MISMATCH {got} != {want[1]}')
-            if got != want[1]:
-                raise RuntimeError('hash mismatch')
-        else:
-            rec['hash'] = 'vendor publishes no hash'
-        app = extract(archive, app_id)
-        cs = subprocess.run(['codesign', '-v', '--deep', '--strict', app], capture_output=True, text=True)
-        sp = subprocess.run(['spctl', '-a', '-vv', app], capture_output=True, text=True)
-        rec['codesign'] = 'valid' if cs.returncode == 0 else 'INVALID: ' + cs.stderr.strip()[:200]
-        rec['spctl'] = sp.stderr.strip().replace(app, '<app>')[:200]
-        if cs.returncode != 0 or (need_notarized and sp.returncode != 0):
-            raise RuntimeError('signature verification failed')
-        apps[app_id] = app
-        rec['status'] = 'ok'
-    except Exception as e:  # one vendor being down must not sink the whole run
-        rec['status'] = f'skipped: {e}'
-    print(app_id, rec, flush=True)
+def wanted():
+    """App ids to fetch: the selected apps (all if none), the bases of selected variants, and the patched
+    build when FRIEDLIVER_REF is set."""
+    ids = set(stats.split_list(os.environ.get('BENCH_ONLY', ''), [r[0] for r in RESOLVERS]))
+    ids |= {v.split('+')[0] for v in stats.split_list(os.environ.get('BENCH_VARIANTS', 'none'))}
+    if os.environ.get('FRIEDLIVER_REF'):
+        ids.add('friedliver-patched')
+    return ids
 
-shutil.rmtree(DL, ignore_errors=True)
-json.dump(apps, open(os.path.join(SCRATCH, 'apps.json'), 'w'), indent=2)
-json.dump(report, open(os.path.join(RES, 'fetch.json'), 'w'), indent=2)
-if not apps:
-    sys.exit('no app could be fetched and verified')
+def main():
+    global SCRATCH, APPS, DL
+    SCRATCH = sys.argv[1]
+    APPS, DL = os.path.join(SCRATCH, 'apps'), os.path.join(SCRATCH, 'dl')
+    for d in (APPS, DL, RES):
+        os.makedirs(d, exist_ok=True)
+    apps, report, want_ids = {}, {}, wanted()
+    for app_id, resolve, need_notarized in RESOLVERS + [('friedliver-patched', friedliver_patched, False)]:
+        if app_id not in want_ids:
+            continue
+        rec = report[app_id] = {}
+        try:
+            url, name, want, version = resolve()
+            local = url.startswith('file://')
+            rec.update(source=f'gh {FL_REPO} ' + (os.environ.get('FRIEDLIVER_REF') or 'latest release')
+                       if local and app_id == 'friedliver-patched' else f'gh release {FL_REPO}' if local else url,
+                       version=version)
+            archive = url[7:] if local else download(url, name)
+            if want and want[0] == 'verified':          # the resolver checked it (run artifact digest)
+                rec['hash'] = want[1]
+            elif want:
+                got = digest(archive, want[0]).hexdigest()
+                rec['hash'] = f'{want[0]} ' + ('verified' if got == want[1] else f'MISMATCH {got} != {want[1]}')
+                if got != want[1]:
+                    raise RuntimeError('hash mismatch')
+            else:
+                rec['hash'] = 'vendor publishes no hash'
+            app = extract(archive, app_id)
+            cs = subprocess.run(['codesign', '-v', '--deep', '--strict', app], capture_output=True, text=True)
+            sp = subprocess.run(['spctl', '-a', '-vv', app], capture_output=True, text=True)
+            rec['codesign'] = 'valid' if cs.returncode == 0 else 'INVALID: ' + cs.stderr.strip()[:200]
+            rec['spctl'] = sp.stderr.strip().replace(app, '<app>')[:200]
+            if cs.returncode != 0 or (need_notarized and sp.returncode != 0):
+                raise RuntimeError('signature verification failed')
+            apps[app_id] = app
+            rec['status'] = 'ok'
+        except Exception as e:  # one vendor being down must not sink the whole run
+            rec['status'] = f'skipped: {e}'
+        print(app_id, rec, flush=True)
+
+    shutil.rmtree(DL, ignore_errors=True)
+    json.dump(apps, open(os.path.join(SCRATCH, 'apps.json'), 'w'), indent=2)
+    json.dump(report, open(os.path.join(RES, 'fetch.json'), 'w'), indent=2)
+    if not apps:
+        sys.exit('no app could be fetched and verified')
+
+if __name__ == '__main__':
+    main()

@@ -3,10 +3,22 @@ name: editor-bench
 on:
   workflow_dispatch:
     inputs:
-      only:
-        description: 'Comma-separated app ids to run (empty = all): friedliver,cursor,antigravity-ide,vscode,antigravity,opencode'
+      apps:
+        description: 'Comma-separated app ids, or "all": friedliver,cursor,antigravity-ide,vscode,antigravity,opencode'
+        required: false
+        default: 'vscode,friedliver'
+      variants:
+        description: 'Settings-variant arms <app>+<variant>, comma-separated, or "none" (variants: settings-perf)'
+        required: false
+        default: 'friedliver+settings-perf'
+      friedliver_ref:
+        description: 'Extra "FriedLiver patched" arm: a FriedLiver-Code release tag, or a Build FriedLiver run id[/artifact]. Empty = none'
         required: false
         default: ''
+      scenarios:
+        description: 'slow-shell,large-repo, "all" or "none" (run on VS Code + FriedLiver arms only)'
+        required: false
+        default: 'all'
   schedule:
     - cron: '0 3 * * 1'   # Mondays 03:00 UTC
 
@@ -23,9 +35,16 @@ jobs:
     timeout-minutes: 150
     env:
       GH_TOKEN: ${{ secrets.FRIEDLIVER_TOKEN || github.token }}   # FriedLiver-Code is public; PAT only if that changes
-      BENCH_ONLY: ${{ inputs.only }}
+      # Inputs reach scripts only as environment variables. A scheduled run has no inputs: same defaults.
+      BENCH_ONLY: ${{ inputs.apps || 'vscode,friedliver' }}
+      BENCH_VARIANTS: ${{ inputs.variants || 'friedliver+settings-perf' }}
+      BENCH_SCENARIOS: ${{ inputs.scenarios || 'all' }}
+      FRIEDLIVER_REF: ${{ inputs.friedliver_ref }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Unit tests (parsing, stats, URL building)
+        run: python3 -m unittest discover -s tests -v
 
       - name: Scratch dir
         run: |
@@ -36,8 +55,12 @@ jobs:
       - name: Download + verify apps (official sources)
         run: python3 fetch_apps.py "$BENCH_SCRATCH"
 
-      - name: Workspace fixture (pinned commit)
-        run: ./setup_fixture.sh "$BENCH_SCRATCH/fixture"
+      - name: Workspace fixtures (pinned commits)
+        run: |
+          case ",$BENCH_SCENARIOS," in
+            *,large-repo,*|,all,) ./setup_fixture.sh "$BENCH_SCRATCH/fixture" "$BENCH_SCRATCH/bigrepo" ;;
+            *) ./setup_fixture.sh "$BENCH_SCRATCH/fixture" ;;
+          esac
 
       - name: Build window watcher
         run: swiftc -O winwait.swift -o "$BENCH_SCRATCH/winwait"
@@ -68,6 +91,7 @@ jobs:
           path: |
             results/*.json
             results/*.jsonl
+            results/logs/
             REPORT.md
             report.html
           if-no-files-found: warn

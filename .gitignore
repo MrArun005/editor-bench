@@ -4,3 +4,4 @@ results/fetch.json
 results/summary.json
 results/isolation-check.json
 __pycache__/
+results/logs/
