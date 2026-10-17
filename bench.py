@@ -12,7 +12,7 @@ Safety model (the owner's 8 GB laptop has crashed under load before):
 
 Usage: bench.py preflight | run [--only id,id] | postflight | cleanup
 """
-import json, os, signal, stat, subprocess, sys, tempfile, time, datetime, shutil, statistics
+import json, os, re, signal, stat, subprocess, sys, tempfile, time, datetime, shutil, statistics
 
 SCRATCH = os.environ.get('BENCH_SCRATCH',
     '/private/tmp/claude-501/-Users-arunmallikarjun-HRMS/607dfe49-a562-4c39-8755-d4057bf35d87/scratchpad/bench')
@@ -25,7 +25,9 @@ BIG = os.path.join(FIX, 'big-5mb.txt')
 # (atomic, unpredictable name, mode 0700) - never a fixed name another user could pre-create.
 # Every root ever created is listed in PROF_LIST so `cleanup` (a separate process) can find it.
 PROF = None
+PROF_PARENT = '/private/tmp'
 PROF_LIST = os.path.join(SCRATCH, 'prof-roots.txt')
+ROOT_NAME = re.compile(r'^ebp-[A-Za-z0-9_]+$')
 WINWAIT = os.path.join(SCRATCH, 'winwait')
 RAW = os.path.join(RES, 'raw-runs.jsonl')
 MIN_FREE = 2 * 1024**3
@@ -130,12 +132,34 @@ def safe_own_dir(path):
     return (stat.S_ISDIR(st.st_mode) and st.st_uid == os.getuid() and stat.S_IMODE(st.st_mode) == 0o700
             and os.path.realpath(path) == path)
 
+def private_file_or_dir(path):
+    """Owned by us, not a symlink, not group/other-writable."""
+    st = os.lstat(path)
+    return not stat.S_ISLNK(st.st_mode) and st.st_uid == os.getuid() and not st.st_mode & 0o022
+
+def valid_root_entry(entry):
+    """A PROF_LIST line is deletable only if it is exactly PROF_PARENT/ebp-<name> and a private dir of ours."""
+    return (os.path.dirname(entry) == os.path.realpath(PROF_PARENT) and bool(ROOT_NAME.match(os.path.basename(entry)))
+            and os.path.lexists(entry) and safe_own_dir(entry))
+
+def cleanup():
+    if not os.path.lexists(PROF_LIST):
+        return
+    if not (private_file_or_dir(SCRATCH) and private_file_or_dir(PROF_LIST)):
+        raise SystemExit(f'ABORT: {SCRATCH} or {PROF_LIST} is not private to us; not trusting it')
+    for entry in open(PROF_LIST).read().split():
+        if valid_root_entry(entry):
+            shutil.rmtree(entry)
+        else:
+            log('cleanup: skipped untrusted entry', repr(entry))
+    os.remove(PROF_LIST)
+
 def ensure_root():
     global PROF
     if PROF:
         return
     os.makedirs(SCRATCH, exist_ok=True)
-    root = tempfile.mkdtemp(prefix='ebp-', dir='/private/tmp')
+    root = tempfile.mkdtemp(prefix='ebp-', dir=PROF_PARENT)
     if not safe_own_dir(root):
         raise SystemExit(f'ABORT: profile root {root} is not a private dir owned by us')
     with open(PROF_LIST, 'a') as f:
@@ -426,10 +450,22 @@ if __name__ == '__main__':
     elif cmd == 'one':                          # bench.py one <app> <kind>  (debug a single run)
         a = BY_ID[sys.argv[2]]
         (idle if sys.argv[3] in ('idle', 'files20') else cold)(a, sys.argv[3], 0)
+    elif cmd == 'selftest':                     # cleanup must reject anything but our own roots
+        real = tempfile.mkdtemp(prefix='ebp-', dir=PROF_PARENT)
+        try:
+            assert valid_root_entry(real)
+            for bad in ('/', os.path.expanduser('~'), '/private/tmp', PROF_PARENT + '/ebp-../x', '/tmp/' + os.path.basename(real),
+                        PROF_PARENT + '/ebp-x/../..', PROF_PARENT + '/other-dir', PROF_PARENT + '/ebp-does-not-exist',
+                        os.path.join(SCRATCH, 'ebp-abc')):
+                assert not valid_root_entry(bad), bad
+            os.chmod(real, 0o755)
+            assert not valid_root_entry(real), 'non-0700 root accepted'
+            link = real + '_lnk'
+            os.symlink(real, link)
+            assert not valid_root_entry(link), 'symlink accepted'
+            os.unlink(link)
+        finally:
+            os.rmdir(real)
+        print('selftest ok')
     elif cmd == 'cleanup':
-        roots = open(PROF_LIST).read().split() if os.path.exists(PROF_LIST) else []
-        for r in roots:
-            if os.path.lexists(r) and safe_own_dir(r):     # never follow or delete something we don't own
-                shutil.rmtree(r)
-        if os.path.exists(PROF_LIST):
-            os.remove(PROF_LIST)
+        cleanup()

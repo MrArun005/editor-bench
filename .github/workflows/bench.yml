@@ -44,6 +44,7 @@ jobs:
 
       - name: Benchmark (sequential, one app at a time)
         run: |
+          python3 bench.py selftest
           python3 bench.py preflight
           python3 bench.py run
           python3 bench.py postflight
