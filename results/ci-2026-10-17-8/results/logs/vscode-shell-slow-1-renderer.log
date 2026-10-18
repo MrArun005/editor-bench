@@ -1,0 +1,233 @@
+2026-10-18 02:12:34.358 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-18 02:12:34.378 [info] [AgentHost:renderer] Acquiring MessagePort to agent host...
+2026-10-18 02:12:34.505 [info] [ChatModelSelection] event=no-model-at-toolbar-build surface="workbench" sessionKey=undefined conversationKey=undefined modelTarget=undefined storageKey="chat.currentLanguageModel.panel" widgetViewKind="view"
+2026-10-18 02:12:34.690 [info] [ChatModelSelection] event=no-model-at-toolbar-build surface="workbench" sessionKey=undefined conversationKey=undefined modelTarget=undefined storageKey="chat.currentLanguageModel.panel" widgetViewKind="view"
+2026-10-18 02:12:34.742 [error] Extension 'github.copilot-chat' appears in product.json but enables LESS API proposals than the extension wants.
+package.json (LOSES): agentSessionsWorkspace
+agentsWindowConfiguration
+chatDebug
+chatHooks
+envIsConnectionMetered
+extensionsAny
+newSymbolNamesProvider
+interactive
+codeActionAI
+activeComment
+commentReveal
+contribCommentThreadAdditionalMenu
+contribCommentsViewThreadMenus
+contribChatEditorInlineGutterMenu
+documentFiltersExclusive
+embeddings
+findTextInFiles
+findTextInFiles2
+languageModelToolSupportsModel
+findFiles2
+textSearchProvider
+terminalDataWriteEvent
+terminalExecuteCommandEvent
+terminalSelection
+terminalQuickFixProvider
+mappedEditsProvider
+aiRelatedInformation
+aiSettingsSearch
+chatParticipantAdditions
+defaultChatParticipant
+contribSourceControlInputBoxMenu
+authLearnMore
+authIssuers
+testObserver
+aiTextSearchProvider
+chatParticipantPrivate
+chatProvider
+contribDebugCreateConfiguration
+chatReferenceDiagnostic
+textSearchProvider2
+chatReferenceBinaryData
+languageModelSystem
+languageModelCapabilities
+languageModelPricing
+inlineCompletionsAdditions
+chatStatusItem
+chatInputNotification
+taskProblemMatcherStatus
+contribLanguageModelToolSets
+textDocumentChangeReason
+resolvers
+taskExecutionTerminal
+dataChannels
+languageModelThinkingPart
+chatSessionsProvider
+devDeviceId
+contribEditorContentMenu
+chatPromptFiles
+mcpServerDefinitions
+tabInputMultiDiff
+workspaceTrust
+environmentPower
+terminalTitle
+toolInvocationApproveCombination
+chatSessionCustomizationProvider
+product.json (WINS): agentSessionsWorkspace
+agentsWindowConfiguration
+interactive
+terminalDataWriteEvent
+terminalExecuteCommandEvent
+terminalSelection
+terminalQuickFixProvider
+chatParticipantAdditions
+defaultChatParticipant
+embeddings
+chatProvider
+mappedEditsProvider
+aiRelatedInformation
+aiSettingsSearch
+codeActionAI
+findTextInFiles
+findTextInFiles2
+textSearchProvider
+textSearchProvider2
+activeComment
+commentReveal
+contribSourceControlInputBoxMenu
+contribCommentEditorActionsMenu
+contribCommentThreadAdditionalMenu
+contribCommentsViewThreadMenus
+contribChatEditorInlineGutterMenu
+extensionAffinity
+newSymbolNamesProvider
+findFiles2
+chatReferenceDiagnostic
+extensionsAny
+authLearnMore
+testObserver
+aiTextSearchProvider
+documentFiltersExclusive
+chatParticipantPrivate
+contribDebugCreateConfiguration
+inlineCompletionsAdditions
+chatReferenceBinaryData
+languageModelSystem
+languageModelCapabilities
+languageModelThinkingPart
+languageModelToolSupportsModel
+chatStatusItem
+taskProblemMatcherStatus
+contribLanguageModelToolSets
+textDocumentChangeReason
+resolvers
+taskExecutionTerminal
+dataChannels
+chatSessionsProvider
+chatSessionCustomizationProvider
+devDeviceId
+contribEditorContentMenu
+tokenInformation
+toolInvocationApproveCombination
+chatPromptFiles
+mcpServerDefinitions
+tabInputMultiDiff
+workspaceTrust
+chatHooks
+chatDebug
+envIsConnectionMetered
+environmentPower
+terminalTitle
+languageModelPricing
+chatInputNotification
+DELTA: authIssuers
+2026-10-18 02:12:35.330 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false
+2026-10-18 02:12:35.462 [info] [ChatModelSelection] event=no-model-at-toolbar-build surface="workbench" sessionKey=undefined conversationKey=undefined modelTarget=undefined storageKey="chat.currentLanguageModel.panel" widgetViewKind="view"
+2026-10-18 02:12:35.496 [info] [ChatModelSelection] event=no-model-at-toolbar-build surface="workbench" sessionKey=undefined conversationKey=undefined modelTarget=undefined storageKey="chat.currentLanguageModel.panel" widgetViewKind="view"
+2026-10-18 02:12:35.501 [info] [RemoteAgentHost] Reconciling: desired=[], current=[]
+2026-10-18 02:12:35.579 [info] [ChatModelSelection] event=no-model-at-toolbar-build surface="workbench" sessionKey=undefined conversationKey=undefined modelTarget=undefined storageKey="chat.currentLanguageModel.panel" widgetViewKind="view"
+2026-10-18 02:12:35.603 [info] Settings Sync: Account status changed from uninitialized to unavailable
+2026-10-18 02:12:37.061 [info] [AgentHost:renderer] MessagePort acquired, creating client...
+2026-10-18 02:12:37.063 [info] Started local extension host with pid 14050.
+2026-10-18 02:12:37.350 [info] [perf] Render performance baseline is 15ms
+2026-10-18 02:12:37.524 [info] [RemoteAgentHostProtocol] Sending initialize: address=local clientId=603e6286-4c05-4ff6-8dcc-e41c96e8beae requestId=1
+2026-10-18 02:12:37.527 [info] [RemoteAgentHostProtocol] Initialized: address=local clientId=603e6286-4c05-4ff6-8dcc-e41c96e8beae durationMs=3149
+2026-10-18 02:12:37.539 [info] [AgentHost:renderer] Protocol connection established; clientId=603e6286-4c05-4ff6-8dcc-e41c96e8beae
+2026-10-18 02:12:37.574 [warning] [CloudSandboxApi] No 'github' session with scopes [read:user, user:email, repo, workflow]
+2026-10-18 02:12:37.576 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.576 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.577 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.577 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.577 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.577 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.578 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.578 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.578 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.578 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.578 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.578 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.619 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.620 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.620 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.620 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.620 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.620 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.621 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.621 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.622 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.622 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.622 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.622 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.649 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.656 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.656 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.656 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.657 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.657 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.657 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.657 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.657 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.657 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.658 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.658 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.658 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.698 [info] [ChatModelSelection] event=no-model-at-toolbar-build surface="workbench" sessionKey="local" conversationKey="vscode-chat-session://local/ZmE4NDhiY2QtNjhlNS00NTI2LTgxODEtODkxNWU4NTc1MzU0" modelTarget=undefined storageKey="chat.currentLanguageModel.panel" widgetViewKind="view"
+2026-10-18 02:12:37.719 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.734 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.734 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.735 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.735 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.735 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.735 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.735 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.735 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.735 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.735 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.735 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.735 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.736 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.736 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.737 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.739 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.739 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.739 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.739 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.739 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.739 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.739 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.740 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.740 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.740 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.743 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.743 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.743 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.743 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.743 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.743 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.743 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.744 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.744 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.744 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.744 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.744 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.744 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:37.745 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com
+2026-10-18 02:12:37.746 [info] [AgentHost] No signed-in session resolved for resource: https://api.github.com/repos
+2026-10-18 02:12:40.332 [info] [AccountPolicyGate] apply: state=inactive, reason=undefined, isRestricted=false
+2026-10-18 02:12:41.459 [error] [Extension Host] (node:14050) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `Code Helper (Plugin) --trace-deprecation ...` to show where the warning was created)

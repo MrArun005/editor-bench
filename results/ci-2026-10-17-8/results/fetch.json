@@ -1,0 +1,26 @@
+{
+  "friedliver": {
+    "source": "gh release MrArun005/FriedLiver-Code",
+    "version": "v1.142.0-5",
+    "hash": "sha256 verified",
+    "codesign": "valid",
+    "spctl": "<app>: rejected\norigin=FriedLiver Self-Signed Code Signing",
+    "status": "ok"
+  },
+  "vscode": {
+    "source": "https://update.code.visualstudio.com/latest/darwin-arm64/stable",
+    "version": null,
+    "hash": "vendor publishes no hash",
+    "codesign": "valid",
+    "spctl": "<app>: accepted\nsource=Notarized Developer ID\norigin=Developer ID Application: Microsoft Corporation (UBF8T346G9)",
+    "status": "ok"
+  },
+  "friedliver-patched": {
+    "source": "gh MrArun005/FriedLiver-Code 39085377230",
+    "version": "run 39085377230: perf/core@cc94be1202 (workflow_dispatch)",
+    "hash": "trusted run; artifact sha256 digest verified",
+    "codesign": "valid",
+    "spctl": "<app>: rejected\norigin=FriedLiver Self-Signed Code Signing",
+    "status": "ok"
+  }
+}
