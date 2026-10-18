@@ -1,0 +1,5 @@
+# Private-repo configs and anything a private run produces. Never commit these.
+*.local.json
+private/
+results-local/
+__pycache__/

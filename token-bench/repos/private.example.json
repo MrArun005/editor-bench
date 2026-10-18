@@ -1,0 +1,25 @@
+{
+  "_readme": "Template only. Copy to repos/private.local.json (gitignored) and fill in the <...> values on your Mac. Never commit the filled file, never run it in public CI: bench.py refuses a private config under GITHUB_ACTIONS and refuses to write its results inside this repo.",
+  "name": "private-large-repo",
+  "private": true,
+  "repos": {
+    "app": {"local_path": "<ABSOLUTE PATH TO YOUR REPO>", "ref": "<COMMIT SHA TO PIN>", "setup": ["<INSTALL COMMAND, e.g. pnpm install --frozen-lockfile --offline>"]}
+  },
+  "scenarios": [
+    {"id": "S1", "repo": "app", "title": "Cold start overview", "prompt": "Give me an overview of this project's architecture.",
+     "check": {"answer_all": ["<A TOP-LEVEL APP OR PACKAGE NAME>", "<ANOTHER ONE>"]}, "estimate": {"input": 900000, "output": 9000}},
+    {"id": "S2", "repo": "app", "after": "S1", "title": "Re-read (same session)", "prompt": "List the modules again.",
+     "check": {"answer_all": ["<A MODULE NAME>"]}, "estimate": {"input": 180000, "output": 2000}},
+    {"id": "S3", "repo": "app", "title": "Find a function", "prompt": "Where is `<SYMBOL>` defined and what calls it?",
+     "check": {"answer_all": ["<FILE NAME OF THE DEFINITION>"]}, "trace": {"symbol": "<SYMBOL>"}, "estimate": {"input": 450000, "output": 3000}},
+    {"id": "S4", "repo": "app", "title": "Targeted edit + test", "prompt": "<CHANGE ONE SPECIFIC FUNCTION'S BEHAVIOUR AND UPDATE ITS TEST>",
+     "check": {"changed": ["<PATH OF ITS SPEC FILE>"], "cmd": "<COMMAND THAT RUNS THAT SPEC, exit 0 = pass>"}, "estimate": {"input": 800000, "output": 7000}},
+    {"id": "S5", "repo": "app", "after": "S4", "title": "Follow-up edge case", "prompt": "Now also handle <EDGE CASE>.",
+     "check": {"cmd": "<SAME SPEC COMMAND>"}, "estimate": {"input": 450000, "output": 4000}},
+    {"id": "S6", "repo": "app", "title": "Explain a module", "prompt": "Explain the <MODULE> flow end to end.",
+     "check": {"answer_all": ["<A KEY CLASS IN THAT FLOW>"]}, "estimate": {"input": 800000, "output": 7000}},
+    {"id": "S7", "repo": "app", "title": "Web/doc lookup",
+     "prompt": "Use your web fetch or browser tool to read https://www.rfc-editor.org/rfc/rfc9110.html and tell me the number of the HTTP status code named \"Misdirected Request\".",
+     "check": {"answer_all": ["\\b421\\b"]}, "estimate": {"input": 150000, "output": 1000}}
+  ]
+}

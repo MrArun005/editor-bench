@@ -1,0 +1,157 @@
+name: token-bench
+
+# Token efficiency of FriedLiver's agents vs Claude Code, Codex, Gemini CLI and Cursor on PUBLIC repos
+# only (token-bench/repos/public.json). A private repo never runs here: bench.py refuses a private
+# config under CI, and this workflow only ever passes public.json.
+#
+# - unit: parser/guard tests + a replay of the synthetic fixtures. Free, no secrets.
+# - free-checks (manual): proves S4/S5's checks separate right from wrong edits, and measures the
+#   IDE side (FriedLiver index build, S3 context cost per tool) with no LLM. Free.
+# - live (manual): the real runs. Each arm runs only when its key is a repo secret; with no keys the
+#   job says so and does nothing. Costs money: see token-bench/README.md for the estimate.
+on:
+  workflow_dispatch:
+    inputs:
+      live:
+        description: 'Run the paid live benchmark (needs API key secrets)'
+        type: boolean
+        default: false
+      arms:
+        description: 'Comma-separated arms (antigravity needs a desktop login: local only)'
+        default: 'claude,friedliver-claude,cursor,codex,friedliver-codex,gemini,friedliver-gemini'
+      reps:
+        description: 'Repetitions per scenario'
+        default: '3'
+      scenarios:
+        description: 'Scenario ids, empty = all'
+        default: ''
+  push:
+    paths:
+      - 'token-bench/**'
+      - '.github/workflows/token-bench.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: token-bench
+  cancel-in-progress: false
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Unit tests
+        run: python3 -m unittest discover -s token-bench/tests -v
+      - name: Replay of the synthetic fixtures
+        run: |
+          python3 token-bench/bench.py run --config token-bench/repos/public.json --out "$RUNNER_TEMP/replay" \
+            --replay token-bench/fixtures --arms claude,friedliver-claude,cursor,codex,friedliver-codex,gemini,friedliver-gemini,antigravity --reps 3
+          python3 token-bench/bench.py import-manual --config token-bench/repos/public.json \
+            --csv token-bench/fixtures/manual-antigravity-ide.sample.csv --out "$RUNNER_TEMP/replay"
+          python3 token-bench/report.py "$RUNNER_TEMP/replay"
+          python3 token-bench/bench.py estimate --config token-bench/repos/public.json | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: token-bench-replay
+          path: ${{ runner.temp }}/replay
+
+  free-checks:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Pinned checkouts (nest for edits, TypeScript v6.0.3 as the large repo)
+        run: |
+          python3 - <<'EOF'
+          import sys, os
+          sys.path.insert(0, 'token-bench')
+          import bench
+          cfg = bench.load_config('token-bench/repos/public.json')
+          work = os.path.join(os.environ['RUNNER_TEMP'], 'work')
+          os.makedirs(work, exist_ok=True)
+          for name, spec in cfg['repos'].items():
+              print(name, bench.prepare_repo(name, spec, work))
+          EOF
+      - name: S4/S5 checks fail on a wrong edit and pass on a right one
+        run: python3 token-bench/checks/selfcheck.py "$RUNNER_TEMP/work/nest" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: FriedLiver's index code (public FriedLiver-Code)
+        run: |
+          git clone --depth 1 --quiet https://github.com/MrArun005/FriedLiver-Code.git "$RUNNER_TEMP/FriedLiver-Code"
+          cd "$RUNNER_TEMP/FriedLiver-Code/extensions/friedliver-agents" && npm ci --ignore-scripts --no-audit --no-fund
+      - name: IDE side - index build and S3 context cost per tool
+        env:
+          FRIEDLIVER_SRC: ${{ runner.temp }}/FriedLiver-Code
+        run: |
+          mkdir -p "$RUNNER_TEMP/ide"
+          python3 token-bench/bench.py context-replay --config token-bench/repos/public.json \
+            --repo-dir "$RUNNER_TEMP/work/typescript" --out "$RUNNER_TEMP/ide" | tee "$RUNNER_TEMP/ide/stdout.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: token-bench-ide-side
+          path: ${{ runner.temp }}/ide
+
+  live:
+    if: github.event_name == 'workflow_dispatch' && inputs.live && github.repository == 'MrArun005/editor-bench'
+    needs: [unit, free-checks]
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      CODEX_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+      BENCH_ARMS: ${{ inputs.arms }}
+      BENCH_REPS: ${{ inputs.reps }}
+      BENCH_SCENARIOS: ${{ inputs.scenarios }}
+    steps:
+      - name: Which keys are set
+        id: keys
+        run: |
+          have=""
+          for k in ANTHROPIC_API_KEY OPENAI_API_KEY GEMINI_API_KEY CURSOR_API_KEY; do [ -n "${!k}" ] && have="$have $k"; done
+          echo "have=${have# }" >> "$GITHUB_OUTPUT"
+          if [ -z "$have" ]; then echo "No API key secrets set: live run skipped." | tee -a "$GITHUB_STEP_SUMMARY"; else echo "Keys present: $have" >> "$GITHUB_STEP_SUMMARY"; fi
+      - uses: actions/checkout@v4
+        if: steps.keys.outputs.have != ''
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        if: steps.keys.outputs.have != ''
+        with:
+          node-version: 22
+      - name: Install the agent CLIs whose keys are present
+        if: steps.keys.outputs.have != ''
+        run: |
+          pkgs=""
+          [ -n "$ANTHROPIC_API_KEY" ] && pkgs="$pkgs @anthropic-ai/claude-code @agentclientprotocol/claude-agent-acp"
+          [ -n "$OPENAI_API_KEY" ] && pkgs="$pkgs @openai/codex @agentclientprotocol/codex-acp"
+          [ -n "$GEMINI_API_KEY" ] && pkgs="$pkgs @google/gemini-cli"
+          [ -n "$pkgs" ] && npm install -g $pkgs
+          [ -n "$OPENAI_API_KEY" ] && printenv OPENAI_API_KEY | codex login --with-api-key
+          if [ -n "$CURSOR_API_KEY" ]; then curl -fsS https://cursor.com/install | bash; echo "$HOME/.local/bin" >> "$GITHUB_PATH"; fi
+      - name: Run
+        if: steps.keys.outputs.have != ''
+        run: |
+          python3 token-bench/bench.py run --config token-bench/repos/public.json --out "$RUNNER_TEMP/live" \
+            --work "$RUNNER_TEMP/work" --arms "$BENCH_ARMS" --reps "$BENCH_REPS" --scenarios "$BENCH_SCENARIOS" --skip-missing-keys
+          python3 token-bench/report.py "$RUNNER_TEMP/live"
+      - uses: actions/upload-artifact@v4
+        if: steps.keys.outputs.have != '' && always()
+        with:
+          name: token-bench-live
+          path: |
+            ${{ runner.temp }}/live/*.json*
+            ${{ runner.temp }}/live/report.html
+            ${{ runner.temp }}/live/raw

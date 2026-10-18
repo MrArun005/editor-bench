@@ -1,0 +1,5 @@
+{"type": "thread.started", "thread_id": "synthetic-codex-S1"}
+{"type": "turn.started"}
+{"type": "item.completed", "item": {"id": "item_0", "type": "command_execution", "command": "rg -n x", "aggregated_output": "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", "exit_code": 0, "status": "completed"}}
+{"type": "item.completed", "item": {"id": "item_end", "type": "agent_message", "text": "SYNTHETIC FIXTURE ANSWER. The repo has compiler, services and server parts; isTypeAssignableTo lives in src/compiler/checker.ts; the pipeline is scanner, parser, binder, checker, emitter; Misdirected Request is 421."}}
+{"type": "turn.completed", "usage": {"input_tokens": 81000, "cached_input_tokens": 64800, "output_tokens": 900, "reasoning_output_tokens": 450}}

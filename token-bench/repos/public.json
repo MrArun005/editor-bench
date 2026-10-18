@@ -1,0 +1,43 @@
+{
+  "name": "public",
+  "private": false,
+  "_why": "TypeScript v6.0.3 is the large repo (about 70k files, the last release written in TypeScript; FriedLiver's index bench uses the same tag). Edits (S4/S5) need a fast, real test run, so they use nestjs/nest, a large NestJS monorepo.",
+  "repos": {
+    "typescript": {"url": "https://github.com/microsoft/TypeScript.git", "ref": "v6.0.3", "sha": "050880ce59e30b356b686bd3144efe24f875ebc8", "setup": []},
+    "nest": {"url": "https://github.com/nestjs/nest.git", "ref": "v11.2.7", "sha": "c666d7f72201f02cd241030d815abf72dbf49b15", "setup": ["npm ci --ignore-scripts --no-audit --no-fund --legacy-peer-deps"]}
+  },
+  "scenarios": [
+    {"id": "S1", "repo": "typescript", "title": "Cold start overview",
+     "prompt": "Give me an overview of this project's architecture.",
+     "check": {"answer_all": ["compiler", "services", "server"]},
+     "estimate": {"input": 600000, "output": 8000}},
+    {"id": "S2", "repo": "typescript", "after": "S1", "title": "Re-read (same session)",
+     "prompt": "List the modules again.",
+     "check": {"answer_all": ["compiler", "services"]},
+     "estimate": {"input": 120000, "output": 1500}},
+    {"id": "S3", "repo": "typescript", "title": "Find a function",
+     "prompt": "Where is `isTypeAssignableTo` defined and what calls it?",
+     "check": {"answer_all": ["checker\\.ts"]},
+     "trace": {"symbol": "isTypeAssignableTo"},
+     "estimate": {"input": 300000, "output": 3000}},
+    {"id": "S4", "repo": "nest", "title": "Targeted edit + test",
+     "prompt": "In packages/common/utils/shared.utils.ts, change `stripEndSlash` so it removes every trailing slash, not just one (for example '/cats///' becomes '/cats'). Update its test in packages/common/test/utils/shared.utils.spec.ts to cover this.",
+     "check": {"changed": ["packages/common/test/utils/shared.utils.spec.ts"],
+               "inject": {"src": "checks/nest_S4.spec.ts", "dest": "packages/common/test/utils/tokenbench_check.spec.ts"},
+               "cmd": "node --loader ts-node/esm ./node_modules/mocha/bin/mocha.js packages/common/test/utils/shared.utils.spec.ts packages/common/test/utils/tokenbench_check.spec.ts"},
+     "estimate": {"input": 500000, "output": 6000}},
+    {"id": "S5", "repo": "nest", "after": "S4", "title": "Follow-up edge case",
+     "prompt": "Now also handle a path made only of slashes, like '/' or '///': stripEndSlash must return '/' for it, not an empty string. Update the test too.",
+     "check": {"inject": {"src": "checks/nest_S5.spec.ts", "dest": "packages/common/test/utils/tokenbench_check.spec.ts"},
+               "cmd": "node --loader ts-node/esm ./node_modules/mocha/bin/mocha.js packages/common/test/utils/shared.utils.spec.ts packages/common/test/utils/tokenbench_check.spec.ts"},
+     "estimate": {"input": 300000, "output": 4000}},
+    {"id": "S6", "repo": "typescript", "title": "Explain a module",
+     "prompt": "Explain how the compiler turns a .ts file into emitted JavaScript: which parts run, in which order, and where each lives.",
+     "check": {"answer_all": ["scanner", "parser", "binder", "checker", "emit"]},
+     "estimate": {"input": 500000, "output": 6000}},
+    {"id": "S7", "repo": "typescript", "title": "Web/doc lookup",
+     "prompt": "Use your web fetch or browser tool to read https://www.rfc-editor.org/rfc/rfc9110.html and tell me the number of the HTTP status code named \"Misdirected Request\".",
+     "check": {"answer_all": ["\\b421\\b"]},
+     "estimate": {"input": 150000, "output": 1000}}
+  ]
+}

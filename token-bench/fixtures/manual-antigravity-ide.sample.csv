@@ -1,0 +1,8 @@
+scenario,rep,input,cache_read,cache_write,output,tool_calls,wall_s,success,interventions,notes
+S1,1,180000,320000,0,7000,12,95,yes,0,SYNTHETIC sample row
+S2,1,30000,60000,0,1200,1,12,yes,0,SYNTHETIC sample row
+S3,1,90000,150000,0,2500,6,40,yes,0,SYNTHETIC sample row
+S4,1,160000,280000,0,5000,10,130,yes,1,SYNTHETIC sample row: approved one command
+S5,1,100000,170000,0,3200,7,70,no,1,SYNTHETIC sample row
+S6,1,150000,260000,0,6000,9,88,yes,0,SYNTHETIC sample row
+S7,1,40000,80000,0,900,2,25,yes,0,SYNTHETIC sample row
