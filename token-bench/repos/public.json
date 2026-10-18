@@ -35,7 +35,7 @@
      "prompt": "Explain how the compiler turns a .ts file into emitted JavaScript: which parts run, in which order, and where each lives.",
      "check": {"answer_all": ["scanner", "parser", "binder", "checker", "emit"]},
      "estimate": {"input": 500000, "output": 6000}},
-    {"id": "S7", "repo": "typescript", "title": "Web/doc lookup",
+    {"id": "S7", "repo": "typescript", "title": "Web/doc lookup", "network": true,
      "prompt": "Use your web fetch or browser tool to read https://www.rfc-editor.org/rfc/rfc9110.html and tell me the number of the HTTP status code named \"Misdirected Request\".",
      "check": {"answer_all": ["\\b421\\b"]},
      "estimate": {"input": 150000, "output": 1000}}

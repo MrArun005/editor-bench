@@ -174,5 +174,80 @@ class ReplayEndToEndTest(unittest.TestCase):
         self.assertIn('antigravity-ide', page)
 
 
+class SecretsTest(unittest.TestCase):
+    """Security review 2026-10-18: keys stay with their own tool, never land in uploads."""
+    KEYS = {'ANTHROPIC_API_KEY': 'sk-ant-api03-AAAAAAAAAAAAAAAAAAAAAAAA', 'OPENAI_API_KEY': 'sk-proj-BBBBBBBBBBBBBBBBBBBBBBBB',
+            'CODEX_API_KEY': 'sk-proj-BBBBBBBBBBBBBBBBBBBBBBBB', 'GEMINI_API_KEY': 'AIzaCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC',
+            'CURSOR_API_KEY': 'key_dddddddddddddddddddddddddddddddd', 'GITHUB_TOKEN': 'ghs_eeee', 'SOME_SECRET': 'zzz'}
+
+    def test_each_arm_gets_only_its_own_key(self):
+        own = {'claude': {'ANTHROPIC_API_KEY'}, 'friedliver-claude': {'ANTHROPIC_API_KEY'}, 'cursor': {'CURSOR_API_KEY'},
+               'codex': {'OPENAI_API_KEY', 'CODEX_API_KEY'}, 'friedliver-codex': {'OPENAI_API_KEY', 'CODEX_API_KEY'},
+               'gemini': {'GEMINI_API_KEY'}, 'friedliver-gemini': {'GEMINI_API_KEY'}, 'antigravity': set()}
+        with mock.patch.dict(os.environ, self.KEYS):
+            for arm, keys in own.items():
+                env = bench.arm_env(arm)
+                self.assertEqual(set(env) & set(self.KEYS), keys, arm)
+                self.assertIn('PATH', env)
+            self.assertEqual(set(bench.arm_env(None)) & set(self.KEYS), set())  # checks and setup: no keys
+
+    def test_redact(self):
+        text = ('a sk-ant-api03-xyzxyzxyzxyzxyzxyz b sk-proj-1234567890abcdefghij c AIzaSyA1234567890abcdefghijklmnopqrstuv '
+                'd key_dddddddddddddddddddddddddddddddd e sk-short')
+        with mock.patch.dict(os.environ, self.KEYS):
+            out = bench.redact(text)
+        for leaked in ('sk-ant-api03-xyz', 'sk-proj-1234', 'AIzaSyA', 'key_dddd'):
+            self.assertNotIn(leaked, out)
+        self.assertIn('sk-short', out)  # too short to be a key
+        self.assertIn('[REDACTED]', out)
+
+    def test_ci_runs_no_network_scenarios_and_no_web_tools(self):
+        cfg = bench.load_config(os.path.join(HERE, 'repos/public.json'))
+        with mock.patch.dict(os.environ, {'CI': 'true'}):
+            ids = [s['id'] for c in bench.chains(bench.runnable(cfg['scenarios'])) for s in c]
+        self.assertNotIn('S7', ids)
+        self.assertIn('S1', ids)
+        argv = ' '.join(adapters.command('claude', 'p', 'm'))
+        self.assertNotIn('WebFetch', argv.split('--allowedTools')[1].split()[0])
+        self.assertIn('WebFetch', ' '.join(adapters.command('claude', 'p', 'm', network=True)))
+        self.assertNotIn('yolo', adapters.command('gemini', 'p', 'm'))
+        self.assertNotIn('--force', adapters.command('cursor', 'p', 'm'))
+
+    def test_acp_permission_denies_network_kinds(self):
+        req = lambda kind: {'toolCall': {'kind': kind}, 'options': [
+            {'optionId': 'a', 'kind': 'allow_always'}, {'optionId': 'r', 'kind': 'reject_once'}]}
+        self.assertEqual(acp.pick_permission(req('edit'), {'fetch'}), {'outcome': 'selected', 'optionId': 'a'})
+        self.assertEqual(acp.pick_permission(req('fetch'), {'fetch'}), {'outcome': 'selected', 'optionId': 'r'})
+
+    def test_agents_run_in_a_throwaway_checkout(self):
+        base = tempfile.mkdtemp()
+        subprocess.run('git init -q && git -c user.email=a@b -c user.name=a commit -q --allow-empty -m x && mkdir node_modules',
+                       shell=True, cwd=base, check=True)
+        with bench.throwaway(base) as d:
+            self.assertNotEqual(os.path.realpath(d), os.path.realpath(base))
+            self.assertTrue(os.path.isdir(os.path.join(d, 'node_modules')))
+            with open(os.path.join(d, 'scratch.txt'), 'w') as f:
+                f.write('agent edit')
+        self.assertFalse(os.path.exists(d))
+        self.assertFalse(os.path.exists(os.path.join(base, 'scratch.txt')))
+
+    def test_workflow_shape(self):
+        with open(os.path.join(HERE, '..', '.github', 'workflows', 'token-bench.yml')) as f:
+            wf = f.read()
+        on = wf.split('\non:', 1)[1].split('\npermissions:', 1)[0]
+        self.assertNotIn('push', on)
+        self.assertNotIn('pull_request', wf)
+        self.assertIn('permissions:\n  contents: read', wf)
+        self.assertNotRegex(wf, r'curl[^\n]*\|\s*(ba)?sh')
+        self.assertIn('sha256sum -c', wf)
+        # secrets.* appear only inside the step named "Run".
+        step = None
+        for line in wf.splitlines():
+            if line.strip().startswith('- name:') or line.strip().startswith('- uses:'):
+                step = line.split(':', 1)[1].strip()
+            if 'secrets.' in line and not line.strip().startswith('#'):
+                self.assertEqual(step, 'Run', line)
+
+
 if __name__ == '__main__':
     unittest.main()

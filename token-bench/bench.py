@@ -10,7 +10,7 @@ Antigravity on the same scenarios. Python stdlib only.
 
 `--replay DIR` reads recorded raw outputs instead of starting any tool: no keys, no network, no cost.
 """
-import argparse, csv, datetime, json, os, re, shutil, statistics, subprocess, sys, time
+import argparse, contextlib, csv, datetime, json, os, re, shutil, statistics, subprocess, sys, tempfile, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -35,6 +35,46 @@ ARMS = {
     'friedliver-ui':     {'kind': 'manual', 'model': 'claude-sonnet-5-5', 'price': 'claude-sonnet-5-5', 'key': None, 'group': 'anthropic'},
     'antigravity-ide':   {'kind': 'manual', 'model': 'gemini-3.1-pro', 'price': 'gemini-3.1-pro-preview', 'key': None, 'group': 'google'},
 }
+
+# ---- Secrets: each tool sees only its own key; nothing key-shaped is written to disk ----
+
+KEY_VARS = ('ANTHROPIC_API_KEY', 'OPENAI_API_KEY', 'CODEX_API_KEY', 'GEMINI_API_KEY', 'CURSOR_API_KEY')
+EXTRA_KEYS = {'OPENAI_API_KEY': ('CODEX_API_KEY',)}  # codex exec reads CODEX_API_KEY
+BASE_ENV = ('PATH', 'HOME', 'TMPDIR', 'LANG', 'LC_ALL', 'USER', 'SHELL', 'TERM')
+KEY_PATTERNS = re.compile(r'sk-ant-[A-Za-z0-9_-]{10,}|sk-[A-Za-z0-9_-]{20,}|AIza[0-9A-Za-z_-]{30,}|key_[0-9a-f]{32,}')
+
+
+def arm_env(arm):
+    """The whole environment for one arm's processes: an allowlist plus that tool's own key(s).
+    arm=None (setup commands, success checks) gets no key at all."""
+    env = {k: os.environ[k] for k in BASE_ENV if k in os.environ}
+    key = ARMS[arm]['key'] if arm else None
+    for k in (key, *EXTRA_KEYS.get(key, ())) if key else ():
+        if os.environ.get(k):
+            env[k] = os.environ[k]
+    if key == 'OPENAI_API_KEY' and 'OPENAI_API_KEY' in env:
+        env.setdefault('CODEX_API_KEY', env['OPENAI_API_KEY'])
+    return env
+
+
+def redact(text):
+    """Removes the exact values of the key variables, then anything shaped like an API key."""
+    for k in KEY_VARS:
+        v = os.environ.get(k)
+        if v and len(v) >= 8:
+            text = text.replace(v, '[REDACTED]')
+    return KEY_PATTERNS.sub('[REDACTED]', text)
+
+
+def runnable(scenarios):
+    """In CI, scenarios that need the network (web lookup) are left out: agents there get no web tools."""
+    if os.environ.get('CI') or os.environ.get('GITHUB_ACTIONS'):
+        skipped = [s['id'] for s in scenarios if s.get('network')]
+        if skipped:
+            print(f'CI: skipping network scenarios {skipped} (run them locally)')
+        return [s for s in scenarios if not s.get('network')]
+    return scenarios
+
 
 with open(os.path.join(HERE, 'prices.json')) as f:
     PRICES = json.load(f)
@@ -89,7 +129,8 @@ def chains(scenarios, only=None):
 # ---- Repos ----
 
 def sh(cmd, cwd, timeout=1800):
-    return subprocess.run(cmd, cwd=cwd, shell=isinstance(cmd, str), capture_output=True, text=True, timeout=timeout)
+    """Setup commands and success checks run repo code: no keys in their environment."""
+    return subprocess.run(cmd, cwd=cwd, shell=isinstance(cmd, str), capture_output=True, text=True, timeout=timeout, env=arm_env(None))
 
 
 def prepare_repo(name, spec, work):
@@ -110,6 +151,24 @@ def prepare_repo(name, spec, work):
             if r.returncode:
                 raise RuntimeError(f'{name}: setup `{cmd}` failed: {r.stderr[-2000:]}')
     return path
+
+
+@contextlib.contextmanager
+def throwaway(base):
+    """A disposable checkout of `base`'s pinned commit for one chain: a detached git worktree in a temp
+    dir, with base's installed node_modules linked in. The agent never touches the prepared checkout."""
+    tmp = tempfile.mkdtemp(prefix='token-bench-')
+    path = os.path.join(tmp, os.path.basename(base.rstrip(os.sep)))
+    r = sh(['git', '-C', base, 'worktree', 'add', '-q', '--detach', path, 'HEAD'], cwd=base)
+    if r.returncode:
+        raise RuntimeError(f'worktree failed: {r.stderr}')
+    if os.path.isdir(os.path.join(base, 'node_modules')):
+        os.symlink(os.path.join(base, 'node_modules'), os.path.join(path, 'node_modules'))
+    try:
+        yield path
+    finally:
+        sh(['git', '-C', base, 'worktree', 'remove', '--force', path], cwd=base)
+        shutil.rmtree(tmp, ignore_errors=True)
 
 
 def reset_repo(path, spec):
@@ -158,15 +217,15 @@ def acp_argv(arm, model):
     return [a.replace('{model}', model) for a in ARMS[arm]['argv']]
 
 
-def run_cli_turn(arm, prompt, model, session_id, cwd, extra, budget):
+def run_cli_turn(arm, prompt, model, session_id, cwd, extra, budget, network=False):
     tool = ARMS[arm]['tool']
     extra = list(extra)
     if tool == 'claude' and budget:
         extra += ['--max-budget-usd', str(budget)]
-    argv = adapters.command(tool, prompt, model, session_id, extra)
+    argv = adapters.command(tool, prompt, model, session_id, extra, network)
     t = time.monotonic()
-    p = subprocess.run(argv, cwd=cwd, capture_output=True, text=True, timeout=1800)
-    return p.stdout, time.monotonic() - t, p.returncode
+    p = subprocess.run(argv, cwd=cwd, capture_output=True, text=True, timeout=1800, env=arm_env(arm))
+    return redact(p.stdout), time.monotonic() - t, p.returncode
 
 
 def record(arm, scn, rep, mode, parsed, wall, ok, detail, model, cfg, raw_file=None):
@@ -180,7 +239,7 @@ def record(arm, scn, rep, mode, parsed, wall, ok, detail, model, cfg, raw_file=N
         'cost_usd': adapters.cost_usd(tok, price), 'reported_cost_usd': parsed.get('reported_cost_usd'),
         'tool_calls': parsed.get('tool_calls'), 'bytes_read': parsed.get('bytes_read'),
         'files_read': None if parsed.get('files_read') is None else len(parsed['files_read']),
-        'wall_s': round(wall, 2) if wall is not None else None, 'success': ok, 'success_detail': detail,
+        'wall_s': round(wall, 2) if wall is not None else None, 'success': ok, 'success_detail': redact(detail or ''),
         'interventions': parsed.get('interventions', 0), 'raw': raw_file,
         'at': datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds'),
     }
@@ -207,12 +266,12 @@ def run(cfg, arms, reps, out, replay=None, only=None, overrides=None, extra=None
     if not replay:
         work = work or os.path.join(out, 'work')
         os.makedirs(work, exist_ok=True)
-        needed = {s['repo'] for c in chains(cfg['scenarios'], only) for s in c}
+        needed = {s['repo'] for c in chains(runnable(cfg['scenarios']), only) for s in c}
         repos = {n: prepare_repo(n, spec, work) for n, spec in cfg['repos'].items() if n in needed}
     with open(results, 'a') as res:
         for rep in range(1, reps + 1):
             order = arms[(rep - 1) % len(arms):] + arms[:(rep - 1) % len(arms)]  # round-robin start
-            for chain in chains(cfg['scenarios'], only):
+            for chain in chains(cfg['scenarios'] if replay else runnable(cfg['scenarios']), only):
                 for arm in order:
                     for rec in run_chain(cfg, arm, chain, rep, out, repos, replay, meta, model_of(arm, overrides), extra.get(arm, []), budget):
                         res.write(json.dumps(rec) + '\n')
@@ -223,11 +282,17 @@ def run(cfg, arms, reps, out, replay=None, only=None, overrides=None, extra=None
 
 
 def run_chain(cfg, arm, chain, rep, out, repos, replay, meta, model, extra, budget):
+    if replay:
+        yield from _chain(cfg, arm, chain, rep, out, None, replay, meta, model, extra, budget)
+        return
+    with throwaway(repos[chain[0]['repo']]) as repo_dir:
+        yield from _chain(cfg, arm, chain, rep, out, repo_dir, replay, meta, model, extra, budget)
+
+
+def _chain(cfg, arm, chain, rep, out, repo_dir, replay, meta, model, extra, budget):
     spec = ARMS[arm]
-    repo_dir = None if replay else repos[chain[0]['repo']]
-    if repo_dir:
-        reset_repo(repo_dir, cfg['repos'][chain[0]['repo']])
     agent, session_id, prev_usage = None, None, None
+    ci = bool(os.environ.get('CI') or os.environ.get('GITHUB_ACTIONS'))
     try:
         for scn in chain:
             raw_name = f"raw/{arm}.{scn['id']}.rep{rep}.jsonl"
@@ -239,18 +304,22 @@ def run_chain(cfg, arm, chain, rep, out, repos, replay, meta, model, extra, budg
             elif spec['kind'] == 'acp':
                 import acp
                 if agent is None:
-                    env = {spec['model_env']: model} if spec.get('model_env') else {}
+                    env = arm_env(arm)
+                    if spec.get('model_env'):
+                        env[spec['model_env']] = model
                     # Vanilla like the CLI arms (claude --bare, codex --ignore-user-config): a fresh config
                     # dir, so the user's own plugins, hooks, MCP servers and memory stay out of the count.
                     fresh = os.path.join(out, 'agent-config', arm)
                     os.makedirs(fresh, exist_ok=True)
                     env.update({'claude': {'CLAUDE_CONFIG_DIR': fresh}, 'codex': {'CODEX_HOME': fresh}}.get(arm.split('-')[-1], {}))
                     mcp = json.loads(os.environ['FRIEDLIVER_INDEX_MCP']) if os.environ.get('FRIEDLIVER_INDEX_MCP') else []
-                    agent = acp.AcpAgent(acp_argv(arm, model), repo_dir, env, mcp, os.environ.get('FRIEDLIVER_SYSTEM_APPEND'))
+                    agent = acp.AcpAgent(acp_argv(arm, model), repo_dir, env, mcp, os.environ.get('FRIEDLIVER_SYSTEM_APPEND'),
+                                         deny_kinds=frozenset({'fetch'}) if ci or not scn.get('network') else frozenset())
                 raw, wall = agent.prompt(scn['prompt'])
-                code = 0
+                raw, code = redact(raw), 0
             else:
-                raw, wall, code = run_cli_turn(arm, scn['prompt'], model, session_id, repo_dir, extra, budget)
+                raw, wall, code = run_cli_turn(arm, scn['prompt'], model, session_id, repo_dir, extra, budget,
+                                               network=bool(scn.get('network')) and not ci)
             with open(os.path.join(out, raw_name), 'w') as f:
                 f.write(raw)
             parsed = parse(arm, raw, prev_usage)

@@ -73,14 +73,24 @@ def parse_acp(raw, prev_usage=None):
     return r
 
 
+def pick_permission(params, deny_kinds):
+    """Allow a tool call, unless its kind is denied (e.g. `fetch` in CI): then reject it."""
+    opts = params.get('options') or []
+    kind = (params.get('toolCall') or {}).get('kind')
+    want = ('reject_once', 'reject_always') if kind in deny_kinds else ('allow_always', 'allow_once')
+    pick = next((o for k in want for o in opts if o.get('kind') == k), None)
+    return {'outcome': 'selected', 'optionId': pick['optionId']} if pick else {'outcome': 'cancelled'}
+
+
 class AcpAgent:
     """One agent process; prompt() runs one turn and returns its transcript (for parse_acp)."""
 
-    def __init__(self, argv, cwd, env=None, mcp_servers=None, system_append=None):
-        self.cwd, self.next_id, self.pending = cwd, 0, {}
+    def __init__(self, argv, cwd, env, mcp_servers=None, system_append=None, deny_kinds=frozenset()):
+        """`env` is the agent's whole environment (bench.arm_env): nothing is inherited."""
+        self.cwd, self.next_id, self.pending, self.deny_kinds = cwd, 0, {}, deny_kinds
         self.mcp_servers, self.system_append = mcp_servers or [], system_append
         self.lock, self.turn = threading.Lock(), []
-        self.proc = subprocess.Popen(argv, cwd=cwd, env={**os.environ, **(env or {})}, text=True, bufsize=1,
+        self.proc = subprocess.Popen(argv, cwd=cwd, env=env, text=True, bufsize=1,
                                      stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         threading.Thread(target=self._read, daemon=True).start()
         init = self.request('initialize', {'protocolVersion': 1, 'clientCapabilities': CLIENT_CAPABILITIES})
@@ -131,10 +141,7 @@ class AcpAgent:
                     f.write(p['content'])
                 result = None
             elif method == 'session/request_permission':
-                opts = p.get('options') or []
-                pick = next((o for o in opts if o.get('kind') == 'allow_always'), None) or \
-                    next((o for o in opts if o.get('kind', '').startswith('allow')), None) or (opts[0] if opts else None)
-                result = {'outcome': {'outcome': 'selected', 'optionId': pick['optionId']} if pick else {'outcome': 'cancelled'}}
+                result = {'outcome': pick_permission(p, self.deny_kinds)}
             else:
                 self._send({'jsonrpc': '2.0', 'id': msg['id'], 'error': {'code': -32601, 'message': 'not supported'}})
                 return

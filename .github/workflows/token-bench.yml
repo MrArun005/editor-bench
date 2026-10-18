@@ -4,11 +4,12 @@ name: token-bench
 # only (token-bench/repos/public.json). A private repo never runs here: bench.py refuses a private
 # config under CI, and this workflow only ever passes public.json.
 #
+# Manual trigger only, read-only token, API keys only in the live job's "Run" step.
 # - unit: parser/guard tests + a replay of the synthetic fixtures. Free, no secrets.
-# - free-checks (manual): proves S4/S5's checks separate right from wrong edits, and measures the
-#   IDE side (FriedLiver index build, S3 context cost per tool) with no LLM. Free.
-# - live (manual): the real runs. Each arm runs only when its key is a repo secret; with no keys the
-#   job says so and does nothing. Costs money: see token-bench/README.md for the estimate.
+# - free-checks: proves S4/S5's checks separate right from wrong edits, and measures the IDE side
+#   (FriedLiver index build, S3 context cost per tool) with no LLM. Free, no secrets.
+# - live (input live=true): the real runs. Each arm runs only when its key secret is set; with no
+#   keys it does nothing. Costs money: see token-bench/README.md for the estimate.
 on:
   workflow_dispatch:
     inputs:
@@ -23,12 +24,12 @@ on:
         description: 'Repetitions per scenario'
         default: '3'
       scenarios:
-        description: 'Scenario ids, empty = all'
+        description: 'Scenario ids, empty = all (network scenarios such as S7 never run in CI)'
         default: ''
-  push:
-    paths:
-      - 'token-bench/**'
-      - '.github/workflows/token-bench.yml'
+      upload_raw:
+        description: 'Also upload raw agent transcripts (redacted). Default: parsed results only'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -58,10 +59,11 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: token-bench-replay
-          path: ${{ runner.temp }}/replay
+          path: |
+            ${{ runner.temp }}/replay/results.jsonl
+            ${{ runner.temp }}/replay/report.html
 
   free-checks:
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -102,56 +104,68 @@ jobs:
           path: ${{ runner.temp }}/ide
 
   live:
-    if: github.event_name == 'workflow_dispatch' && inputs.live && github.repository == 'MrArun005/editor-bench'
+    if: inputs.live && github.repository == 'MrArun005/editor-bench'
     needs: [unit, free-checks]
     runs-on: ubuntu-latest
     timeout-minutes: 300
     env:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      CODEX_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
-      BENCH_ARMS: ${{ inputs.arms }}
-      BENCH_REPS: ${{ inputs.reps }}
-      BENCH_SCENARIOS: ${{ inputs.scenarios }}
+      # Cursor CLI, pinned: the tarball its install script fetches for this version, checked by SHA-256
+      # (computed 2026-10-18). Bump both together; on a mismatch the Cursor arm is skipped.
+      CURSOR_CLI_VERSION: '2026.10.16-e3cb207'
+      CURSOR_CLI_SHA256: '3aa3f48cd7a3909a98c9b3f2a4085f0c021088bf826690b22c61f424c843e552'
     steps:
-      - name: Which keys are set
-        id: keys
-        run: |
-          have=""
-          for k in ANTHROPIC_API_KEY OPENAI_API_KEY GEMINI_API_KEY CURSOR_API_KEY; do [ -n "${!k}" ] && have="$have $k"; done
-          echo "have=${have# }" >> "$GITHUB_OUTPUT"
-          if [ -z "$have" ]; then echo "No API key secrets set: live run skipped." | tee -a "$GITHUB_STEP_SUMMARY"; else echo "Keys present: $have" >> "$GITHUB_STEP_SUMMARY"; fi
       - uses: actions/checkout@v4
-        if: steps.keys.outputs.have != ''
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4
-        if: steps.keys.outputs.have != ''
         with:
           node-version: 22
-      - name: Install the agent CLIs whose keys are present
-        if: steps.keys.outputs.have != ''
+      - name: Install the agent CLIs (no secrets in this step)
         run: |
-          pkgs=""
-          [ -n "$ANTHROPIC_API_KEY" ] && pkgs="$pkgs @anthropic-ai/claude-code @agentclientprotocol/claude-agent-acp"
-          [ -n "$OPENAI_API_KEY" ] && pkgs="$pkgs @openai/codex @agentclientprotocol/codex-acp"
-          [ -n "$GEMINI_API_KEY" ] && pkgs="$pkgs @google/gemini-cli"
-          [ -n "$pkgs" ] && npm install -g $pkgs
-          [ -n "$OPENAI_API_KEY" ] && printenv OPENAI_API_KEY | codex login --with-api-key
-          if [ -n "$CURSOR_API_KEY" ]; then curl -fsS https://cursor.com/install | bash; echo "$HOME/.local/bin" >> "$GITHUB_PATH"; fi
+          npm install -g @anthropic-ai/claude-code @agentclientprotocol/claude-agent-acp \
+            @openai/codex @agentclientprotocol/codex-acp @google/gemini-cli
+          tgz="$RUNNER_TEMP/cursor-agent.tgz"
+          curl -fsSL -o "$tgz" "https://downloads.cursor.com/lab/${CURSOR_CLI_VERSION}/linux/x64/agent-cli-package.tar.gz"
+          if echo "${CURSOR_CLI_SHA256}  $tgz" | sha256sum -c -; then
+            dir="$HOME/.local/share/cursor-agent/versions/${CURSOR_CLI_VERSION}"
+            mkdir -p "$dir" "$HOME/.local/bin"
+            tar --strip-components=1 -xzf "$tgz" -C "$dir"
+            ln -sf "$dir/cursor-agent" "$HOME/.local/bin/cursor-agent"
+            echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          else
+            echo "Cursor CLI checksum mismatch: the cursor arm is skipped." | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+          rm -f "$tgz"
       - name: Run
-        if: steps.keys.outputs.have != ''
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          BENCH_ARMS: ${{ inputs.arms }}
+          BENCH_REPS: ${{ inputs.reps }}
+          BENCH_SCENARIOS: ${{ inputs.scenarios }}
         run: |
+          # bench.py gives each arm only its own key (arm_env), skips arms whose key is missing, runs
+          # agents in throwaway checkouts, leaves out network scenarios under CI, and redacts
+          # key-shaped strings from every transcript before it is written.
           python3 token-bench/bench.py run --config token-bench/repos/public.json --out "$RUNNER_TEMP/live" \
             --work "$RUNNER_TEMP/work" --arms "$BENCH_ARMS" --reps "$BENCH_REPS" --scenarios "$BENCH_SCENARIOS" --skip-missing-keys
-          python3 token-bench/report.py "$RUNNER_TEMP/live"
-      - uses: actions/upload-artifact@v4
-        if: steps.keys.outputs.have != '' && always()
+          if [ -f "$RUNNER_TEMP/live/results.jsonl" ]; then python3 token-bench/report.py "$RUNNER_TEMP/live"; fi
+      - name: Upload parsed results
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: token-bench-live
+          if-no-files-found: ignore
           path: |
-            ${{ runner.temp }}/live/*.json*
+            ${{ runner.temp }}/live/results.jsonl
+            ${{ runner.temp }}/live/run.json
             ${{ runner.temp }}/live/report.html
-            ${{ runner.temp }}/live/raw
+      - name: Upload raw transcripts (opt-in)
+        if: always() && inputs.upload_raw
+        uses: actions/upload-artifact@v4
+        with:
+          name: token-bench-live-raw
+          if-no-files-found: ignore
+          path: ${{ runner.temp }}/live/raw

@@ -25,9 +25,9 @@ and say nothing about any tool. A report built from them carries a red banner sa
 |---|---|---|---|---|---|
 | Claude Code | `claude --bare -p … --output-format stream-json --verbose` | `usage` on every `assistant` message (one per API call; dedupe by `message.id`), final `result` has `total_cost_usd`, `usage`, `session_id` | `cache_read_input_tokens`, `cache_creation_input_tokens`; `input_tokens` is uncached | `--resume <session_id>`; after a resume `total_cost_usd` includes earlier runs, so cost is recomputed from tokens | [Headless docs](https://code.claude.com/docs/en/headless) |
 | Codex CLI | `codex exec --json` | `turn.completed.usage` | `cached_input_tokens` is inside `input_tokens`; `reasoning_output_tokens` | `codex exec resume <thread_id>` (`thread.started.thread_id`) | [Non-interactive mode](https://learn.chatgpt.com/docs/non-interactive-mode) |
-| Gemini CLI | `gemini -p … --output-format stream-json` | final `result.stats`: `input_tokens` (= promptTokenCount, cached part included), `cached`, `output_tokens` (candidates only), `total_tokens`, `tool_calls`; thinking = total − input − output | `cached` (implicit caching) | `--resume latest` (takes `latest` or an index, not an id) | [Headless docs](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/headless.md); field mapping read from the CLI's `convertToStreamStats` (v0.64.0) |
-| Cursor | `cursor-agent -p … --output-format stream-json --force` | Documented `result` has no usage. Newer CLIs add `usage {inputTokens, outputTokens, cacheReadTokens, cacheWriteTokens}`, where `inputTokens` is uncached and billing = the three input fields summed. No usage -> row flagged "tokens not reported" | `cacheReadTokens`, `cacheWriteTokens` | `--resume <session_id>` | [Output format](https://cursor.com/docs/cli/reference/output-format), [Cursor staff on the usage fields](https://forum.cursor.com/t/discrepancies-between-cursor-cli-usage-and-billing/164471) |
-| Antigravity CLI | `agy -p … --output-format stream-json --dangerously-skip-permissions` | `result.usage {input_tokens, output_tokens, thinking_tokens, cache_read_tokens, total_tokens}`; tool steps are `step_update` with `step_type: tool` | in the docs' examples total = input + output, so cache reads are inside `input_tokens` and thinking inside `output_tokens` (inferred, not stated) | `--conversation <conversation_id>` | [Headless docs](https://antigravity.google/docs/cli/headless) |
+| Gemini CLI | `gemini -p … --output-format stream-json --approval-mode auto_edit` | final `result.stats`: `input_tokens` (= promptTokenCount, cached part included), `cached`, `output_tokens` (candidates only), `total_tokens`, `tool_calls`; thinking = total − input − output | `cached` (implicit caching) | `--resume latest` (takes `latest` or an index, not an id) | [Headless docs](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/headless.md); field mapping read from the CLI's `convertToStreamStats` (v0.64.0) |
+| Cursor | `cursor-agent -p … --output-format stream-json` | Documented `result` has no usage. Newer CLIs add `usage {inputTokens, outputTokens, cacheReadTokens, cacheWriteTokens}`, where `inputTokens` is uncached and billing = the three input fields summed. No usage -> row flagged "tokens not reported" | `cacheReadTokens`, `cacheWriteTokens` | `--resume <session_id>` | [Output format](https://cursor.com/docs/cli/reference/output-format), [Cursor staff on the usage fields](https://forum.cursor.com/t/discrepancies-between-cursor-cli-usage-and-billing/164471) |
+| Antigravity CLI | `agy -p … --output-format stream-json --dangerously-skip-permissions --sandbox` (local only) | `result.usage {input_tokens, output_tokens, thinking_tokens, cache_read_tokens, total_tokens}`; tool steps are `step_update` with `step_type: tool` | in the docs' examples total = input + output, so cache reads are inside `input_tokens` and thinking inside `output_tokens` (inferred, not stated) | `--conversation <conversation_id>` | [Headless docs](https://antigravity.google/docs/cli/headless) |
 | Antigravity IDE | none | manual protocol (below); `agy` is the automated stand-in for its agent | | | |
 | FriedLiver agents | ACP, as FriedLiver starts them: `claude-agent-acp`, `codex-acp`, `gemini --acp` (`agent-core/main/agents/registry.ts`) | `session/prompt` result `usage {inputTokens, outputTokens, cachedReadTokens, cachedWriteTokens, thoughtTokens, totalTokens}` (UNSTABLE in ACP SDK 1.9, cumulative over the session, so a turn = the difference); `session/update` `usage_update {used, size, cost?}` = context window and cumulative cost | `cachedReadTokens`, `cachedWriteTokens` | the same ACP session | `@agentclientprotocol/sdk` 1.9.0 `schema/types.gen.d.ts` (`Usage`, `UsageUpdate`); FriedLiver folds `usage_update` in `extensions/friedliver-agents/src/shared/session.ts` |
 
@@ -47,7 +47,7 @@ continues S4's; every other scenario starts a fresh session on a fresh `git rese
 | S4 | change `stripEndSlash` (nestjs/nest v11.2.7) to drop every trailing slash, update its test | spec file changed **and** the repo's spec plus a hidden spec pass (mocha) | edit + test loop |
 | S5 | "Now also handle a path made only of slashes …" (same session) | hidden S5 spec passes | diff-awareness |
 | S6 | explain the compile pipeline from .ts to emitted JS | answer names scanner, parser, binder, checker, emit | module explanation |
-| S7 | read RFC 9110 with the tool's web fetch, name the "Misdirected Request" code | answer contains 421 | fetch: cleaned text vs raw HTML |
+| S7 | read RFC 9110 with the tool's web fetch, name the "Misdirected Request" code | answer contains 421 | fetch: cleaned text vs raw HTML. **Local runs only** (`"network": true`): CI skips it and gives agents no web tools |
 
 Why two repos: TypeScript v6.0.3 (about 70k files, the last TypeScript-written release, the tag
 FriedLiver's own index bench uses) is the large one; its tests need a full build, so the edit
@@ -68,6 +68,24 @@ Override per arm with `--model arm=model`.
 **Vanilla setup.** `claude --bare`, `codex --ignore-user-config`, and a fresh `CLAUDE_CONFIG_DIR` /
 `CODEX_HOME` for the FriedLiver arms, so nobody's plugins, hooks, MCP servers or memory get counted.
 Gemini CLI and `agy` still read `~/.gemini`: run with no Gemini extensions installed.
+
+**Approvals.** The narrowest mode that still edits: Claude `acceptEdits` with an explicit tool list,
+Codex `workspace-write` (network off), Gemini `auto_edit`, Cursor without `--force`; web tools only
+for network scenarios. FriedLiver arms auto-approve ACP permission requests except `fetch` (denied in
+CI and in non-network scenarios). `agy` has no per-tool approval flag headless, so it runs with
+`--sandbox` and is local only.
+
+## Secrets and public CI
+
+- Each agent process gets an allowlisted environment (`PATH`, `HOME`, `TMPDIR`, locale, shell) plus
+  only its own tool's key (`bench.arm_env`); setup commands and success checks get no key at all.
+- Agents run in a throwaway `git worktree` of the pinned commit, deleted after each session.
+- Every transcript is redacted before it is written (exact key values, then `sk-ant-…`, `sk-…`,
+  `AIza…`, `key_…` shapes). CI uploads parsed results and the report only; raw transcripts only
+  with the `upload_raw` input.
+- The workflow is `workflow_dispatch` only with `contents: read`; keys appear only in the live job's
+  `Run` step. The Cursor CLI is installed from a pinned version's tarball checked against a SHA-256;
+  on a mismatch the Cursor arm is skipped.
 
 ## IDE-side measures (no LLM, free)
 

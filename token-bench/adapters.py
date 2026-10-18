@@ -212,29 +212,43 @@ def parse_antigravity(raw):
 
 # ---- Command lines ----
 
-def command(tool, prompt, model, session_id=None, extra=()):
-    """argv for one headless turn. `session_id` continues an earlier conversation."""
+def command(tool, prompt, model, session_id=None, extra=(), network=False):
+    """argv for one headless turn. `session_id` continues an earlier conversation. Tools get the
+    narrowest approval mode that still lets them read, edit and (where headless allows) run tests;
+    web tools only when the scenario needs the network (never in CI: bench.runnable drops those)."""
     if tool == 'claude':
+        allowed = 'Read,Grep,Glob,Edit,Write,Bash' + (',WebFetch,WebSearch' if network else '')
         # --bare: no CLAUDE.md, hooks, plugins, MCP servers or memory from the machine; needs ANTHROPIC_API_KEY.
         argv = ['claude', '--bare', '-p', prompt, '--output-format', 'stream-json', '--verbose', '--model', model,
-                '--permission-mode', 'acceptEdits', '--permission-prompts', 'none',
-                '--allowedTools', 'Read,Grep,Glob,Edit,Write,Bash,WebFetch,WebSearch']
+                '--permission-mode', 'acceptEdits', '--permission-prompts', 'none', '--allowedTools', allowed]
+        if not network:
+            argv += ['--disallowedTools', 'WebFetch,WebSearch']
         return argv + (['--resume', session_id] if session_id else []) + list(extra)
     if tool == 'codex':
+        # workspace-write: edits and commands inside the checkout, network off.
         flags = ['--json', '--model', model, '--sandbox', 'workspace-write', '--skip-git-repo-check', '--ignore-user-config']
+        if network:  # check these keys against your Codex version
+            flags += ['-c', 'sandbox_workspace_write.network_access=true', '-c', 'tools.web_search=true']
         if session_id:
             return ['codex', 'exec', 'resume', session_id, *flags, *extra, prompt]
         return ['codex', 'exec', *flags, *extra, prompt]
     if tool == 'gemini':
+        # auto_edit approves edits only; shell and web tools need approval, which headless denies.
         argv = ['gemini', '-p', prompt, '--output-format', 'stream-json', '--model', model,
-                '--approval-mode', 'yolo', '--skip-trust']
+                '--approval-mode', 'auto_edit', '--skip-trust']
+        if network:
+            argv += ['--allowed-tools', 'web_fetch', 'google_web_search']
         # ponytail: --resume takes "latest" or an index, not an id; each chain runs in its own fresh checkout, so latest is ours.
         return argv + (['--resume', 'latest'] if session_id else []) + list(extra)
     if tool == 'cursor':
-        argv = ['cursor-agent', '-p', prompt, '--output-format', 'stream-json', '--model', model, '--force']
+        # No --force: print mode may edit files, but commands not allowed by rules are refused.
+        argv = ['cursor-agent', '-p', prompt, '--output-format', 'stream-json', '--model', model]
         return argv + (['--resume', session_id] if session_id else []) + list(extra)
     if tool == 'antigravity':
-        argv = ['agy', '-p', prompt, '--output-format', 'stream-json', '--model', model, '--dangerously-skip-permissions']
+        # Local runs only (agy needs a desktop login). Headless has no per-tool approval flag, so
+        # permissions are skipped but commands run inside agy's terminal sandbox.
+        argv = ['agy', '-p', prompt, '--output-format', 'stream-json', '--model', model,
+                '--dangerously-skip-permissions', '--sandbox']
         return argv + (['--conversation', session_id] if session_id else []) + list(extra)
     raise ValueError(f'no headless command for {tool}')
 

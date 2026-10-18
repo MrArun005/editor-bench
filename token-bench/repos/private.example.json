@@ -18,7 +18,7 @@
      "check": {"cmd": "<SAME SPEC COMMAND>"}, "estimate": {"input": 450000, "output": 4000}},
     {"id": "S6", "repo": "app", "title": "Explain a module", "prompt": "Explain the <MODULE> flow end to end.",
      "check": {"answer_all": ["<A KEY CLASS IN THAT FLOW>"]}, "estimate": {"input": 800000, "output": 7000}},
-    {"id": "S7", "repo": "app", "title": "Web/doc lookup",
+    {"id": "S7", "repo": "app", "title": "Web/doc lookup", "network": true,
      "prompt": "Use your web fetch or browser tool to read https://www.rfc-editor.org/rfc/rfc9110.html and tell me the number of the HTTP status code named \"Misdirected Request\".",
      "check": {"answer_all": ["\\b421\\b"]}, "estimate": {"input": 150000, "output": 1000}}
   ]
